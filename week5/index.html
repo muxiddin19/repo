@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Programming Portfolio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4ff;
+      color: #1a1a2e;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(135deg, #1a56db, #7c3aed);
+      color: white;
+      padding: 32px 24px;
+      border-radius: 12px;
+      margin-bottom: 28px;
+    }
+    header h1 { font-size: 2rem; margin-bottom: 6px; }
+    header p  { opacity: 0.8; font-size: 1rem; }
+
+    .week-section { margin-bottom: 28px; }
+    .week-section h2 {
+      font-size: 1.2rem;
+      color: #1a56db;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #c8d4f0;
+      padding-bottom: 4px;
+    }
+
+    .tasks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .task-card {
+      background: white;
+      border: 1.5px solid #c8d4f0;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: #1a1a2e;
+      width: 200px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .task-card:hover {
+      box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+      transform: translateY(-2px);
+    }
+    .task-card .tag {
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #1a56db;
+      margin-bottom: 6px;
+    }
+    .task-card h3 { font-size: 15px; }
+    .task-card p  { font-size: 12px; color: #666; margin-top: 4px; }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌐 My Web Programming Portfolio</h1>
+    <p>Student Name · ID: 20XXXXXXXX · Gachon University · Web Programming K0126002</p>
+  </header>
+
+  <!-- ===== WEEK 1: HTML ===== -->
+  <section class="week-section">
+    <h2>Week 1 — HTML Fundamentals</h2>
+    <div class="tasks">
+      <a class="task-card" href="week1/html-basics.html">
+        <div class="tag">HTML</div>
+        <h3>HTML Basics</h3>
+        <p>Tags, headings, links, images</p>
+      </a>
+      <a class="task-card" href="week1/forms.html">
+        <div class="tag">HTML</div>
+        <h3>HTML Forms</h3>
+        <p>Input, select, submit</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== WEEK 2: CSS ===== -->
+  <section class="week-section">
+    <h2>Week 2 — CSS Styling</h2>
+    <div class="tasks">
+      <a class="task-card" href="week2/css-basics.html">
+        <div class="tag">CSS</div>
+        <h3>CSS Basics</h3>
+        <p>Colors, fonts, spacing</p>
+      </a>
+      <a class="task-card" href="week2/flexbox.html">
+        <div class="tag">CSS</div>
+        <h3>Flexbox Layout</h3>
+        <p>Responsive card grid</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== WEEK 3: JAVASCRIPT ===== -->
+  <section class="week-section">
+    <h2>Week 3 — JavaScript</h2>
+    <div class="tasks">
+      <a class="task-card" href="week3/counter.html">
+        <div class="tag">JS</div>
+        <h3>Counter App</h3>
+        <p>Click events and DOM updates</p>
+      </a>
+      <a class="task-card" href="week3/quiz.html">
+        <div class="tag">JS</div>
+        <h3>Quiz App</h3>
+        <p>If/else, score tracking</p>
+      </a>
+      <a class="task-card" href="week3/todo.html">
+        <div class="tag">JS</div>
+        <h3>To-Do List</h3>
+        <p>Arrays, localStorage</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built with HTML, CSS &amp; JavaScript · Hosted on GitHub Pages</p>
+  </footer>
+
+</body>
+</html>

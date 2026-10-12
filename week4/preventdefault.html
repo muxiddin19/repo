@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>e.preventDefault() - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">09</span><h1>e.preventDefault()</h1></div>
+<div class="theory"><p>Forms reload the page on submit and links navigate away. <code>e.preventDefault()</code> cancels that default so your JavaScript can handle the event instead.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>form.addEventListener(&#x27;submit&#x27;, (e) =&gt; {
+  e.preventDefault();   // stops the page reload
+  const value = input.value;
+  result.textContent = &#x27;Got: &#x27; + value;
+});</code></pre></div>
+<div class="demo-box"><h4>Live demo - with and without preventDefault</h4>
+<div class="grid2">
+<div class="panel bad"><strong>Without preventDefault</strong><form action="#" method="get" style="margin-top:8px"><input type="text" name="x" placeholder="Type anything..." style="width:100%;margin-bottom:8px"><button class="demo-btn red sm" style="width:100%">Submit (page reloads!)</button></form></div>
+<div class="panel ok"><strong>With preventDefault</strong><form id="safe" style="margin-top:8px"><input type="text" id="si" placeholder="Type anything..." style="width:100%;margin-bottom:8px"><button class="demo-btn green sm" style="width:100%">Submit (no reload)</button></form><p id="res" style="margin-top:8px;font-weight:600;font-size:13px"></p></div>
+</div>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>e.preventDefault()</code> stops the browser default action.</li><li>Use it on <code>submit</code> to validate without reloading.</li><li>Use it on link clicks to stop navigation.</li><li>Call it first in the handler.</li></ul></div>
+<nav class="pager"><span><a href="eventobject.html">&larr; The Event Object (e)</a></span><span><a href="bubbling.html">Event Bubbling &amp; Delegation &rarr;</a></span></nav>
+</main>
+<script>
+document.getElementById('safe').addEventListener('submit',e=>{e.preventDefault();
+  const v=document.getElementById('si').value;
+  document.getElementById('res').textContent=v?'Got value: "'+v+'" - no reload!':'Handled by JS - no reload!'});
+</script>
+</body>
+</html>

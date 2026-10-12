@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: sans-serif;        /* fix 1: added semicolon */
+      background-color: #f0fdf4;
+    }
+
+    h1 {
+      color: #15803d;                 /* fix 2: = changed to : */
+      font-size: 2rem;
+      text-align: center;             /* fix 3: added colon */
+    }
+
+    p {
+      line-height: 1.7;
+      color: #334155;                 /* fix 4: foreground → color */
+    }
+
+    /* This is a correct CSS comment */  /* fix 5: // → /* */ */
+    .highlight {
+      background-color: #dcfce7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fixed!</h1>
+  <p>This paragraph has <span class="highlight">working CSS</span> around it.</p>
+</body>
+</html>

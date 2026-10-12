@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Loops</title></head>
+<body>
+  <h2>Loops</h2>
+  <button onclick="repeatFive()">Repeat 5 times</button>
+  <button onclick="loopFruits()">Loop through fruits</button>
+  <button onclick="clearOutput()">Clear</button>
+  <ul id="output"></ul>
+
+  <script>
+    function addLine(text) {
+      console.log(text);
+      let li = document.createElement('li');
+      li.textContent = text;
+      document.getElementById('output').appendChild(li);
+    }
+
+    // Repeat 5 times
+    function repeatFive() {
+      for (let i = 1; i <= 5; i++) {
+        addLine('Step ' + i);
+      }
+    }
+
+    // Loop through an array
+    function loopFruits() {
+      let fruits = ['apple', 'banana', 'cherry'];
+      for (let fruit of fruits) {
+        addLine(fruit);
+      }
+    }
+
+    function clearOutput() {
+      document.getElementById('output').innerHTML = '';
+    }
+  </script>
+</body>
+</html>

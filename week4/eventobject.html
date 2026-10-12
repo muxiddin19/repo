@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Event Object (e) - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">08</span><h1>The Event Object (e)</h1></div>
+<div class="theory"><p>The browser passes an <strong>event object</strong> to your callback. <code>e.type</code> is the event name, <code>e.target</code> is the element that triggered it, and <code>e.key</code> is the pressed key for keyboard events.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>btn.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+  console.log(e.type);       // &#x27;click&#x27;
+  console.log(e.target.id);  // id of clicked element
+});
+input.addEventListener(&#x27;keydown&#x27;, (e) =&gt; {
+  console.log(e.key);        // &#x27;a&#x27;, &#x27;Enter&#x27;, ...
+});</code></pre></div>
+<div class="demo-box"><h4>Event explorer - click or type</h4>
+<div class="row" style="margin:0"><button class="demo-btn" id="a">Button A</button><button class="demo-btn yellow" id="b">Button B</button><input type="text" id="inp" placeholder="Type here (keydown)..."></div>
+<div class="log" id="log"></div>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li>The event object is passed automatically as the first argument.</li><li><code>e.type</code>: event name.</li><li><code>e.target</code>: element that triggered the event.</li><li><code>e.key</code>: key pressed (keyboard events).</li></ul></div>
+<nav class="pager"><span><a href="addeventlistener.html">&larr; addEventListener</a></span><span><a href="preventdefault.html">e.preventDefault() &rarr;</a></span></nav>
+</main>
+<script>
+const log=document.getElementById('log');
+function add(t,v){const l=document.createElement('div');l.textContent=t+'   '+v;log.appendChild(l);while(log.children.length>5)log.firstChild.remove()}
+document.querySelectorAll('#a,#b').forEach(b=>b.addEventListener('click',e=>add('click','e.target.id = "'+e.target.id+'"')));
+document.getElementById('inp').addEventListener('keydown',e=>add('keydown','e.key = "'+e.key+'"'));
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Web Portfolio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7ff;
+      color: #1a1a2e;
+      padding: 20px;
+    }
+
+    nav a {
+      display: inline-block;
+      margin-right: 12px;
+      color: #1a56db;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 12px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    button {
+      background: #1a56db;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #1446b5; }
+
+    .demo { margin: 16px 0; }
+    .demo p { margin-bottom: 8px; }
+
+    address, footer { margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Web Portfolio</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="card">Week 1</div>
+    <div class="card">Week 2</div>
+    <div class="card">Week 3_1</div>
+    <div class="card">Week 3_2</div>
+    <div class="card">Week 4</div>
+    <div class="card">Week 5</div>
+  </main>
+
+  <!-- JS DOM demo -->
+  <section class="demo">
+    <p id="message">Original text</p>
+    <button onclick="changeText()">Click me</button>
+  </section>
+<section class="demo">
+    <input type="text" id="inputField" placeholder="Type something...">
+    <button onclick="displayText()">Display Text</button>
+    <p id="displayArea"></p>
+  </section>
+  <section class="demo"><input type="text" id="nameInput" placeholder="Your name">
+<button onclick="greet()">Greet</button>
+<p id="output"></p>
+  </section>
+
+  <address>
+    <p>Contact me at: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+  </address>
+
+  <footer>
+    <p>&copy; 2024 My Web Portfolio. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Two modern ways to declare variables
+    let name = 'Alice';   // can be reassigned
+    const MAX = 100;      // cannot be reassigned (constant)
+
+    console.log(name);    // prints to browser DevTools console (F12)
+    // alert('Hello, ' + name);  // popup dialog (uncomment to test)
+
+    function changeText() {
+      // Get element by its id
+      let el = document.getElementById('message');
+
+      // Change what it displays
+      el.textContent = 'Text was changed!';
+
+      // Change its style
+      el.style.color = 'red';
+      function logMessage() {
+        console.log('Text changed to: ' + el.textContent);
+      }
+      logMessage();
+    }
+
+    function displayText() {
+      let input = document.getElementById('inputField');
+      let display = document.getElementById('displayArea');
+      display.textContent = input.value;
+    }
+    function greet() {
+  let name = document.getElementById('nameInput').value;
+  document.getElementById('output').textContent = 'Hello, ' + name + '!';
+}
+let score = 75;
+
+if (score >= 90) {
+  console.log('A');
+} else if (score >= 80) {
+  console.log('B');
+} else if (score >= 70) {
+  console.log('C');
+} else {
+  console.log('F');
+}
+// Repeat 5 times
+for (let i = 1; i <= 5; i++) {
+  console.log('Step ' + i);
+}
+
+// Loop through an array
+let fruits = ['apple', 'banana', 'cherry'];
+for (let fruit of fruits) {
+  console.log(fruit);
+}
+  </script>
+</body>
+</html>

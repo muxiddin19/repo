@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; }
+    h2 { color: #0369a1; }
+  </style>
+</head>
+<body>
+  <h2>Internal Style — now blue</h2>
+  <p style="color: #7c3aed;">Inline styled — now purple</p>
+  <p>Normal paragraph — inherits sans-serif from body</p>
+</body>
+</html>

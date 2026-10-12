@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>classList - Styling with JavaScript - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">06</span><h1>classList - Styling with JavaScript</h1></div>
+<div class="theory"><p>Define how a class looks in CSS, then let JavaScript add and remove it with <code>classList</code>: <code>add()</code>, <code>remove()</code>, <code>toggle()</code>, <code>contains()</code>.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>box.classList.add(&#x27;highlighted&#x27;);
+box.classList.remove(&#x27;highlighted&#x27;);
+box.classList.toggle(&#x27;rounded&#x27;);
+box.classList.contains(&#x27;active&#x27;);   // true / false</code></pre></div>
+<div class="demo-box"><h4>Interactive - classList methods</h4>
+<div id="box" class="cls-target">I am the demo box</div>
+<div class="out" style="min-height:0;margin-top:12px">Classes: <span id="list"></span></div>
+<div class="row"><button class="demo-btn yellow sm" data-m="add" data-c="highlighted">add('highlighted')</button><button class="demo-btn outline sm" data-m="remove" data-c="highlighted">remove('highlighted')</button><button class="demo-btn sm" data-m="toggle" data-c="rounded">toggle('rounded')</button><button class="demo-btn sm" data-m="toggle" data-c="shadowed">toggle('shadowed')</button><button class="demo-btn sm" data-m="toggle" data-c="big">toggle('big')</button></div>
+<p id="has" style="margin-top:10px;font-size:13px"></p>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>add</code> adds a class (no duplicates).</li><li><code>remove</code> removes it (safe if absent).</li><li><code>toggle</code> adds if missing, removes if present.</li><li><code>contains</code> returns true/false.</li></ul></div>
+<nav class="pager"><span><a href="innerhtml.html">&larr; innerHTML - Power &amp; Danger</a></span><span><a href="addeventlistener.html">addEventListener &rarr;</a></span></nav>
+</main>
+<script>
+const box=document.getElementById('box');
+function render(){document.getElementById('list').innerHTML=[...box.classList].map(c=>'<span class="badge">'+c+'</span>').join('');
+  document.getElementById('has').textContent="classList.contains('highlighted') -> "+box.classList.contains('highlighted')}
+document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{box.classList[b.dataset.m](b.dataset.c);render()}));
+render();
+</script>
+</body>
+</html>

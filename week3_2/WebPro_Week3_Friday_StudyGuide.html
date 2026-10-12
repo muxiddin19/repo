@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Advanced — Week 3 Friday Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f9fa;--surf:#fff;--surf2:#f0f4f8;--brd:#dee2e6;
+  --tx:#212529;--mu:#6c757d;--ac:#0f766e;--acl:#ccfbf1;
+  --am:#b8860b;--cb:#051a0a;--ct:#d4edda;
+  --lime:#166534;--cor:#c0392b;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#051a0a;--surf:#0b2017;--surf2:#102b1a;--brd:#1a3d28;
+  --tx:#d4edda;--mu:#4a9060;--ac:#14b8a6;--acl:#042f2e;
+  --am:#FFD166;--cb:#051a0a;--ct:#d4edda;--lime:#34d399;--cor:#FF6B6B;
+}}
+:root[data-theme=dark]{
+  --bg:#051a0a;--surf:#0b2017;--surf2:#102b1a;--brd:#1a3d28;
+  --tx:#d4edda;--mu:#4a9060;--ac:#14b8a6;--acl:#042f2e;
+  --am:#FFD166;--cb:#051a0a;--ct:#d4edda;--lime:#34d399;--cor:#FF6B6B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+#site-header{position:sticky;top:0;z-index:100;background:var(--surf);
+  border-bottom:1px solid var(--brd);border-left:4px solid var(--ac);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-course{font-size:11px;color:var(--mu);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:var(--ac)}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 12px;border-radius:20px;cursor:pointer;font-size:13px;white-space:nowrap}
+.theme-btn:hover{background:var(--acl)}
+#layout{display:flex;min-height:calc(100vh - 53px)}
+#sidebar{width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);
+  position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto;padding:12px 0}
+#sidebar nav a{display:flex;align-items:center;gap:8px;padding:5px 16px;
+  font-size:13px;color:var(--mu);border-left:3px solid transparent;transition:all .15s}
+#sidebar nav a:hover{color:var(--tx);background:var(--surf2);text-decoration:none}
+#sidebar nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl);font-weight:600}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);min-width:24px}
+.nav-section-label{padding:12px 16px 4px;font-size:10px;font-weight:700;color:var(--mu);
+  letter-spacing:.08em;text-transform:uppercase}
+#main{flex:1;padding:36px 44px;max-width:900px}
+.topic-section{margin-bottom:52px;padding-bottom:40px;border-bottom:1px solid var(--brd)}
+.topic-section:last-child{border-bottom:none}
+.topic-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ac);
+  background:var(--acl);padding:2px 8px;border-radius:4px;font-weight:700}
+.topic-header h2{font-size:22px;font-weight:700;color:var(--tx)}
+.quiz-badge{font-size:11px;background:var(--am);color:#000;
+  padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.topic-theory{margin-bottom:18px}
+.topic-theory p{margin-bottom:10px;color:var(--tx)}
+.code-wrap{position:relative;margin:16px 0;border-radius:8px;overflow:hidden;border:1px solid var(--brd)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);padding:6px 12px;border-bottom:1px solid var(--brd)}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);font-weight:600}
+.code-btns{display:flex;gap:6px}
+.code-btns button{background:transparent;border:1px solid var(--brd);color:var(--mu);
+  padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.code-btns button:hover{color:var(--ac);border-color:var(--ac);background:var(--acl)}
+.code-block{background:var(--cb);padding:18px 20px;overflow-x:auto;margin:0}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--ct);white-space:pre}
+.keypoints{background:var(--acl);border-left:4px solid var(--ac);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin-top:16px}
+.keypoints h4{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:8px}
+.keypoints ul{padding-left:18px}
+.keypoints li{font-size:14px;color:var(--tx);margin-bottom:4px}
+#exercises{margin-top:60px}
+#exercises>h2{font-size:28px;font-weight:800;color:var(--tx);margin-bottom:8px}
+#exercises>.intro{color:var(--mu);margin-bottom:32px;font-size:15px}
+.exercise{background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  margin-bottom:32px;overflow:hidden}
+.ex-header{display:flex;align-items:center;gap:12px;padding:16px 20px;
+  background:var(--surf2);border-bottom:1px solid var(--brd)}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--ac)}
+.ex-header h3{font-size:17px;font-weight:700;flex:1}
+.diff{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.diff.beginner{background:#e6f7f4;color:#0a7a65}
+.diff.intermediate{background:#fff3cd;color:#856404}
+.diff.advanced{background:#f8d7da;color:#842029}
+:root[data-theme=dark] .diff.beginner,:root:not([data-theme=light]) .diff.beginner{background:#042f2e;color:#14b8a6}
+:root[data-theme=dark] .diff.intermediate,:root:not([data-theme=light]) .diff.intermediate{background:#2a200a;color:#FFD166}
+:root[data-theme=dark] .diff.advanced,:root:not([data-theme=light]) .diff.advanced{background:#2a0a0a;color:#FF6B6B}
+.ex-body{padding:20px}
+.ex-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:8px}
+.task-box{background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:14px 16px;margin-bottom:16px;font-size:15px}
+.editor-area{margin-top:16px}
+textarea.code-editor{width:100%;min-height:200px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px;
+  border:1px solid var(--brd);border-radius:6px;resize:vertical;line-height:1.6}
+.ex-btns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ex-btns button{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--brd);transition:all .15s}
+.btn-preview{background:var(--ac);color:#f0fdfa;border-color:var(--ac)}
+.btn-preview:hover{opacity:.88}
+.btn-hint{background:var(--surf2);color:var(--tx)}
+.btn-hint:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sol{background:var(--surf2);color:var(--tx)}
+.btn-sol:hover{border-color:var(--lime);color:var(--lime)}
+.hint-box,.solution-box{margin-top:12px;padding:14px 16px;border-radius:6px;font-size:14px}
+.hint-box{background:var(--acl);border-left:3px solid var(--ac);color:var(--tx)}
+.solution-box .code-block{border-radius:6px;overflow:hidden;margin:0}
+.preview-frame{width:100%;height:340px;border:1px solid var(--brd);
+  border-radius:6px;margin-top:10px;background:#fff;display:none}
+#site-footer{text-align:center;padding:24px;color:var(--mu);font-size:13px;
+  border-top:1px solid var(--brd);margin-top:40px}
+@media(max-width:768px){#sidebar{display:none}#main{padding:20px 16px}}
+</style>
+</head>
+<body>
+<header id="site-header">
+  <div class="hdr-left">
+    <span class="hdr-course">K0126002 &middot; Web Programming &middot; Gachon University</span>
+    <span class="hdr-title">Week 3 Friday &middot; CSS Advanced &mdash; Study Guide</span>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">&#127769; Dark</button>
+</header>
+<div id="layout">
+  <aside id="sidebar"><nav><div class="nav-section-label">Topics 1–7: Position & Pseudo</div><a href="#topic-01"><span class="nav-num">01</span>position: static & relative</a><a href="#topic-02"><span class="nav-num">02</span>position: absolute</a><a href="#topic-03"><span class="nav-num">03</span>position: fixed & sticky</a><a href="#topic-04"><span class="nav-num">04</span>z-index & overflow</a><a href="#topic-05"><span class="nav-num">05</span>Pseudo-classes</a><a href="#topic-06"><span class="nav-num">06</span>Pseudo-elements ::before/::after</a><a href="#topic-07"><span class="nav-num">07</span>CSS Transitions</a><div class="nav-section-label">Topics 8–15: Animation & Layout</div><a href="#topic-08"><span class="nav-num">08</span>@keyframes Animations</a><a href="#topic-09"><span class="nav-num">09</span>CSS Variables</a><a href="#topic-10"><span class="nav-num">10</span>Media Queries</a><a href="#topic-11"><span class="nav-num">11</span>Advanced Flexbox</a><a href="#topic-12"><span class="nav-num">12</span>CSS Grid</a><a href="#topic-13"><span class="nav-num">13</span>border-radius & box-shadow</a><a href="#topic-14"><span class="nav-num">14</span>inherit Keyword</a><a href="#topic-15"><span class="nav-num">15</span>Putting It All Together</a><div class="nav-section-label">Practice Exercises</div><a href="#exercise-1"><span class="nav-num" style="color:var(--am)">E1</span>Position the Badge</a><a href="#exercise-2"><span class="nav-num" style="color:var(--am)">E2</span>Hover Card + Transition</a><a href="#exercise-3"><span class="nav-num" style="color:var(--am)">E3</span>Loading Spinner</a><a href="#exercise-4"><span class="nav-num" style="color:var(--am)">E4</span>CSS Variables Theme</a><a href="#exercise-5"><span class="nav-num" style="color:var(--am)">E5</span>Fixed Nav Bar</a><a href="#exercise-6"><span class="nav-num" style="color:var(--am)">E6</span>Responsive Grid Page</a><a href="#exercise-7"><span class="nav-num" style="color:var(--am)">E7</span>Complete Portfolio Page</a></nav></aside>
+  <main id="main">
+    <section style="margin-bottom:40px">
+      <h1 style="font-size:32px;font-weight:800;margin-bottom:8px">CSS Advanced</h1>
+      <p style="color:var(--mu);font-size:15px">15 topics &middot; 7 exercises &middot; covers all Week 3 Friday quiz questions (Q1&ndash;Q25)</p>
+      <p style="margin-top:12px;font-size:15px">This guide covers the Friday 2-hour session: CSS Position, Pseudo-classes &amp; Pseudo-elements, Transitions, Animations, Custom Properties, Media Queries, and CSS Grid. Each topic has theory, a live preview, and key points. Practice in the <a href="#exercises">exercises section</a>.</p>
+    </section>
+
+<section class="topic-section" id="topic-01">
+  <div class="topic-header">
+    <span class="topic-num">01</span>
+    <h2>position: static & relative</h2>
+    <span class="quiz-badge">Q1</span> <span class="quiz-badge">Q2</span>
+  </div>
+  <div class="topic-theory"><p>The CSS <code>position</code> property has five values. The default is <strong>static</strong> — the element sits in the normal document flow and the offset properties (<code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>) have <em>no effect</em>. Every element is static unless you say otherwise.</p><p><strong>position: relative</strong> keeps the element in the normal flow (other elements still see it where it was) but lets you shift it visually using the offset properties. The shift is relative to <em>where the element would normally be</em>. This value is also the most common way to create a <em>positioned ancestor</em> for absolutely positioned children.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .box {
+      width: 120px; height: 60px;
+      background: #0f766e; color: white;
+      padding: 8px; margin: 6px; font-size: 14px;
+    }
+
+    /* static: default — offsets ignored */
+    .static { position: static; }
+
+    /* relative: offsets work — moves FROM its natural position */
+    .relative {
+      position: relative;
+      top:  20px;   /* moves DOWN 20px from natural spot */
+      left: 30px;   /* moves RIGHT 30px */
+      background: #14b8a6;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;box static&quot;&gt;static (default)&lt;/div&gt;
+  &lt;div class=&quot;box relative&quot;&gt;relative — shifted ↓20px →30px&lt;/div&gt;
+  &lt;div class=&quot;box static&quot;&gt;Next element — unaffected by relative shift above&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>position: static = default; top/left/right/bottom have NO effect.</li><li>position: relative shifts visually but keeps its place in the flow.</li><li>Surrounding elements are NOT affected by a relative shift.</li><li>relative is also used to create a positioned ancestor for absolute children.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-02">
+  <div class="topic-header">
+    <span class="topic-num">02</span>
+    <h2>position: absolute</h2>
+    <span class="quiz-badge">Q3</span>
+  </div>
+  <div class="topic-theory"><p><strong>position: absolute</strong> removes the element entirely from the normal flow — other elements close the gap as if it never existed. It is then positioned using <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code> relative to its <em>nearest positioned ancestor</em> (any parent with <code>position</code> not equal to <code>static</code>).</p><p>If no positioned ancestor exists, the element anchors to the <code>&lt;body&gt;</code> (or the initial containing block). The most common pattern: set <code>position: relative</code> on the parent and <code>position: absolute</code> on the child to create a tooltip, badge, or overlay precisely placed within that parent.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .card {
+      position: relative;        /* creates the anchor for absolute children */
+      width: 280px;
+      height: 160px;
+      background: #f0fdfa;
+      border: 2px solid #14b8a6;
+      border-radius: 10px;
+      margin: 40px;
+    }
+
+    /* Badge anchored to top-right corner of .card */
+    .badge {
+      position: absolute;
+      top: -12px; right: -12px;
+      background: #0f766e;
+      color: white;
+      font-size: 12px; font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .card-title {
+      padding: 20px;
+      font-size: 18px; font-weight: bold;
+      color: #0f766e;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;span class=&quot;badge&quot;&gt;NEW&lt;/span&gt;
+    &lt;div class=&quot;card-title&quot;&gt;CSS Advanced Guide&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>position: absolute removes element from the flow — no space left behind.</li><li>Positioned relative to nearest ancestor with position ≠ static.</li><li>Pattern: parent gets position:relative, child gets position:absolute.</li><li>top:-12px places the badge 12px ABOVE the parent's top edge.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-03">
+  <div class="topic-header">
+    <span class="topic-num">03</span>
+    <h2>position: fixed & sticky</h2>
+    <span class="quiz-badge">Q4</span> <span class="quiz-badge">Q5</span>
+  </div>
+  <div class="topic-theory"><p><strong>position: fixed</strong> removes the element from the flow and positions it relative to the <em>viewport</em> (the browser window). It stays exactly in place when you scroll — perfect for sticky navigation bars, floating action buttons, and cookie consent banners.</p><p><strong>position: sticky</strong> is a hybrid: it behaves like <code>relative</code> until you scroll to a defined threshold (e.g. <code>top: 0</code>), then it 'sticks' in place like <code>fixed</code> — but only within its parent container. When you scroll past the parent, the sticky element scrolls away too. Used for table headers and section labels.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { margin: 0; font-family: sans-serif; }
+
+    /* Fixed nav — always visible, sits outside the flow */
+    .fixed-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #0f766e;
+      color: white;
+      padding: 14px 24px;
+      z-index: 100;   /* above everything else */
+    }
+
+    .content { padding-top: 60px; } /* offset for fixed nav height */
+
+    /* Sticky section title */
+    .sticky-header {
+      position: sticky;
+      top: 56px;              /* sticks 56px from top (below fixed nav) */
+      background: #ccfbf1;
+      border-left: 4px solid #14b8a6;
+      padding: 10px 16px;
+      font-weight: bold;
+      color: #0f766e;
+    }
+
+    .section-body {
+      padding: 20px;
+      height: 300px;    /* tall enough to scroll */
+      background: #f0fdfa;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class=&quot;fixed-nav&quot;&gt;Fixed Navigation — always visible while scrolling&lt;/nav&gt;
+  &lt;div class=&quot;content&quot;&gt;
+    &lt;div&gt;
+      &lt;div class=&quot;sticky-header&quot;&gt;Section A — sticky header&lt;/div&gt;
+      &lt;div class=&quot;section-body&quot;&gt;Scroll down to see the sticky header in action…&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+      &lt;div class=&quot;sticky-header&quot;&gt;Section B — another sticky header&lt;/div&gt;
+      &lt;div class=&quot;section-body&quot;&gt;Each section has its own sticky label.&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>position: fixed → viewport anchor, never moves when scrolling.</li><li>position: sticky → hybrid: relative → fixed at scroll threshold.</li><li>sticky only works within its parent container.</li><li>Always add z-index to fixed elements so they stay on top.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-04">
+  <div class="topic-header">
+    <span class="topic-num">04</span>
+    <h2>z-index & overflow</h2>
+    <span class="quiz-badge">Q6</span> <span class="quiz-badge">Q7</span>
+  </div>
+  <div class="topic-theory"><p><strong>z-index</strong> controls the stacking order of positioned elements (elements with <code>position</code> not equal to <code>static</code>). A higher z-index appears on top. The default z-index is <code>auto</code> (effectively 0). Negative values push an element behind the normal flow.</p><p><strong>overflow</strong> controls what happens when an element's content is larger than its box. <code>overflow: hidden</code> clips the excess. <code>overflow: scroll</code> always shows scrollbars. <code>overflow: auto</code> shows scrollbars only when needed. <code>overflow: visible</code> (default) lets content spill outside.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .stack { position: relative; height: 200px; }
+
+    .layer { position: absolute; width: 180px; height: 100px;
+              padding: 10px; border-radius: 8px; font-size: 14px; }
+
+    .layer-1 { background:#0f766e; color:white; top:20px; left:20px; z-index:1; }
+    .layer-2 { background:#14b8a6; color:white; top:50px; left:80px; z-index:2; }
+    .layer-3 { background:#ccfbf1; color:#0f766e; top:80px;left:140px; z-index:3; }
+
+    /* overflow demo */
+    .overflow-demo {
+      width: 220px;
+      height: 90px;
+      overflow: hidden;   /* try: scroll | auto | visible */
+      border: 2px solid #14b8a6;
+      padding: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;stack&quot;&gt;
+    &lt;div class=&quot;layer layer-1&quot;&gt;z-index: 1 (bottom)&lt;/div&gt;
+    &lt;div class=&quot;layer layer-2&quot;&gt;z-index: 2 (middle)&lt;/div&gt;
+    &lt;div class=&quot;layer layer-3&quot;&gt;z-index: 3 (top)&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;overflow-demo&quot;&gt;
+    overflow: hidden clips everything outside the box.
+    This text is too long to fit and will be cut off.
+    You will not see this last sentence at all.
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>z-index only works on positioned elements (position ≠ static).</li><li>Higher z-index = closer to the viewer (on top).</li><li>overflow: hidden clips excess; auto adds scrollbars only when needed.</li><li>Combining position:relative + overflow:hidden is a classic mask trick.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-05">
+  <div class="topic-header">
+    <span class="topic-num">05</span>
+    <h2>Pseudo-classes</h2>
+    <span class="quiz-badge">Q8</span> <span class="quiz-badge">Q9</span> <span class="quiz-badge">Q10</span>
+  </div>
+  <div class="topic-theory"><p>A <strong>pseudo-class</strong> is a selector that targets an element in a particular <em>state</em>. The state is dynamic — it changes as the user interacts. The most used: <code>:hover</code> (mouse over), <code>:focus</code> (keyboard/click focus), <code>:active</code> (being clicked), <code>:visited</code> (link already opened), <code>:first-child</code>, <code>:last-child</code>, and <code>:nth-child(n)</code>.</p><p><strong>:focus</strong> is critical for accessibility. Never remove it entirely with <code>outline: none</code> without providing a visible alternative. Users who navigate with a keyboard rely on the focus ring to know which element is active. <code>:focus-visible</code> is a modern pseudo-class that shows focus only when using keyboard navigation, hiding it for mouse clicks — best of both worlds.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* :hover — mouse over */
+    .btn {
+      background: #0f766e; color: white; border: none;
+      padding: 10px 20px; border-radius: 6px; cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn:hover  { background: #14b8a6; transform: translateY(-2px); }
+    .btn:active { transform: scale(0.97); }
+
+    /* :focus-visible — keyboard focus only */
+    input {
+      border: 2px solid #94a3b8; border-radius: 6px;
+      padding: 8px 12px; font-size: 15px; outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus-visible { border-color: #0f766e; box-shadow: 0 0 0 3px #99f6e4; }
+
+    /* :nth-child — stripe table rows */
+    table { border-collapse: collapse; width: 260px; margin-top: 16px; font-size: 14px; }
+    td    { padding: 6px 12px; }
+    tr:nth-child(even) { background: #f0fdfa; }
+    tr:nth-child(odd)  { background: white; }
+    tr:first-child     { background: #0f766e; color: white; font-weight: bold; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;button class=&quot;btn&quot;&gt;Hover &amp; Click Me&lt;/button&gt;&lt;br&gt;&lt;br&gt;
+  &lt;input type=&quot;text&quot; placeholder=&quot;Tab here to see :focus-visible&quot;&gt;&lt;br&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Score&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Alice&lt;/td&gt;&lt;td&gt;98&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Bob&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Carol&lt;/td&gt;&lt;td&gt;91&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Dave&lt;/td&gt;&lt;td&gt;77&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>:hover fires when mouse is over — use for UI feedback.</li><li>:focus when element receives focus — NEVER hide without an alternative.</li><li>:focus-visible is better: shows focus only for keyboard, not mouse.</li><li>:nth-child(2n) = even rows; :nth-child(2n+1) = odd rows.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-06">
+  <div class="topic-header">
+    <span class="topic-num">06</span>
+    <h2>Pseudo-elements ::before & ::after</h2>
+    <span class="quiz-badge">Q11</span> <span class="quiz-badge">Q12</span>
+  </div>
+  <div class="topic-theory"><p>A <strong>pseudo-element</strong> creates a virtual sub-element that can be styled independently. <code>::before</code> inserts it <em>immediately before</em> the element's content; <code>::after</code> inserts it <em>immediately after</em>. Both are generated by CSS alone — no extra HTML needed.</p><p>The <strong><code>content</code></strong> property is mandatory — without it the pseudo-element does not render (even <code>content: ''</code> with an empty string is required for purely decorative uses). Once it exists, you can give it any CSS properties: <code>display</code>, <code>position</code>, <code>background</code>, <code>width</code>, <code>height</code>, etc.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* ::before adds a decorative leaf icon */
+    h2::before {
+      content: '🌿 ';
+    }
+
+    /* ::after adds a required asterisk to labels */
+    .required::after {
+      content: ' *';
+      color: #f43f5e;
+      font-weight: bold;
+    }
+
+    /* ::before as a decorative underline bar */
+    .underline-title {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 8px;
+    }
+    .underline-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: #0f766e;
+      border-radius: 2px;
+    }
+
+    /* ::before as a quotation mark */
+    blockquote { position: relative; padding-left: 36px; font-style: italic; }
+    blockquote::before {
+      content: '&quot;';
+      position: absolute;
+      left: 0; top: -8px;
+      font-size: 56px;
+      color: #14b8a6;
+      line-height: 1;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;CSS Pseudo-elements&lt;/h2&gt;
+  &lt;p&gt;&lt;label class=&quot;required&quot;&gt;Email address&lt;/label&gt;&lt;/p&gt;
+  &lt;p class=&quot;underline-title&quot;&gt;Decorative Underline&lt;/p&gt;
+  &lt;blockquote&gt;CSS gives you superpowers — no JavaScript needed.&lt;/blockquote&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>::before inserts before the content; ::after inserts after.</li><li>content: property is REQUIRED — even content:'' for decorative only.</li><li>Pseudo-elements can be positioned (absolute/relative) and sized.</li><li>No extra HTML: one CSS rule, applied to every matching element.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-07">
+  <div class="topic-header">
+    <span class="topic-num">07</span>
+    <h2>CSS Transitions</h2>
+    <span class="quiz-badge">Q13</span>
+  </div>
+  <div class="topic-theory"><p>The <code>transition</code> property smoothly animates a CSS property change over time. The shorthand takes four values: <code>property duration timing-function delay</code>. For example: <code>transition: background 0.3s ease</code> — when <code>background</code> changes (e.g., on <code>:hover</code>), the browser interpolates between old and new over 300ms with an ease curve.</p><p>Always put <code>transition</code> on the <em>base state</em>, not the <code>:hover</code> state — this ensures the animation plays both ways (forward on hover, reverse when leaving). You can animate multiple properties by separating with commas: <code>transition: background 0.3s, transform 0.2s</code>. Avoid <code>transition: all</code> — it is slow and can animate properties you don't intend.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .card {
+      width: 240px;
+      padding: 24px;
+      background: #f0fdfa;
+      border: 2px solid #14b8a6;
+      border-radius: 12px;
+      color: #0f766e;
+      font-size: 16px;
+      margin: 20px;
+      /* transition on BASE state — animates BOTH forward and reverse */
+      transition: background  0.3s ease,
+                  transform   0.2s ease,
+                  box-shadow  0.3s ease;
+    }
+
+    .card:hover {
+      background: #0f766e;
+      color: white;
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+    }
+
+    /* Opacity transition — fade out */
+    .fade-btn {
+      opacity: 1;
+      transition: opacity 0.4s ease;
+      padding: 10px 20px;
+      background: #14b8a6;
+      color: white;
+      border: none; border-radius: 6px; cursor: pointer;
+    }
+    .fade-btn:hover { opacity: 0.5; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;Hover over this card&lt;/div&gt;
+  &lt;button class=&quot;fade-btn&quot;&gt;Hover to fade&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>transition: property duration timing delay — all four in order.</li><li>Put transition on the BASE element, not the :hover rule.</li><li>Comma-separate multiple transitions: background 0.3s, transform 0.2s.</li><li>Avoid transition:all — name specific properties for performance.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-08">
+  <div class="topic-header">
+    <span class="topic-num">08</span>
+    <h2>CSS Animations & @keyframes</h2>
+    <span class="quiz-badge">Q14</span>
+  </div>
+  <div class="topic-theory"><p><strong>@keyframes</strong> defines a multi-step animation sequence: you name it, then describe the CSS properties at each percentage point from 0% (start) to 100% (end). You can add as many stops as needed. The <code>animation</code> property then attaches the sequence to an element.</p><p>The <code>animation</code> shorthand: <code>name duration timing-function delay iteration-count direction fill-mode</code>. The most important non-obvious value is <strong><code>fill-mode: forwards</code></strong> — without it the element snaps back to its initial state when the animation finishes. Use <code>iteration-count: infinite</code> for looping animations like loading spinners.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Fade + slide in */
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Pulse */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1);    opacity: 1;   }
+      50%       { transform: scale(1.1); opacity: 0.7; }
+    }
+
+    /* Spinning loader */
+    @keyframes spin {
+      from { transform: rotate(0deg);   }
+      to   { transform: rotate(360deg); }
+    }
+
+    .hero {
+      animation: fadeSlideIn 0.8s ease-out forwards;
+      font-size: 28px; font-weight: bold;
+      color: #0f766e; padding: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #0f766e; color: white;
+      padding: 6px 16px; border-radius: 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid #ccfbf1;
+      border-top-color: #0f766e;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 20px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;hero&quot;&gt;Hello! I faded and slid in on load.&lt;/div&gt;
+  &lt;span class=&quot;badge&quot;&gt;Live&lt;/span&gt;
+  &lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>@keyframes name { from{} to{} } or 0%{} 25%{} 100%{}.</li><li>animation: name duration timing delay iterations direction fill-mode.</li><li>fill-mode: forwards keeps the final state — without it element snaps back.</li><li>iteration-count: infinite loops forever — perfect for spinners.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-09">
+  <div class="topic-header">
+    <span class="topic-num">09</span>
+    <h2>CSS Custom Properties (Variables)</h2>
+    <span class="quiz-badge">Q15</span> <span class="quiz-badge">Q16</span>
+  </div>
+  <div class="topic-theory"><p>CSS custom properties — declared with a <code>--</code> prefix and read back with <code>var()</code> — are the closest CSS gets to variables in a programming language. Declare them on <code>:root</code> to make them globally available. They cascade and can be overridden on any element.</p><p>The main superpower: change one variable and every use of it updates instantly. This makes design tokens (colour palette, spacing scale, border radius) easy to maintain. Dark mode becomes a matter of redefining a handful of variables inside a <code>@media (prefers-color-scheme: dark)</code> block — no JavaScript required.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Global design tokens */
+    :root {
+      --color-primary:   #0f766e;
+      --color-accent:    #14b8a6;
+      --color-bg:        #f0fdfa;
+      --color-text:      #1e293b;
+      --radius-card:     12px;
+      --shadow-card:     0 4px 20px rgba(0,0,0,0.1);
+      --spacing-md:      20px;
+    }
+
+    /* Automatic dark mode — just redefine the tokens */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg:   #051a0a;
+        --color-text: #d4edda;
+      }
+    }
+
+    body { background: var(--color-bg); color: var(--color-text); font-family: sans-serif; }
+
+    .btn {
+      background: var(--color-primary);
+      color: white;
+      padding: 10px 24px;
+      border: none;
+      border-radius: var(--radius-card);
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--color-accent); }
+
+    .card {
+      background: var(--color-bg);
+      border: 2px solid var(--color-accent);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-card);
+      margin-top: var(--spacing-md);
+      max-width: 300px;
+      color: var(--color-text);
+    }
+
+    /* Local override — this card uses red as primary */
+    .card.danger { --color-primary: #f43f5e; --color-accent: #fb7185; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;button class=&quot;btn&quot;&gt;Primary Button&lt;/button&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;strong&gt;Default Card&lt;/strong&gt;&lt;br&gt;Uses global --color-primary (teal)
+  &lt;/div&gt;
+  &lt;div class=&quot;card danger&quot;&gt;
+    &lt;strong&gt;Danger Card&lt;/strong&gt;&lt;br&gt;Local override: --color-primary = red
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Declare: --name: value; (on :root for global scope).</li><li>Use: color: var(--name); — anywhere in CSS.</li><li>They cascade — override on any element for local theming.</li><li>Dark mode: redefine variables inside @media (prefers-color-scheme: dark).</li></ul></div>
+</section>
+<section class="topic-section" id="topic-10">
+  <div class="topic-header">
+    <span class="topic-num">10</span>
+    <h2>CSS Media Queries</h2>
+    <span class="quiz-badge">Q17</span>
+  </div>
+  <div class="topic-theory"><p>Media queries apply CSS conditionally. The most common condition is <code>max-width</code> or <code>min-width</code> for responsive layouts. The recommended approach is <strong>mobile-first</strong>: write base styles for the smallest screen, then use <code>min-width</code> breakpoints to progressively enhance for wider screens.</p><p>Beyond width, media queries support: <code>orientation</code> (landscape/portrait), <code>prefers-color-scheme</code> (dark/light), <code>prefers-reduced-motion</code> (disable animations for accessibility), and the <code>print</code> media type for print stylesheets.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;style&gt;
+    /* BASE STYLES — mobile-first (&lt; 768px) */
+    body { font-family: sans-serif; padding: 16px; background: #f0fdfa; }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      border: 2px solid #14b8a6;
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 16px;
+      color: #0f766e;
+    }
+
+    .breakpoint-label {
+      font-size: 14px;
+      background: #0f766e;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    /* TABLET ≥ 640px — 2 column grid */
+    @media (min-width: 640px) {
+      .grid { flex-direction: row; flex-wrap: wrap; }
+      .card { flex: 1; min-width: 200px; }
+    }
+
+    /* DARK MODE */
+    @media (prefers-color-scheme: dark) {
+      body { background: #051a0a; }
+      .card { background: #0b2017; border-color: #14b8a6; color: #d4edda; }
+    }
+
+    /* PRINT — hide decorative elements */
+    @media print {
+      .breakpoint-label { display: none; }
+      body { background: white; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;breakpoint-label&quot;&gt;Resize the preview to see the grid change&lt;/div&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;Card One&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;Card Two&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;Card Three&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>@media (min-width: 640px) {} — mobile-first, add complexity upward.</li><li>max-width targets screens UP TO that size; min-width targets ABOVE.</li><li>prefers-color-scheme: dark enables automatic dark mode CSS.</li><li>prefers-reduced-motion: reduce disables animations for accessibility.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-11">
+  <div class="topic-header">
+    <span class="topic-num">11</span>
+    <h2>Advanced Flexbox</h2>
+    <span class="quiz-badge">Q18</span> <span class="quiz-badge">Q19</span>
+  </div>
+  <div class="topic-theory"><p>You already know <code>display: flex</code>, <code>justify-content</code>, and <code>align-items</code>. Now the deeper properties: <strong><code>flex-direction</code></strong> changes the main axis from row (default, horizontal) to column (vertical). <strong><code>flex-wrap: wrap</code></strong> allows items to break onto new lines when they overflow — essential for responsive card grids.</p><p><strong><code>flex: 1</code></strong> (shorthand for <code>flex-grow: 1; flex-shrink: 1; flex-basis: 0</code>) tells an item to grow and fill available space. <strong><code>order</code></strong> visually reorders items without changing the HTML source order (useful for responsive reordering). <strong><code>align-self</code></strong> overrides <code>align-items</code> for a single item.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* flex-wrap: wrap — cards flow to new rows when narrow */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;     /* items wrap to next row */
+      gap: 16px;
+      padding: 16px;
+      background: #f0fdfa;
+    }
+
+    .card {
+      flex: 1;             /* grow to fill available space */
+      min-width: 160px;    /* but never smaller than 160px */
+      background: #0f766e;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .card.featured {
+      order: -1;           /* move to front without changing HTML */
+      flex: 2;             /* twice as wide */
+      background: #14b8a6;
+    }
+
+    /* flex-direction: column layout */
+    .sidebar-layout {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .sidebar { width: 180px; flex-shrink: 0; background: #ccfbf1;
+               padding: 16px; border-radius: 10px; font-size: 14px; }
+    .main    { flex: 1; background: white; border: 2px solid #14b8a6;
+               padding: 16px; border-radius: 10px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card-grid&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;A&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;B&lt;/div&gt;
+    &lt;div class=&quot;card featured&quot;&gt;FEATURED — order:-1, flex:2&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;C&lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;D&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;sidebar-layout&quot;&gt;
+    &lt;aside class=&quot;sidebar&quot;&gt;Sidebar (fixed 180px)&lt;/aside&gt;
+    &lt;main class=&quot;main&quot;&gt;Main content (flex:1 — fills remaining space)&lt;/main&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>flex-wrap: wrap allows items to flow to new lines — essential for responsive grids.</li><li>flex: 1 = grow to fill space; flex: 2 = take twice as much space.</li><li>min-width on flex items prevents them shrinking too small.</li><li>order: -1 moves an item to the front visually without changing HTML.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-12">
+  <div class="topic-header">
+    <span class="topic-num">12</span>
+    <h2>CSS Grid</h2>
+    <span class="quiz-badge">Q20</span> <span class="quiz-badge">Q21</span> <span class="quiz-badge">Q22</span>
+  </div>
+  <div class="topic-theory"><p><strong>CSS Grid</strong> is a two-dimensional layout system — you define both rows and columns simultaneously. <code>display: grid</code> on a container turns its children into grid items. <code>grid-template-columns</code> defines the column structure; <code>grid-template-rows</code> defines rows. The <code>fr</code> unit means 'fraction of the remaining space'.</p><p>Items can span multiple cells with <code>grid-column: 1 / 3</code> (from column line 1 to 3) or <code>grid-column: span 2</code> (shorthand). <strong>Named template areas</strong> (<code>grid-template-areas</code>) are the most readable approach: draw the layout in text form, assign children with <code>grid-area</code>. Use Grid for the overall page structure and Flexbox for one-dimensional components.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Named areas layout */
+    .page {
+      display: grid;
+      grid-template-areas:
+        &quot;header  header  header&quot;
+        &quot;sidebar main    main&quot;
+        &quot;footer  footer  footer&quot;;
+      grid-template-columns: 200px 1fr 1fr;
+      grid-template-rows:    auto 1fr auto;
+      gap: 12px;
+      min-height: 340px;
+      padding: 12px;
+      background: #f0fdfa;
+    }
+
+    .page &gt; * {
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    header  { grid-area: header;  background: #0f766e; color: white; }
+    .sidebar{ grid-area: sidebar; background: #ccfbf1; color: #0f766e; }
+    main    { grid-area: main;    background: white;   border: 2px solid #14b8a6; color: #0f766e; }
+    footer  { grid-area: footer;  background: #1e293b; color: #94a3b8; }
+
+    /* Simple 3-column card grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .cards div { background: #0f766e; color: white;
+                 padding: 12px; border-radius: 6px; text-align: center; font-size: 13px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;page&quot;&gt;
+    &lt;header&gt;Header (spans all 3 columns)&lt;/header&gt;
+    &lt;div class=&quot;sidebar&quot;&gt;Sidebar&lt;br&gt;(200px fixed)&lt;/div&gt;
+    &lt;main&gt;Main content (flex: fills remaining 2 columns)&lt;/main&gt;
+    &lt;footer&gt;Footer (spans all 3 columns)&lt;/footer&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;cards&quot;&gt;
+    &lt;div&gt;Card 1&lt;/div&gt;&lt;div&gt;Card 2&lt;/div&gt;&lt;div&gt;Card 3&lt;/div&gt;
+    &lt;div&gt;Card 4&lt;/div&gt;&lt;div&gt;Card 5&lt;/div&gt;&lt;div&gt;Card 6&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>display: grid activates the Grid layout on a container.</li><li>grid-template-columns: repeat(3, 1fr) → 3 equal-width columns.</li><li>gap sets space between ALL grid cells (rows and columns).</li><li>Named template areas make the page structure readable as code.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-13">
+  <div class="topic-header">
+    <span class="topic-num">13</span>
+    <h2>border-radius & box-shadow</h2>
+    <span class="quiz-badge">Q23</span> <span class="quiz-badge">Q24</span>
+  </div>
+  <div class="topic-theory"><p><strong><code>border-radius</code></strong> rounds the corners of an element's border box. A value of <code>8px</code> gives a subtle rounded card look; <code>50%</code> on a square element creates a perfect circle. You can set each corner independently: <code>border-radius: 8px 24px 8px 24px</code> (top-left, top-right, bottom-right, bottom-left clockwise).</p><p><strong><code>box-shadow</code></strong> adds a shadow behind an element: <code>box-shadow: h-offset v-offset blur spread color</code>. The <em>blur radius</em> (3rd value) controls softness. <code>spread</code> (4th, optional) expands or contracts the shadow. Use <code>inset</code> before the values for an inner shadow. Multiple shadows are comma-separated.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { background: #f0fdfa; padding: 30px; font-family: sans-serif; }
+    .row { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+
+    /* border-radius variety */
+    .r-none  { border-radius: 0;    }
+    .r-sm    { border-radius: 6px;  }
+    .r-lg    { border-radius: 20px; }
+    .r-pill  { border-radius: 100px;}
+    .r-circle{ border-radius: 50%; width: 80px; height: 80px; line-height: 80px;
+               text-align: center; }
+
+    /* box-shadow variety */
+    .s-sm  { box-shadow: 0 2px 8px rgba(0,0,0,0.1);   }
+    .s-md  { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .s-lg  { box-shadow: 0 8px 32px rgba(0,0,0,0.2);  }
+    .s-col { box-shadow: 0 4px 20px rgba(15,118,110,0.4); }  /* coloured shadow */
+    .s-in  { box-shadow: inset 0 2px 8px rgba(0,0,0,0.2); background: #ccfbf1; }
+
+    .box {
+      background: #0f766e; color: white;
+      padding: 12px 20px; font-size: 14px; font-weight: bold;
+    }
+    .circle-box { background: #14b8a6; color: white; font-size: 14px; font-weight: bold; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;box r-none&quot;&gt;radius: 0&lt;/div&gt;
+    &lt;div class=&quot;box r-sm&quot;&gt;6px&lt;/div&gt;
+    &lt;div class=&quot;box r-lg&quot;&gt;20px&lt;/div&gt;
+    &lt;div class=&quot;box r-pill&quot;&gt;pill&lt;/div&gt;
+    &lt;div class=&quot;box r-circle circle-box&quot;&gt;50%&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;box r-sm s-sm&quot;&gt;shadow sm&lt;/div&gt;
+    &lt;div class=&quot;box r-sm s-md&quot;&gt;shadow md&lt;/div&gt;
+    &lt;div class=&quot;box r-sm s-lg&quot;&gt;shadow lg&lt;/div&gt;
+    &lt;div class=&quot;box r-sm s-col&quot;&gt;colored shadow&lt;/div&gt;
+    &lt;div class=&quot;box r-sm s-in&quot;&gt;inset shadow&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>border-radius: 8px rounds all 4 corners equally.</li><li>border-radius: 50% on a square = perfect circle.</li><li>box-shadow: h v blur spread color — blur is the 3rd value.</li><li>inset keyword before values creates an inner shadow.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-14">
+  <div class="topic-header">
+    <span class="topic-num">14</span>
+    <h2>The CSS inherit Keyword</h2>
+    <span class="quiz-badge">Q25</span>
+  </div>
+  <div class="topic-theory"><p><strong><code>inherit</code></strong> forces a property to take the same computed value as its parent element. Some CSS properties (like <code>color</code> and <code>font-family</code>) inherit automatically. Others (like <code>border</code>, <code>padding</code>, <code>background</code>) do not inherit — you must explicitly write <code>inherit</code> to force inheritance.</p><p>Related keywords: <strong><code>initial</code></strong> resets to the browser's default value for that property. <strong><code>unset</code></strong> is inherit for inherited properties and initial for non-inherited ones — a convenient reset. <strong><code>revert</code></strong> reverts to the browser's default user-agent stylesheet.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { color: #0f766e; font-family: 'Georgia', serif; font-size: 18px; }
+
+    /* inherit: force child to use parent's colour */
+    .parent {
+      color: #f43f5e;   /* red */
+      font-size: 20px;
+    }
+    .child-inherit { color: inherit; }  /* also red — takes from .parent */
+    .child-normal  { }                  /* also red — color IS inherited */
+    .child-initial { color: initial; }  /* browser default: black */
+
+    /* border does NOT inherit */
+    .with-border { border: 3px solid currentColor; padding: 8px; }
+
+    /* inherit border from parent */
+    .parent-bordered {
+      border: 3px solid #0f766e;
+      padding: 12px;
+    }
+    .inherit-border { border: inherit; }  /* takes parent's border */
+
+    p { margin: 8px 0; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;parent&quot;&gt;
+    &lt;p&gt;Parent — color: red&lt;/p&gt;
+    &lt;p class=&quot;child-inherit&quot;&gt;child color: inherit → red&lt;/p&gt;
+    &lt;p class=&quot;child-normal&quot;&gt;child with no color set → also red (inherits)&lt;/p&gt;
+    &lt;p class=&quot;child-initial&quot;&gt;child color: initial → black (browser default)&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;hr&gt;
+  &lt;div class=&quot;parent-bordered&quot;&gt;
+    Parent has a border
+    &lt;div class=&quot;inherit-border&quot; style=&quot;margin-top:8px&quot;&gt;border: inherit → same border&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>inherit forces a property to copy the parent's computed value.</li><li>color and font-family inherit automatically — most others don't.</li><li>initial resets to browser default; unset = inherit for inherited props.</li><li>currentColor is a special value = the element's own color property.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-15">
+  <div class="topic-header">
+    <span class="topic-num">15</span>
+    <h2>Putting CSS Advanced Together</h2>
+    <span class="quiz-badge"></span>
+  </div>
+  <div class="topic-theory"><p>This final topic combines everything from this session into a real-world component: a responsive product card with position, pseudo-elements, transitions, CSS variables, and a media query. Study how each technique layers on top of the others.</p><p>Notice: CSS variables are defined in <code>:root</code>, the badge uses <code>position: absolute</code> on a <code>position: relative</code> card, the hover uses <code>transition</code>, the star uses <code>::before</code>, and the grid switches from 1 column to 3 columns at 640px.</p></div>
+  <div class="code-wrap">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;style&gt;
+    :root {
+      --primary: #0f766e;
+      --accent:  #14b8a6;
+      --bg:      #f0fdfa;
+      --card:    #ffffff;
+      --text:    #1e293b;
+      --radius:  12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); font-family: sans-serif; padding: 24px; color: var(--text); }
+
+    /* 1-column on mobile, 3-column on tablet+ */
+    .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;           /* anchor for absolute badge */
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(15,118,110,0.18);
+      border-color: var(--accent);
+    }
+
+    /* Absolute badge */
+    .badge {
+      position: absolute; top: -10px; right: 16px;
+      background: var(--primary); color: white;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ::before star */
+    .card-title::before { content: '⭐ '; }
+
+    .card-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .card-desc  { font-size: 14px; color: #64748b; line-height: 1.6; }
+    .card-price { font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 14px; }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #051a0a; --card: #0b2017; --text: #d4edda; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;span class=&quot;badge&quot;&gt;NEW&lt;/span&gt;
+      &lt;h3 class=&quot;card-title&quot;&gt;CSS Course&lt;/h3&gt;
+      &lt;p class=&quot;card-desc&quot;&gt;Master CSS from selectors to Grid. Build real projects.&lt;/p&gt;
+      &lt;div class=&quot;card-price&quot;&gt;₩49,000&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3 class=&quot;card-title&quot;&gt;JS Bootcamp&lt;/h3&gt;
+      &lt;p class=&quot;card-desc&quot;&gt;JavaScript fundamentals through modern ES2025 features.&lt;/p&gt;
+      &lt;div class=&quot;card-price&quot;&gt;₩69,000&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;span class=&quot;badge&quot;&gt;HOT&lt;/span&gt;
+      &lt;h3 class=&quot;card-title&quot;&gt;Full Stack&lt;/h3&gt;
+      &lt;p class=&quot;card-desc&quot;&gt;HTML, CSS, JavaScript, and Node.js — end to end.&lt;/p&gt;
+      &lt;div class=&quot;card-price&quot;&gt;₩129,000&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>CSS variables + position + transition + pseudo-elements work together.</li><li>position:relative on card + position:absolute on badge = corner badge.</li><li>@media min-width:640px switches the grid from 1 to 3 columns.</li><li>This is the pattern used in real product pages and dashboards.</li></ul></div>
+</section>
+    <section id="exercises">
+      <h2>Practice Exercises</h2>
+      <p class="intro">Write code in each editor and click <strong>Preview</strong> to see the result. Use Hint if stuck, Solution to check your work.</p>
+
+<div class="exercise" id="exercise-1">
+  <div class="ex-header">
+    <span class="ex-num">E1</span>
+    <h3>Position the Badge</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Create a card (white, 280×180px, teal border, 12px radius) with a 'SALE' badge positioned in the top-right corner (position:absolute). The card must have position:relative. Badge: teal background, white text, rounded pill shape.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  .card {
+    /* TODO: 280px wide, 180px tall, white background, 2px teal border, 12px radius */
+    /* TODO: position relative */
+    margin: 40px;
+  }
+  .badge {
+    /* TODO: position absolute, top-right corner */
+    /* TODO: teal background, white text, pill shape, bold */
+    background: #0f766e;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;span class=&quot;badge&quot;&gt;SALE&lt;/span&gt;
+    &lt;p style=&quot;padding:16px&quot;&gt;Card content here&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Card needs <code>position: relative</code>. Badge needs <code>position: absolute; top: -12px; right: 16px;</code> and <code>border-radius: 20px;</code>.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  .card {
+    width: 280px;
+    height: 180px;
+    background: white;
+    border: 2px solid #14b8a6;
+    border-radius: 12px;
+    position: relative;
+    margin: 40px;
+  }
+  .badge {
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: #0f766e;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;span class=&quot;badge&quot;&gt;SALE&lt;/span&gt;
+    &lt;p style=&quot;padding:16px;color:#0f766e;font-weight:bold&quot;&gt;Card content here&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-2">
+  <div class="ex-header">
+    <span class="ex-num">E2</span>
+    <h3>Hover Card with Transition</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a card that lifts up and shows a coloured shadow on hover. Use transition on the base card (not on :hover) so the animation plays both on enter AND exit. Properties to animate: transform translateY(-6px) and box-shadow.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  body { padding: 40px; background: #f0fdfa; }
+  .card {
+    background: white;
+    border: 2px solid #14b8a6;
+    border-radius: 12px;
+    padding: 24px;
+    width: 240px;
+    color: #0f766e;
+    font-size: 16px;
+    /* TODO: add transition for transform and box-shadow */
+  }
+  .card:hover {
+    /* TODO: translateY(-6px) and box-shadow */
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;Hover over me!&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Add <code>transition: transform 0.25s ease, box-shadow 0.25s ease;</code> to the base <code>.card</code> rule. In <code>.card:hover</code> set <code>transform: translateY(-6px); box-shadow: 0 12px 28px rgba(15,118,110,0.2);</code></div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  body { padding: 40px; background: #f0fdfa; }
+  .card {
+    background: white;
+    border: 2px solid #14b8a6;
+    border-radius: 12px;
+    padding: 24px;
+    width: 240px;
+    color: #0f766e;
+    font-size: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(15,118,110,0.25);
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;Hover over me!&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-3">
+  <div class="ex-header">
+    <span class="ex-num">E3</span>
+    <h3>Loading Spinner with @keyframes</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Create a CSS loading spinner using only @keyframes and animation. The spinner is a 50×50px circle with a transparent background, a 4px border in light teal, but the top border is dark teal — rotated 360° infinitely.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  body { display: flex; justify-content: center;
+         align-items: center; height: 200px; background: #f0fdfa; }
+
+  /* TODO: define @keyframes spin (from 0deg to 360deg) */
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 4px solid #ccfbf1;       /* light teal ring */
+    border-top-color: #0f766e;       /* dark teal arc */
+    /* TODO: apply animation: spin 0.8s linear infinite */
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Define <code>@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</code> then add <code>animation: spin 0.8s linear infinite;</code> to the spinner.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  body { display: flex; justify-content: center;
+         align-items: center; height: 200px; background: #f0fdfa; }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 4px solid #ccfbf1;
+    border-top-color: #0f766e;
+    animation: spin 0.8s linear infinite;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-4">
+  <div class="ex-header">
+    <span class="ex-num">E4</span>
+    <h3>CSS Variables Theme</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Create a page that uses CSS variables for all colours and spacing. Define at least 5 tokens in :root (--primary, --accent, --bg, --text, --radius). Use them everywhere — buttons, cards, body background. Then add a @media (prefers-color-scheme: dark) block that redefines the colour tokens for dark mode.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  /* TODO: declare :root variables */
+  :root {
+    /* --primary: ... */
+    /* --accent: ... */
+    /* --bg: ... */
+    /* --text: ... */
+    /* --radius: ... */
+  }
+
+  /* TODO: dark mode media query */
+
+  body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; }
+
+  .btn {
+    /* TODO: use var(--primary) for background */
+    color: white; border: none; padding: 10px 20px; cursor: pointer;
+  }
+  .card {
+    /* TODO: use variables for background, border, border-radius */
+    padding: 20px; margin-top: 16px;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;button class=&quot;btn&quot;&gt;Click Me&lt;/button&gt;
+  &lt;div class=&quot;card&quot;&gt;A themed card using CSS variables&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Declare <code>--primary: #0f766e; --accent: #14b8a6; --bg: #f0fdfa; --text: #1e293b; --radius: 10px;</code> on :root. Then <code>background: var(--primary);</code> etc. For dark mode: <code>@media (prefers-color-scheme: dark) { :root { --bg: #051a0a; --text: #d4edda; } }</code></div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;style&gt;
+  :root {
+    --primary: #0f766e;
+    --accent:  #14b8a6;
+    --bg:      #f0fdfa;
+    --text:    #1e293b;
+    --radius:  10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:   #051a0a;
+      --text: #d4edda;
+    }
+  }
+  body { background: var(--bg); color: var(--text);
+         font-family: sans-serif; padding: 20px; }
+  .btn {
+    background: var(--primary);
+    color: white; border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: var(--accent); }
+  .card {
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px; margin-top: 16px;
+    color: var(--text);
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;button class=&quot;btn&quot;&gt;Click Me&lt;/button&gt;
+  &lt;div class=&quot;card&quot;&gt;A themed card using CSS variables&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-5">
+  <div class="ex-header">
+    <span class="ex-num">E5</span>
+    <h3>Fixed Navigation Bar</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a page with a fixed navigation bar that stays at the top when you scroll. The nav should have a dark background (#1e293b), a logo on the left, links on the right (Flexbox space-between), and the links should turn teal on hover. The page content should be tall enough to require scrolling.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;style&gt;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; }
+
+  /* TODO: .nav — position fixed, top 0, full width, dark background, flex, padding */
+  .nav { }
+
+  /* TODO: .nav-logo — white, bold, no underline */
+  .nav-logo { }
+
+  /* TODO: .nav-links — flex, gap */
+  .nav-links { }
+
+  /* TODO: .nav-links a — light grey, no underline */
+  .nav-links a { }
+
+  /* TODO: hover — teal #14b8a6 */
+  .nav-links a:hover { }
+
+  /* Content to scroll */
+  .content { padding-top: 70px; }
+  .section  { height: 300px; padding: 40px; font-size: 18px; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class=&quot;nav&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;nav-logo&quot;&gt;WebPro&lt;/a&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#s1&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;#s2&quot;&gt;Topics&lt;/a&gt;
+      &lt;a href=&quot;#s3&quot;&gt;Quiz&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+  &lt;div class=&quot;content&quot;&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s1&quot; style=&quot;background:#f0fdfa&quot;&gt;Section 1 — scroll down…&lt;/div&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s2&quot; style=&quot;background:#ccfbf1&quot;&gt;Section 2 — nav stays fixed!&lt;/div&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s3&quot; style=&quot;background:#99f6e4&quot;&gt;Section 3&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Set <code>position: fixed; top: 0; left: 0; right: 0; z-index: 100;</code> on .nav. Use <code>display: flex; justify-content: space-between; align-items: center;</code>. Give .content a <code>padding-top</code> equal to the nav height.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;style&gt;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; }
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: #1e293b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    z-index: 100;
+  }
+  .nav-logo { color: #14b8a6; font-size: 1.3rem; font-weight: 700; text-decoration: none; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: #14b8a6; }
+  .content { padding-top: 70px; }
+  .section { height: 300px; padding: 40px; font-size: 18px; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class=&quot;nav&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;nav-logo&quot;&gt;WebPro&lt;/a&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#s1&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;#s2&quot;&gt;Topics&lt;/a&gt;
+      &lt;a href=&quot;#s3&quot;&gt;Quiz&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+  &lt;div class=&quot;content&quot;&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s1&quot; style=&quot;background:#f0fdfa&quot;&gt;Section 1 — scroll down…&lt;/div&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s2&quot; style=&quot;background:#ccfbf1&quot;&gt;Section 2 — nav stays fixed!&lt;/div&gt;
+    &lt;div class=&quot;section&quot; id=&quot;s3&quot; style=&quot;background:#99f6e4&quot;&gt;Section 3&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-6">
+  <div class="ex-header">
+    <span class="ex-num">E6</span>
+    <h3>Responsive Grid Page</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a page with a CSS Grid layout that is 1-column on mobile and switches to a 3-column grid at 640px. Each card should have: a ::before pseudo-element that adds an emoji icon, a hover transition that lifts the card, and CSS variables for colour consistency. The page should also have a dark mode via @media (prefers-color-scheme: dark).</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;style&gt;
+  /* TODO: :root variables — --primary, --accent, --bg, --text, --radius */
+
+  /* TODO: * reset */
+
+  /* TODO: body styles */
+
+  /* TODO: .grid — display:grid, 1 column base, gap */
+
+  /* TODO: @media (min-width: 640px) — 3 columns */
+
+  /* TODO: .card — border, padding, radius, transition */
+  /* TODO: .card:hover — lift effect */
+
+  /* TODO: .card[data-icon]::before — content using attr() */
+  /* Hint: content: attr(data-icon) '  '; font-size: 2rem; display: block; */
+
+  /* TODO: dark mode @media */
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Skills&lt;/h1&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🌐&quot;&gt;HTML5 — Structure&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🎨&quot;&gt;CSS3 — Styling&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;⚡&quot;&gt;JavaScript — Behaviour&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;📐&quot;&gt;Flexbox — 1D Layout&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🗂&quot;&gt;Grid — 2D Layout&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;📱&quot;&gt;Responsive — Any Screen&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>The <code>::before</code> with <code>content: attr(data-icon)</code> reads the HTML attribute and renders it as the icon. Use <code>display: block</code> on the pseudo-element to put the icon on its own line above the text.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;style&gt;
+  :root {
+    --primary: #0f766e; --accent: #14b8a6;
+    --bg: #f0fdfa;      --text: #1e293b;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #051a0a; --text: #d4edda; }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text);
+         font-family: sans-serif; padding: 24px; }
+  h1 { color: var(--primary); margin-bottom: 24px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .card {
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    background: var(--bg);
+    color: var(--text);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(15,118,110,0.18);
+  }
+  .card[data-icon]::before {
+    content: attr(data-icon);
+    display: block;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Skills&lt;/h1&gt;
+  &lt;div class=&quot;grid&quot;&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🌐&quot;&gt;HTML5 — Structure&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🎨&quot;&gt;CSS3 — Styling&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;⚡&quot;&gt;JavaScript — Behaviour&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;📐&quot;&gt;Flexbox — 1D Layout&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;🗂&quot;&gt;Grid — 2D Layout&lt;/div&gt;
+    &lt;div class=&quot;card&quot; data-icon=&quot;📱&quot;&gt;Responsive — Any Screen&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-7">
+  <div class="ex-header">
+    <span class="ex-num">E7</span>
+    <h3>Complete CSS Advanced Portfolio Page</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a complete personal page using ALL techniques from this session. Requirements: 1) CSS variables in :root with dark mode, 2) fixed navigation bar, 3) hero section with a fade-in @keyframes animation, 4) responsive grid (1 col mobile → 3 col desktop) of skill cards with ::before emoji icons and hover transitions, 5) a sticky section heading that sticks as you scroll. Fill in your own name, major, and skills.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;title&gt;My CSS Advanced Page&lt;/title&gt;
+&lt;style&gt;
+  /* TODO: Write all CSS here — use the techniques from this session */
+  /* 1. :root variables + dark mode */
+  /* 2. Fixed nav */
+  /* 3. @keyframes fadeIn + hero */
+  /* 4. Responsive grid with ::before icons + hover */
+  /* 5. Sticky section headings */
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav&gt;
+    &lt;span&gt;YOUR NAME&lt;/span&gt;
+    &lt;div&gt;&lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt; &lt;a href=&quot;#&quot;&gt;Skills&lt;/a&gt;&lt;/div&gt;
+  &lt;/nav&gt;
+  &lt;section class=&quot;hero&quot;&gt;
+    &lt;h1&gt;Hello, I am [Your Name]&lt;/h1&gt;
+    &lt;p&gt;[Your major] · Gachon University · Week 3 CSS Advanced&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section class=&quot;skills-section&quot;&gt;
+    &lt;h2 class=&quot;sticky-h2&quot;&gt;My Skills&lt;/h2&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;🌐&quot;&gt;HTML5&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;🎨&quot;&gt;CSS3&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;⚡&quot;&gt;JavaScript&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Build each section one at a time. Start with the :root variables, then the fixed nav, then @keyframes fadeIn applied to .hero h1, then the responsive grid, then position:sticky on the section heading. Preview after each step.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;title&gt;CSS Advanced Portfolio&lt;/title&gt;
+&lt;style&gt;
+  :root {
+    --primary: #0f766e; --accent: #14b8a6;
+    --bg: #f0fdfa;      --text: #1e293b;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #051a0a; --text: #d4edda; }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { background: var(--bg); color: var(--text);
+         font-family: 'Segoe UI', sans-serif; }
+
+  /* Fixed nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1e293b;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 32px;
+  }
+  nav span { color: var(--accent); font-weight: 700; font-size: 1.2rem; }
+  nav a { color: #94a3b8; text-decoration: none; margin-left: 20px;
+          transition: color 0.2s; }
+  nav a:hover { color: var(--accent); }
+
+  /* Hero with @keyframes */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero {
+    padding: 140px 40px 80px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg) 0%, #ccfbf1 100%);
+  }
+  .hero h1 {
+    font-size: 2.5rem; color: var(--primary);
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 1.1rem; color: #64748b;
+    animation: fadeSlideIn 0.8s ease-out 0.2s both;
+  }
+
+  /* Skills section */
+  .skills-section { padding: 0 24px 60px; }
+
+  /* Sticky heading */
+  .sticky-h2 {
+    position: sticky; top: 56px;
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 1.4rem; padding: 14px 0 10px;
+    border-bottom: 3px solid var(--accent);
+    margin-bottom: 20px;
+  }
+
+  /* Responsive grid */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Cards with ::before and hover */
+  .card {
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--text);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(15,118,110,0.18);
+  }
+  .card[data-icon]::before {
+    content: attr(data-icon);
+    display: block; font-size: 2rem; margin-bottom: 10px;
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav&gt;
+    &lt;span&gt;Kim Jisoo&lt;/span&gt;
+    &lt;div&gt;&lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;&lt;a href=&quot;#&quot;&gt;Skills&lt;/a&gt;&lt;/div&gt;
+  &lt;/nav&gt;
+  &lt;section class=&quot;hero&quot;&gt;
+    &lt;h1&gt;Hello, I am Kim Jisoo&lt;/h1&gt;
+    &lt;p&gt;AI Software Engineering · Gachon University · Week 3 CSS Advanced&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section class=&quot;skills-section&quot;&gt;
+    &lt;h2 class=&quot;sticky-h2&quot;&gt;My Skills&lt;/h2&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;🌐&quot;&gt;HTML5&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;🎨&quot;&gt;CSS3 Advanced&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;⚡&quot;&gt;JavaScript&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;📐&quot;&gt;Flexbox&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;🗂&quot;&gt;CSS Grid&lt;/div&gt;
+      &lt;div class=&quot;card&quot; data-icon=&quot;📱&quot;&gt;Responsive Design&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+    </section>
+  </main>
+</div>
+<footer id="site-footer">K0126002 Web Programming &middot; Gachon University &middot; Week 3 Friday: CSS Advanced</footer>
+<script>
+function toggleTheme(){
+  const r=document.documentElement,cur=r.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  document.querySelector('.theme-btn').textContent=next==='dark'?'☀ Light':'🌙 Dark';
+  try{localStorage.setItem('theme-w3f',next);}catch(e){}
+}
+function previewCode(btn){
+  const wrap=btn.closest('.code-wrap');
+  let fr=wrap.querySelector('.preview-frame');
+  if(!fr){fr=document.createElement('iframe');fr.className='preview-frame';wrap.appendChild(fr);}
+  fr.style.display='block'; fr.srcdoc=wrap.querySelector('.code-block code').innerText;
+}
+function copyCode(btn){
+  const code=btn.closest('.code-wrap').querySelector('.code-block code').innerText;
+  navigator.clipboard.writeText(code).then(()=>{const t=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=t,1500);});
+}
+function previewExercise(btn){
+  const ea=btn.closest('.editor-area');
+  let fr=ea.querySelector('.preview-frame');
+  if(!fr){fr=document.createElement('iframe');fr.className='preview-frame';ea.appendChild(fr);}
+  fr.style.display='block'; fr.srcdoc=ea.querySelector('textarea').value;
+}
+function toggleHint(btn){const box=btn.closest('.editor-area').querySelector('.hint-box');box.hidden=!box.hidden;btn.textContent=box.hidden?'Hint':'Hide Hint';}
+function toggleSolution(btn){const box=btn.closest('.editor-area').querySelector('.solution-box');box.hidden=!box.hidden;btn.textContent=box.hidden?'Solution':'Hide Solution';}
+const allAnchors=document.querySelectorAll('#sidebar nav a[href^="#"]');
+const allSections=[...document.querySelectorAll('.topic-section,.exercise')];
+function onScroll(){const top=window.scrollY+80;let cur=null;allSections.forEach(s=>{if(s.offsetTop<=top)cur=s;});allAnchors.forEach(a=>{a.classList.remove('active');if(cur&&a.getAttribute('href')==='#'+cur.id)a.classList.add('active');});}
+window.addEventListener('scroll',onScroll,{passive:true});
+try{const t=localStorage.getItem('theme-w3f');if(t){document.documentElement.setAttribute('data-theme',t);document.querySelector('.theme-btn').textContent=t==='dark'?'☀ Light':'🌙 Dark';}}catch(e){}
+</script>
+</body>
+</html>

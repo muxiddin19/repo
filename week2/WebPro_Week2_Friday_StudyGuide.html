@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic HTML — Week 2 Friday Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f9fa;--surf:#fff;--surf2:#f0f4f8;--brd:#dee2e6;
+  --tx:#212529;--mu:#6c757d;--ac:#0a6e8a;--acl:#e0f4fa;
+  --am:#b8860b;--cb:#1e2d3d;--ct:#d8eaf0;
+  --lime:#1a7a50;--cor:#c0392b;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#060D14;--surf:#0D1F2D;--surf2:#13263B;--brd:#1e3048;
+  --tx:#d8eaf0;--mu:#5f8ba4;--ac:#38BDF8;--acl:#09263b;
+  --am:#FFD166;--cb:#060D14;--ct:#d8eaf0;--lime:#38D996;--cor:#FF6B6B;
+}}
+:root[data-theme=dark]{
+  --bg:#060D14;--surf:#0D1F2D;--surf2:#13263B;--brd:#1e3048;
+  --tx:#d8eaf0;--mu:#5f8ba4;--ac:#38BDF8;--acl:#09263b;
+  --am:#FFD166;--cb:#060D14;--ct:#d8eaf0;--lime:#38D996;--cor:#FF6B6B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+#site-header{position:sticky;top:0;z-index:100;background:var(--surf);
+  border-bottom:1px solid var(--brd);border-left:4px solid var(--ac);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-course{font-size:11px;color:var(--mu);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:var(--ac)}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 12px;border-radius:20px;cursor:pointer;font-size:13px;white-space:nowrap}
+.theme-btn:hover{background:var(--acl)}
+#layout{display:flex;min-height:calc(100vh - 53px)}
+#sidebar{width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);
+  position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto;padding:12px 0}
+#sidebar nav a{display:flex;align-items:center;gap:8px;padding:5px 16px;
+  font-size:13px;color:var(--mu);border-left:3px solid transparent;transition:all .15s}
+#sidebar nav a:hover{color:var(--tx);background:var(--surf2);text-decoration:none}
+#sidebar nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl);font-weight:600}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);min-width:24px}
+.nav-section-label{padding:12px 16px 4px;font-size:10px;font-weight:700;color:var(--mu);
+  letter-spacing:.08em;text-transform:uppercase}
+#main{flex:1;padding:36px 44px;max-width:900px}
+.topic-section{margin-bottom:52px;padding-bottom:40px;border-bottom:1px solid var(--brd)}
+.topic-section:last-child{border-bottom:none}
+.topic-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ac);
+  background:var(--acl);padding:2px 8px;border-radius:4px;font-weight:700}
+.topic-header h2{font-size:22px;font-weight:700;color:var(--tx)}
+.quiz-badge{font-size:11px;background:var(--am);color:#000;
+  padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.topic-theory{margin-bottom:18px}
+.topic-theory p{margin-bottom:10px;color:var(--tx)}
+.code-wrap{position:relative;margin:16px 0;border-radius:8px;overflow:hidden;border:1px solid var(--brd)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);padding:6px 12px;border-bottom:1px solid var(--brd)}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);font-weight:600}
+.code-btns{display:flex;gap:6px}
+.code-btns button{background:transparent;border:1px solid var(--brd);color:var(--mu);
+  padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.code-btns button:hover{color:var(--ac);border-color:var(--ac);background:var(--acl)}
+.code-block{background:var(--cb);padding:18px 20px;overflow-x:auto;margin:0}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--ct);white-space:pre}
+.ht{color:#38BDF8}.ha{color:#FFD166}.hv{color:#38D996}.hc{color:#5f8ba4}.hn{color:#A88BFF}
+.keypoints{background:var(--acl);border-left:4px solid var(--ac);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin-top:16px}
+.keypoints h4{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:8px}
+.keypoints ul{padding-left:18px}
+.keypoints li{font-size:14px;color:var(--tx);margin-bottom:4px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.compare-box{border-radius:8px;overflow:hidden;border:1px solid var(--brd)}
+.compare-label{padding:6px 12px;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;border-bottom:1px solid var(--brd)}
+.compare-label.bad{background:#fde8e8;color:#9b1c1c}
+.compare-label.good{background:#def7ec;color:#03543f}
+:root[data-theme=dark] .compare-label.bad,:root:not([data-theme=light]) .compare-label.bad{background:#3b0d0d;color:#FC8181}
+:root[data-theme=dark] .compare-label.good,:root:not([data-theme=light]) .compare-label.good{background:#0b2a1e;color:#68D391}
+#exercises>h2{font-size:28px;font-weight:800;color:var(--tx);margin-bottom:8px}
+.intro{color:var(--mu);margin-bottom:32px;font-size:15px}
+.exercise{background:var(--surf);border:1px solid var(--brd);border-radius:10px;margin-bottom:32px;overflow:hidden}
+.ex-header{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--surf2);border-bottom:1px solid var(--brd)}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--ac)}
+.ex-header h3{font-size:17px;font-weight:700;flex:1}
+.diff{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.diff.beginner{background:#e6f7f4;color:#0a7a65}
+.diff.intermediate{background:#fff3cd;color:#856404}
+.diff.advanced{background:#f8d7da;color:#842029}
+:root[data-theme=dark] .diff.beginner,:root:not([data-theme=light]) .diff.beginner{background:#0a2a24;color:#38D996}
+:root[data-theme=dark] .diff.intermediate,:root:not([data-theme=light]) .diff.intermediate{background:#2a200a;color:#FFD166}
+:root[data-theme=dark] .diff.advanced,:root:not([data-theme=light]) .diff.advanced{background:#2a0a0a;color:#FF6B6B}
+.ex-body{padding:20px}
+.ex-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:8px}
+.task-box{background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:14px 16px;margin-bottom:16px;font-size:15px}
+.editor-area{margin-top:16px}
+textarea.code-editor{width:100%;min-height:200px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px;
+  border:1px solid var(--brd);border-radius:6px;resize:vertical;line-height:1.6}
+.ex-btns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ex-btns button{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--brd);transition:all .15s}
+.btn-preview{background:var(--ac);color:#060D14;border-color:var(--ac)}
+.btn-preview:hover{opacity:.88}
+.btn-hint{background:var(--surf2);color:var(--tx)}
+.btn-hint:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sol{background:var(--surf2);color:var(--tx)}
+.btn-sol:hover{border-color:var(--lime);color:var(--lime)}
+.hint-box,.solution-box{margin-top:12px;padding:14px 16px;border-radius:6px;font-size:14px}
+.hint-box{background:var(--acl);border-left:3px solid var(--ac);color:var(--tx)}
+.preview-frame{width:100%;height:340px;border:1px solid var(--brd);border-radius:6px;margin-top:10px;background:#fff;display:none}
+#site-footer{text-align:center;padding:24px;color:var(--mu);font-size:13px;border-top:1px solid var(--brd);margin-top:40px}
+@media(max-width:768px){
+  #sidebar{display:none;position:fixed;top:53px;left:0;height:calc(100vh - 53px);z-index:90;box-shadow:4px 0 20px rgba(0,0,0,.3)}
+  #sidebar.open{display:block}
+  #main{padding:20px 16px}
+  .mobile-menu-btn{display:block!important}
+  .compare-grid{grid-template-columns:1fr}
+}
+.mobile-menu-btn{display:none;background:var(--surf2);border:1px solid var(--brd);color:var(--tx);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:18px}
+</style>
+</head>
+<body>
+<header id="site-header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="hdr-left">
+      <span class="hdr-course">K0126002 · Web Programming · Gachon University</span>
+      <span class="hdr-title">Week 2 Friday · Semantic HTML — Study Guide</span>
+    </div>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
+</header>
+<div id="layout">
+  <aside id="sidebar"><nav><div class="nav-section-label">Structure</div>
+<a href="#topic-01"><span class="nav-num">01</span>What is Semantic HTML?</a>
+<a href="#topic-02"><span class="nav-num">02</span>&lt;header&gt; — Page &amp; Section Header</a>
+<a href="#topic-03"><span class="nav-num">03</span>&lt;nav&gt; — Navigation Landmark</a>
+<a href="#topic-04"><span class="nav-num">04</span>&lt;main&gt; — The Main Content</a>
+<a href="#topic-05"><span class="nav-num">05</span>&lt;footer&gt; — Page &amp; Section Footer</a>
+<div class="nav-section-label">Grouping</div>
+<a href="#topic-06"><span class="nav-num">06</span>&lt;section&gt; — Thematic Grouping</a>
+<a href="#topic-07"><span class="nav-num">07</span>&lt;article&gt; — Self-Contained Content</a>
+<a href="#topic-08"><span class="nav-num">08</span>&lt;aside&gt; — Tangentially Related Content</a>
+<a href="#topic-09"><span class="nav-num">09</span>&lt;div&gt; — The Non-Semantic Container</a>
+<div class="nav-section-label">Figures &amp; Time</div>
+<a href="#topic-10"><span class="nav-num">10</span>&lt;figure&gt; — Self-Contained Figure</a>
+<a href="#topic-11"><span class="nav-num">11</span>&lt;figcaption&gt; — Caption for Figure</a>
+<a href="#topic-12"><span class="nav-num">12</span>&lt;time&gt; — Machine-Readable Dates</a>
+<a href="#topic-13"><span class="nav-num">13</span>&lt;address&gt; — Contact Information</a>
+<div class="nav-section-label">Text Semantics</div>
+<a href="#topic-14"><span class="nav-num">14</span>&lt;mark&gt; — Highlighted Text</a>
+<a href="#topic-15"><span class="nav-num">15</span>&lt;abbr&gt; — Abbreviations</a>
+<a href="#topic-16"><span class="nav-num">16</span>&lt;blockquote&gt; — Block Quotation</a>
+<a href="#topic-17"><span class="nav-num">17</span>&lt;q&gt; — Inline Quotation</a>
+<a href="#topic-18"><span class="nav-num">18</span>&lt;cite&gt; — Title of a Work</a>
+<a href="#topic-19"><span class="nav-num">19</span>&lt;code&gt; — Inline Code</a>
+<a href="#topic-20"><span class="nav-num">20</span>&lt;pre&gt; — Preformatted Text</a>
+<div class="nav-section-label">Interactive &amp; ARIA</div>
+<a href="#topic-21"><span class="nav-num">21</span>&lt;details&gt; &amp; &lt;summary&gt; — Disclosure Widget</a>
+<a href="#topic-22"><span class="nav-num">22</span>&lt;dialog&gt; — Popup/Modal</a>
+<a href="#topic-23"><span class="nav-num">23</span>ARIA role Attribute</a>
+<a href="#topic-24"><span class="nav-num">24</span>Semantic Landmarks &amp; Accessibility</a>
+<a href="#topic-25"><span class="nav-num">25</span>Complete Semantic Page — All Together</a>
+<div class="nav-section-label">Exercises</div>
+<a href="#exercise-1"><span class="nav-num" style="color:var(--am)">E1</span>Convert Div Soup to Semantic HTML</a>
+<a href="#exercise-2"><span class="nav-num" style="color:var(--am)">E2</span>Blog Article with header &amp;amp; footer</a>
+<a href="#exercise-3"><span class="nav-num" style="color:var(--am)">E3</span>Figure, figcaption &amp;amp; time</a>
+<a href="#exercise-4"><span class="nav-num" style="color:var(--am)">E4</span>FAQ with &amp;lt;details&amp;gt; &amp;amp; &amp;lt;summary&amp;gt;</a>
+<a href="#exercise-5"><span class="nav-num" style="color:var(--am)">E5</span>Full Semantic Portfolio Page</a>
+<a href="#exercise-6"><span class="nav-num" style="color:var(--am)">E6</span>Fix Semantic Errors</a>
+<a href="#exercise-7"><span class="nav-num" style="color:var(--am)">E7</span>Quotation &amp;amp; Citation Page</a>
+<a href="#exercise-8"><span class="nav-num" style="color:var(--am)">E8</span>News Article — All Semantic Elements</a>
+</nav></aside>
+  <main id="main">
+    <section style="margin-bottom:40px">
+      <h1 style="font-size:32px;font-weight:800;margin-bottom:8px">Semantic HTML</h1>
+      <p style="color:var(--mu);font-size:15px">25 topics · 8 interactive exercises · covers all Friday quiz questions</p>
+      <p style="margin-top:12px;font-size:15px">This guide covers every Semantic HTML topic for the Friday lab quiz.
+      Each topic explains WHY the element exists (not just WHAT it does), with a code example
+      you can preview instantly. Practice your skills in the
+      <a href="#exercises">exercises section</a> — write real HTML and see the result live.</p>
+    </section>
+    <section id="topic-01">
+  <div class="topic-header">
+    <span class="topic-num">01</span>
+    <h2>What is Semantic HTML?</h2>
+    <span class="quiz-badge">Q1</span>
+  </div>
+  <div class="topic-theory"><p><strong>Semantic HTML</strong> means choosing elements based on their <em>meaning</em>, not their visual appearance. Compare <code>&lt;div class="nav"&gt;</code> versus <code>&lt;nav&gt;</code>: both can look identical on screen, but only <code>&lt;nav&gt;</code> tells the browser, search engine, and screen reader "this is a navigation landmark." Meaning lives in the tag, not in a class name.</p>
+<p>Before HTML5 (2008), developers built entire pages from nested <code>&lt;div&gt;</code> and <code>&lt;span&gt;</code> elements with class names like <code>header</code>, <code>sidebar</code>, <code>footer</code>. This pattern is called <strong>"div soup"</strong> — it works visually, but machines cannot extract meaning from it. HTML5 introduced ~30 new semantic elements to fix this. Using them correctly improves SEO (Google ranks semantic pages higher), accessibility (screen readers navigate by landmarks), and code readability.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- ✗ Div soup — machines see meaningless boxes --&gt;
+&lt;div class=&quot;header&quot;&gt;
+  &lt;div class=&quot;logo&quot;&gt;My Site&lt;/div&gt;
+  &lt;div class=&quot;nav&quot;&gt;
+    &lt;div class=&quot;nav-item&quot;&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;main&quot;&gt;
+  &lt;div class=&quot;article&quot;&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;footer&quot;&gt;© 2026&lt;/div&gt;
+
+&lt;!-- ✓ Semantic HTML — machines understand the structure --&gt;
+&lt;header&gt;
+  &lt;h1&gt;My Site&lt;/h1&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;...&lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;© 2026&lt;/footer&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Semantic = choosing tags by meaning, not appearance.</li>
+<li>HTML5 added ~30 semantic elements (2008) to replace div soup.</li>
+<li>Improves SEO, accessibility, and code readability.</li>
+<li>Semantic elements describe structure to browsers, robots, and screen readers.</li></ul>
+</div>
+</section>
+<section id="topic-02">
+  <div class="topic-header">
+    <span class="topic-num">02</span>
+    <h2>&lt;header&gt; — Page &amp; Section Header</h2>
+    <span class="quiz-badge">Q23</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;header&gt;</code> element represents introductory content for its nearest sectioning parent. At the top level it wraps the entire site header — logo, site title, top navigation. But it can also appear inside <code>&lt;article&gt;</code> or <code>&lt;section&gt;</code> as a localised header for that content block.</p>
+<p>Do not confuse <code>&lt;header&gt;</code> with <code>&lt;head&gt;</code>. The <code>&lt;head&gt;</code> is invisible metadata; <code>&lt;header&gt;</code> is a visible page region. A page can have <em>multiple</em> header elements (one for the site, one per article), but only a <em>single</em> <code>&lt;head&gt;</code>. The <code>&lt;header&gt;</code> element typically contains: a logo/site title, the primary navigation (<code>&lt;nav&gt;</code>), and possibly a search form.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Blog — Gachon Web Students&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Page-level header --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Gachon Web Blog&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;
+      &lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;!-- Article-level header (inside article) --&gt;
+      &lt;header&gt;
+        &lt;h2&gt;My First HTML Page&lt;/h2&gt;
+        &lt;p&gt;Posted by Kim Jisoo · &lt;time datetime=&quot;2026-09-05&quot;&gt;Sep 5, 2026&lt;/time&gt;&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;p&gt;Today I built my first webpage...&lt;/p&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>header = visible introductory content (NOT the invisible &lt;head&gt;).</li>
+<li>A page can have multiple headers (site + per article).</li>
+<li>Typically contains: logo, site title, primary nav.</li>
+<li>Screen readers identify it as the &#x27;banner&#x27; landmark.</li></ul>
+</div>
+</section>
+<section id="topic-03">
+  <div class="topic-header">
+    <span class="topic-num">03</span>
+    <h2>&lt;nav&gt; — Navigation Landmark</h2>
+    <span class="quiz-badge">Q2, Q21</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;nav&gt;</code> element marks a block of <strong>major navigation links</strong>. Screen readers expose it as a "navigation" landmark — visually impaired users can jump directly to navigation without reading through the whole page. Search engines also treat links inside <code>&lt;nav&gt;</code> as structural site navigation rather than body content.</p>
+<p>You do not need to wrap every set of links in <code>&lt;nav&gt;</code> — only the primary navigation menus. Footer links to privacy policy and terms of service do not need a <code>&lt;nav&gt;</code>. Common pattern: one <code>&lt;nav&gt;</code> inside the page <code>&lt;header&gt;</code> for main navigation, and optionally a second for breadcrumbs. When you have two nav elements, add <code>aria-label</code> to distinguish them for screen readers.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;header&gt;
+  &lt;!-- Primary site navigation --&gt;
+  &lt;nav aria-label=&quot;Main navigation&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/courses&quot;&gt;Courses&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;!-- Breadcrumb — secondary nav needs its own label --&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot;&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/courses&quot;&gt;Courses&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-current=&quot;page&quot;&gt;Web Programming&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+
+&lt;!-- Footer links: minor, do NOT need &lt;nav&gt; --&gt;
+&lt;footer&gt;
+  &lt;a href=&quot;/privacy&quot;&gt;Privacy&lt;/a&gt; ·
+  &lt;a href=&quot;/terms&quot;&gt;Terms&lt;/a&gt;
+&lt;/footer&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>nav = major navigation links only (not every set of links).</li>
+<li>Screen readers expose nav as a &#x27;navigation&#x27; landmark.</li>
+<li>Two navs on one page: add aria-label to distinguish them.</li>
+<li>Replace &lt;div class=&#x27;nav&#x27;&gt; with &lt;nav&gt; for semantic benefit.</li></ul>
+</div>
+</section>
+<section id="topic-04">
+  <div class="topic-header">
+    <span class="topic-num">04</span>
+    <h2>&lt;main&gt; — The Main Content</h2>
+    <span class="quiz-badge">Q3</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;main&gt;</code> element contains the <strong>dominant, unique content</strong> of the page — the part that differs from every other page. Navigation, headers, and footers that repeat across pages are <em>not</em> main content. There must be exactly <strong>one visible <code>&lt;main&gt;</code></strong> per page. Browsers use it as the target for "skip to main content" links that screen reader and keyboard users rely on.</p>
+<p>Think of <code>&lt;main&gt;</code> as the "jump here" destination when a keyboard user wants to skip past the repeated header and nav to get to what's actually different about this page. This is why it pairs with <code>&lt;a href="#main-content" class="skip-link"&gt;</code> — an accessibility best practice.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Courses&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Repeated on every page — NOT main content --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;My University&lt;/h1&gt;
+    &lt;nav&gt;...&lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;!-- ONE main per page — the unique content --&gt;
+  &lt;main id=&quot;main-content&quot;&gt;
+    &lt;h2&gt;Web Programming Course&lt;/h2&gt;
+    &lt;p&gt;This page is about K0126002...&lt;/p&gt;
+    &lt;!-- Everything unique to this page goes here --&gt;
+  &lt;/main&gt;
+
+  &lt;!-- Repeated on every page — NOT main content --&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Gachon University&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>main = the page&#x27;s unique, dominant content.</li>
+<li>Exactly ONE visible main per page.</li>
+<li>Screen readers offer &#x27;skip to main content&#x27; navigation.</li>
+<li>header, nav, footer repeat across pages — they are NOT inside main.</li></ul>
+</div>
+</section>
+<section id="topic-05">
+  <div class="topic-header">
+    <span class="topic-num">05</span>
+    <h2>&lt;footer&gt; — Page &amp; Section Footer</h2>
+    <span class="quiz-badge">Q5</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;footer&gt;</code> element contains information <em>about</em> its parent section: copyright notices, authorship, links to related documents, contact information, or a repeat of the main nav for long pages. Like <code>&lt;header&gt;</code>, it can appear at the page level or inside an <code>&lt;article&gt;</code> or <code>&lt;section&gt;</code> as a localised footer.</p>
+<p>A page footer typically contains: copyright (<code>&amp;copy;</code>), year, and company name; links to privacy policy, terms, and accessibility statement; social media links; contact details. Screen readers identify the page-level footer as the "contentinfo" landmark. Use only one page-level <code>&lt;footer&gt;</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- Page-level footer --&gt;
+&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2026 Gachon University · Web Programming K0126002&lt;/p&gt;
+  &lt;nav aria-label=&quot;Footer links&quot;&gt;
+    &lt;a href=&quot;/privacy&quot;&gt;Privacy Policy&lt;/a&gt; ·
+    &lt;a href=&quot;/accessibility&quot;&gt;Accessibility&lt;/a&gt; ·
+    &lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/footer&gt;
+
+&lt;!-- Article-level footer (meta information about the article) --&gt;
+&lt;article&gt;
+  &lt;h2&gt;Semantic HTML Deep Dive&lt;/h2&gt;
+  &lt;p&gt;Using semantic elements makes your code...&lt;/p&gt;
+  &lt;footer&gt;
+    &lt;p&gt;Author: Prof. Kim · Published: &lt;time datetime=&quot;2026-09-05&quot;&gt;Sep 5, 2026&lt;/time&gt;&lt;/p&gt;
+    &lt;p&gt;Tags: HTML, Accessibility, SEO&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>footer = information ABOUT the parent: copyright, author, links.</li>
+<li>Page-level footer = &#x27;contentinfo&#x27; landmark for screen readers.</li>
+<li>Can also appear inside article/section for per-section metadata.</li>
+<li>One page-level footer; multiple article/section footers are fine.</li></ul>
+</div>
+</section>
+<section id="topic-06">
+  <div class="topic-header">
+    <span class="topic-num">06</span>
+    <h2>&lt;section&gt; — Thematic Grouping</h2>
+    <span class="quiz-badge">Q6 (part 1)</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;section&gt;</code> element groups <strong>related content that belongs together thematically</strong>. The key rule: a <code>&lt;section&gt;</code> <em>must</em> have a heading (<code>h1</code>–<code>h6</code>) as its first child — if the group of content doesn't have (or shouldn't have) a heading, it probably shouldn't be a <code>&lt;section&gt;</code>.</p>
+<p>A section is a named chapter or part of the page: "About Me", "Skills", "Contact". Think of it like chapters in a book — each chapter has a title and groups related paragraphs. Do not use <code>&lt;section&gt;</code> as a styling wrapper (that's what <code>&lt;div&gt;</code> is for). The question to ask: "Could this section stand as a chapter in a table of contents?" If yes, use <code>&lt;section&gt;</code>. The difference between <code>section</code> and <code>article</code> is that a section needs its surrounding context to make sense, while an article is fully independent.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;main&gt;
+  &lt;!-- section groups related content under one heading --&gt;
+  &lt;section id=&quot;about&quot;&gt;
+    &lt;h2&gt;About Me&lt;/h2&gt;
+    &lt;p&gt;I am a second-year student at Gachon University...&lt;/p&gt;
+    &lt;p&gt;I enjoy web development and coffee.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;skills&quot;&gt;
+    &lt;h2&gt;My Skills&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;HTML5&lt;/li&gt;
+      &lt;li&gt;CSS3&lt;/li&gt;
+      &lt;li&gt;JavaScript&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;contact&quot;&gt;
+    &lt;h2&gt;Contact Me&lt;/h2&gt;
+    &lt;p&gt;Email: &lt;a href=&quot;mailto:jisoo@gachon.ac.kr&quot;&gt;jisoo@gachon.ac.kr&lt;/a&gt;&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>section = thematic grouping that MUST have a heading.</li>
+<li>Each section is like a named chapter with related content.</li>
+<li>Don&#x27;t use section as a styling wrapper — that&#x27;s what div is for.</li>
+<li>section needs its context; article is fully self-contained.</li></ul>
+</div>
+</section>
+<section id="topic-07">
+  <div class="topic-header">
+    <span class="topic-num">07</span>
+    <h2>&lt;article&gt; — Self-Contained Content</h2>
+    <span class="quiz-badge">Q4, Q25</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;article&gt;</code> element represents <strong>self-contained content that could be removed from the page and still make sense on its own</strong> — a blog post, a news article, a product card, a comment, a forum post. The test: could you publish this piece in an RSS feed, email, or different website and have it be understandable without the surrounding page?</p>
+<p>Articles can be nested: a news article can contain reader comments, each of which is its own <code>&lt;article&gt;</code> inside the main one. Each article can have its own <code>&lt;header&gt;</code> (title, author, date) and <code>&lt;footer&gt;</code> (tags, related links). The key difference from <code>&lt;section&gt;</code>: an article is <em>independently distributable</em>; a section is <em>part of a larger whole</em>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;main&gt;
+  &lt;!-- A blog index page — each post is an article --&gt;
+  &lt;article&gt;
+    &lt;header&gt;
+      &lt;h2&gt;&lt;a href=&quot;/posts/html-basics&quot;&gt;HTML Basics in 10 Minutes&lt;/a&gt;&lt;/h2&gt;
+      &lt;p&gt;By Kim Jisoo · &lt;time datetime=&quot;2026-09-01&quot;&gt;Sep 1, 2026&lt;/time&gt;&lt;/p&gt;
+    &lt;/header&gt;
+    &lt;p&gt;In this post I cover the essential HTML tags every web developer...&lt;/p&gt;
+    &lt;footer&gt;
+      &lt;p&gt;Tags: HTML · Beginner&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/article&gt;
+
+  &lt;article&gt;
+    &lt;header&gt;
+      &lt;h2&gt;&lt;a href=&quot;/posts/semantic-html&quot;&gt;Why Semantic HTML Matters&lt;/a&gt;&lt;/h2&gt;
+      &lt;p&gt;By Park Minho · &lt;time datetime=&quot;2026-09-05&quot;&gt;Sep 5, 2026&lt;/time&gt;&lt;/p&gt;
+    &lt;/header&gt;
+    &lt;p&gt;Semantic HTML is not just about following rules — it directly affects...&lt;/p&gt;
+    &lt;footer&gt;
+      &lt;p&gt;Tags: HTML · Accessibility · SEO&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/article&gt;
+&lt;/main&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>article = self-contained, independently distributable content.</li>
+<li>Test: can it make sense outside this page (in RSS, email)?</li>
+<li>Examples: blog post, news story, product card, comment.</li>
+<li>Articles can nest (comment articles inside a post article).</li></ul>
+</div>
+</section>
+<section id="topic-08">
+  <div class="topic-header">
+    <span class="topic-num">08</span>
+    <h2>&lt;aside&gt; — Tangentially Related Content</h2>
+    <span class="quiz-badge">Q5 (part 2)</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;aside&gt;</code> element marks content that is <strong>tangentially related</strong> to the surrounding content — related but not essential to understanding it. Examples: a pull quote, a sidebar with related posts, a glossary definition box, an advertisement, author bio, or a "Did you know?" fact box.</p>
+<p>Placed inside an <code>&lt;article&gt;</code>, an <code>&lt;aside&gt;</code> holds content tangentially related to the article. Placed directly inside <code>&lt;main&gt;</code> or <code>&lt;body&gt;</code>, it becomes a page-level sidebar. Screen readers expose it as a "complementary" landmark. The key test: if the aside were removed, would the main content still be fully understandable? If yes, it belongs in an aside.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;CSS Flexbox Layout&lt;/h2&gt;
+    &lt;p&gt;Flexbox is a one-dimensional layout method for arranging items...&lt;/p&gt;
+    &lt;p&gt;The main axis is controlled by justify-content...&lt;/p&gt;
+
+    &lt;!-- Tangentially related — helpful but not essential --&gt;
+    &lt;aside&gt;
+      &lt;h3&gt;Quick Reference&lt;/h3&gt;
+      &lt;p&gt;&lt;code&gt;display: flex&lt;/code&gt; — activates flexbox&lt;/p&gt;
+      &lt;p&gt;&lt;code&gt;flex-direction: row&lt;/code&gt; — horizontal axis&lt;/p&gt;
+      &lt;p&gt;&lt;code&gt;justify-content: center&lt;/code&gt; — centre items&lt;/p&gt;
+    &lt;/aside&gt;
+
+    &lt;p&gt;The cross axis is controlled by align-items...&lt;/p&gt;
+  &lt;/article&gt;
+
+  &lt;!-- Page-level sidebar --&gt;
+  &lt;aside aria-label=&quot;Related articles&quot;&gt;
+    &lt;h2&gt;You Might Also Like&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;/css-grid&quot;&gt;CSS Grid Guide&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/responsive&quot;&gt;Responsive Design&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/aside&gt;
+&lt;/main&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>aside = tangentially related — helpful but not essential.</li>
+<li>Screen readers expose aside as &#x27;complementary&#x27; landmark.</li>
+<li>Remove it and the main content still makes complete sense.</li>
+<li>Examples: sidebar, pull quote, author bio, related links.</li></ul>
+</div>
+</section>
+<section id="topic-09">
+  <div class="topic-header">
+    <span class="topic-num">09</span>
+    <h2>&lt;div&gt; — The Non-Semantic Container</h2>
+    <span class="quiz-badge">Q9, Q22</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;div&gt;</code> element is a generic block-level container with <strong>no semantic meaning</strong>. It says nothing about the content inside — it is a purely presentational tool. With HTML5 semantic elements, the golden rule is: <em>use semantic elements first; only fall back to <code>&lt;div&gt;</code> when no semantic element fits.</em></p>
+<p><strong>When div IS the right choice:</strong> grouping elements purely for CSS layout (a flexbox row, a CSS grid column, a styling wrapper). <strong>When div is NOT the right choice:</strong> replacing <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;aside&gt;</code>, or <code>&lt;footer&gt;</code>. A page where every structural element is a <code>&lt;div&gt;</code> is "div soup" — technically valid HTML but semantically meaningless to machines.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- ✗ Div soup — everything is a div with class names --&gt;
+&lt;div class=&quot;page-wrapper&quot;&gt;
+  &lt;div class=&quot;header&quot;&gt;
+    &lt;div class=&quot;nav&quot;&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;content&quot;&gt;
+    &lt;div class=&quot;article&quot;&gt;...&lt;/div&gt;
+    &lt;div class=&quot;sidebar&quot;&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- ✓ Semantic HTML — meaningful elements where they fit --&gt;
+&lt;div class=&quot;page-wrapper&quot;&gt;    &lt;!-- div OK: pure CSS layout wrapper --&gt;
+  &lt;header&gt;
+    &lt;nav&gt;...&lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;div class=&quot;content-grid&quot;&gt; &lt;!-- div OK: CSS grid container --&gt;
+    &lt;main&gt;
+      &lt;article&gt;...&lt;/article&gt;
+    &lt;/main&gt;
+    &lt;aside&gt;...&lt;/aside&gt;
+  &lt;/div&gt;
+  &lt;footer&gt;...&lt;/footer&gt;
+&lt;/div&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>div = generic container, NO semantic meaning.</li>
+<li>Use semantic elements first; div only for pure CSS layout.</li>
+<li>div soup = pages built entirely from divs (bad practice).</li>
+<li>class=&#x27;header&#x27; does not give semantics — &lt;header&gt; does.</li></ul>
+</div>
+</section>
+<section id="topic-10">
+  <div class="topic-header">
+    <span class="topic-num">10</span>
+    <h2>&lt;figure&gt; — Self-Contained Figure</h2>
+    <span class="quiz-badge">Q7</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;figure&gt;</code> element wraps <strong>self-contained content that is referenced from the main text</strong> but could be moved to a different position or an appendix without affecting the main flow. Most commonly it wraps an image with a caption, but it can also contain code listings, tables, charts, or diagrams.</p>
+<p>The crucial advantage: <code>&lt;figure&gt;</code> communicates a relationship — this image and this caption belong together as a unit. Without <code>&lt;figure&gt;</code>, a screen reader sees a loose image and a nearby paragraph with no connection between them. With <code>&lt;figure&gt;</code> (and its partner <code>&lt;figcaption&gt;</code>), the caption is programmatically associated with the image, so assistive technology can announce both together.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;article&gt;
+  &lt;h2&gt;Anatomy of an HTML Page&lt;/h2&gt;
+  &lt;p&gt;Every HTML file follows the structure shown in Figure 1.
+     Notice how the body wraps all visible content.&lt;/p&gt;
+
+  &lt;!-- figure groups image + caption as a semantic unit --&gt;
+  &lt;figure&gt;
+    &lt;img src=&quot;html-structure.png&quot;
+         alt=&quot;Diagram showing DOCTYPE, html, head, and body nesting&quot;
+         width=&quot;600&quot; height=&quot;400&quot;&gt;
+    &lt;figcaption&gt;Figure 1: The four required parts of an HTML document.&lt;/figcaption&gt;
+  &lt;/figure&gt;
+
+  &lt;!-- figure can also wrap code samples --&gt;
+  &lt;figure&gt;
+    &lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&quot;en&quot;&amp;gt;...&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+    &lt;figcaption&gt;Listing 1: The minimal HTML5 document skeleton.&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/article&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>figure = self-contained unit (image + caption, code + explanation).</li>
+<li>Could be moved to an appendix without breaking the main flow.</li>
+<li>Screen readers announce figcaption as the image&#x27;s caption.</li>
+<li>figure can wrap images, code, tables, or charts.</li></ul>
+</div>
+</section>
+<section id="topic-11">
+  <div class="topic-header">
+    <span class="topic-num">11</span>
+    <h2>&lt;figcaption&gt; — Caption for Figure</h2>
+    <span class="quiz-badge">Q8</span>
+  </div>
+  <div class="topic-theory"><p><code>&lt;figcaption&gt;</code> provides a <strong>visible caption for its parent <code>&lt;figure&gt;</code></strong>. It must be the first or last child element of <code>&lt;figure&gt;</code>. The caption explains what the figure shows, provides attribution, or gives a figure number.</p>
+<p>Important distinction: <code>figcaption</code> is <em>not</em> the same as <code>alt</code>. The <code>alt</code> attribute is the text alternative for the image when it cannot be seen — a description of what the image depicts. The <code>figcaption</code> is a visible label for sighted users. You need both: <code>alt</code> for accessibility, <code>figcaption</code> for the visible caption. If the figcaption already fully describes the image, you can use an empty <code>alt=""</code> to avoid repetition for screen reader users.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;figure&gt;
+  &lt;!-- alt: invisible description for screen readers --&gt;
+  &lt;!-- figcaption: visible caption for everyone --&gt;
+  &lt;img src=&quot;flexbox-demo.gif&quot;
+       alt=&quot;Animation showing flex items rearranging when flex-direction changes&quot;
+       width=&quot;500&quot;&gt;
+  &lt;figcaption&gt;Figure 3: Flex direction controls the main axis orientation.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- figcaption can go FIRST or LAST inside figure --&gt;
+&lt;figure&gt;
+  &lt;figcaption&gt;Table 1: Browser support for HTML5 semantic elements.&lt;/figcaption&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;th&gt;Element&lt;/th&gt;&lt;th&gt;Chrome&lt;/th&gt;&lt;th&gt;Firefox&lt;/th&gt;&lt;th&gt;Safari&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&amp;lt;main&amp;gt;&lt;/td&gt;&lt;td&gt;26+&lt;/td&gt;&lt;td&gt;21+&lt;/td&gt;&lt;td&gt;7+&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&amp;lt;article&amp;gt;&lt;/td&gt;&lt;td&gt;6+&lt;/td&gt;&lt;td&gt;4+&lt;/td&gt;&lt;td&gt;5+&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/figure&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>figcaption = visible caption, first or last child of figure.</li>
+<li>alt = invisible screen reader description. Both are needed.</li>
+<li>If figcaption fully describes the image, use alt=&#x27;&#x27;.</li>
+<li>Provides accessible association between image and its label.</li></ul>
+</div>
+</section>
+<section id="topic-12">
+  <div class="topic-header">
+    <span class="topic-num">12</span>
+    <h2>&lt;time&gt; — Machine-Readable Dates</h2>
+    <span class="quiz-badge">Q9</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;time&gt;</code> element marks a <strong>date, time, or duration</strong>. The content shown to the user can be in any human-readable format ("last Tuesday", "September 5th, 2026"), but the <code>datetime</code> attribute provides a <strong>machine-readable version</strong> that browsers, search engines, and calendar apps can parse. Without <code>datetime</code>, "last Friday" is meaningless to a computer; with it, it becomes <code>datetime="2026-09-05"</code>.</p>
+<p>Google uses <code>&lt;time datetime="..."&gt;</code> to display article publication dates in search results. iOS and Android can auto-detect dates inside <code>&lt;time&gt;</code> and offer to add them to the calendar. The datetime format follows ISO 8601: <code>YYYY-MM-DD</code> for dates, <code>HH:MM</code> for times, or <code>YYYY-MM-DDTHH:MM</code> for combined date-time.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;article&gt;
+  &lt;header&gt;
+    &lt;h2&gt;Web Programming Lab Results&lt;/h2&gt;
+    &lt;!-- Published date — ISO 8601 format in datetime --&gt;
+    &lt;p&gt;Published: &lt;time datetime=&quot;2026-09-05&quot;&gt;Friday, September 5, 2026&lt;/time&gt;&lt;/p&gt;
+    &lt;!-- Date + time combined --&gt;
+    &lt;p&gt;Deadline: &lt;time datetime=&quot;2026-09-12T09:00&quot;&gt;Next Friday at 9:00 AM&lt;/time&gt;&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;p&gt;The assignment is due in
+     &lt;!-- duration: P = period, W = weeks, D = days --&gt;
+     &lt;time datetime=&quot;P7D&quot;&gt;one week&lt;/time&gt;.
+  &lt;/p&gt;
+
+  &lt;p&gt;Office hours: &lt;time datetime=&quot;14:00&quot;&gt;2 PM&lt;/time&gt; to
+     &lt;time datetime=&quot;16:00&quot;&gt;4 PM&lt;/time&gt; on Thursdays.
+  &lt;/p&gt;
+&lt;/article&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>time = date/time/duration visible to users + machine-readable datetime.</li>
+<li>datetime follows ISO 8601: YYYY-MM-DD or YYYY-MM-DDTHH:MM.</li>
+<li>Google reads datetime for search result snippets.</li>
+<li>Browsers/phones use it to detect dates and offer calendar integration.</li></ul>
+</div>
+</section>
+<section id="topic-13">
+  <div class="topic-header">
+    <span class="topic-num">13</span>
+    <h2>&lt;address&gt; — Contact Information</h2>
+    <span class="quiz-badge">Q19</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;address&gt;</code> element provides <strong>contact information for its nearest ancestor <code>&lt;article&gt;</code> or <code>&lt;body&gt;</code></strong>. Inside an article it gives the author's contact details. At the page level (inside <code>&lt;body&gt;</code> or <code>&lt;footer&gt;</code>) it gives the organisation's contact details.</p>
+<p>A common misconception: <code>&lt;address&gt;</code> is NOT limited to postal addresses. It represents any contact information — email addresses, phone numbers, social media links, physical addresses. However, it should NOT contain non-contact information like publication dates. Browsers typically render it in italic by default; override with CSS if needed.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- Article author contact info --&gt;
+&lt;article&gt;
+  &lt;h2&gt;Semantic HTML Guide&lt;/h2&gt;
+  &lt;address&gt;
+    Written by &lt;a href=&quot;mailto:kim.jisoo@gachon.ac.kr&quot;&gt;Kim Jisoo&lt;/a&gt;.
+    Department of Computer Science, Gachon University.
+  &lt;/address&gt;
+  &lt;p&gt;Semantic HTML is not just about following rules...&lt;/p&gt;
+&lt;/article&gt;
+
+&lt;!-- Organisation contact info in footer --&gt;
+&lt;footer&gt;
+  &lt;address&gt;
+    &lt;strong&gt;Department of Computer Science&lt;/strong&gt;&lt;br&gt;
+    Gachon University&lt;br&gt;
+    1342 Seongnam-daero, Sujeong-gu&lt;br&gt;
+    Seongnam-si, Gyeonggi-do 13120&lt;br&gt;
+    Tel: &lt;a href=&quot;tel:+821031234567&quot;&gt;+82 10-3123-4567&lt;/a&gt;&lt;br&gt;
+    Email: &lt;a href=&quot;mailto:cs@gachon.ac.kr&quot;&gt;cs@gachon.ac.kr&lt;/a&gt;
+  &lt;/address&gt;
+&lt;/footer&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>address = contact info for nearest article or the whole page.</li>
+<li>Contains: email, phone, physical address, social links.</li>
+<li>Does NOT contain: publication dates, general paragraphs.</li>
+<li>Browsers render address in italic by default (change with CSS).</li></ul>
+</div>
+</section>
+<section id="topic-14">
+  <div class="topic-header">
+    <span class="topic-num">14</span>
+    <h2>&lt;mark&gt; — Highlighted Text</h2>
+    <span class="quiz-badge">Q10</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;mark&gt;</code> element represents text that is <strong>highlighted or marked for reference</strong> — the HTML equivalent of a yellow highlighter pen. Its key semantic purpose is to indicate relevance in context: search results highlighting the search term, a tutor marking important passages, a diff showing what changed.</p>
+<p>Do not confuse <code>&lt;mark&gt;</code> with <code>&lt;strong&gt;</code> or <code>&lt;em&gt;</code>. <code>strong</code> indicates importance (general), <code>em</code> indicates stress, and <code>mark</code> indicates <em>contextual relevance</em> — "this part matches what you were looking for." Browsers render it with a yellow background by default; change with CSS.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Search results page — highlight the search term --&gt;
+  &lt;h2&gt;Search Results for &quot;semantic HTML&quot;&lt;/h2&gt;
+  &lt;article&gt;
+    &lt;h3&gt;Why &lt;mark&gt;Semantic HTML&lt;/mark&gt; Matters&lt;/h3&gt;
+    &lt;p&gt;This guide explains how &lt;mark&gt;semantic HTML&lt;/mark&gt; improves
+       accessibility and SEO. Using proper elements...&lt;/p&gt;
+  &lt;/article&gt;
+
+  &lt;!-- Study guide — highlighting key term being defined --&gt;
+  &lt;p&gt;The &lt;mark&gt;DOCTYPE declaration&lt;/mark&gt; must be the very
+     first line of every HTML file.&lt;/p&gt;
+
+  &lt;!-- Customise colour with CSS if yellow doesn&#x27;t fit your design --&gt;
+  &lt;style&gt;
+    mark {
+      background-color: #ffd700;
+      color: #000;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+  &lt;/style&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>mark = highlighted for contextual relevance (like a highlighter pen).</li>
+<li>Different from strong (important) and em (stressed).</li>
+<li>Classic use: highlight search terms in search results.</li>
+<li>Yellow background by default; override with CSS.</li></ul>
+</div>
+</section>
+<section id="topic-15">
+  <div class="topic-header">
+    <span class="topic-num">15</span>
+    <h2>&lt;abbr&gt; — Abbreviations</h2>
+    <span class="quiz-badge">Q11</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;abbr&gt;</code> element marks an <strong>abbreviation or acronym</strong>, with the full expanded form provided in the <code>title</code> attribute. When users hover over the abbreviation, most browsers show the tooltip with the full form. Screen readers can also announce both the abbreviation and its expansion.</p>
+<p>Always define an abbreviation the first time it appears in a document using <code>&lt;abbr&gt;</code>. After the first use, you can write the abbreviation bare. Common abbreviations that everyone knows (USA, HTML, CSS) may not need <code>&lt;abbr&gt;</code>, but specialist terms, organisation names, and technical acronyms always benefit from it. Browsers display a dotted underline by default.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;p&gt;
+  &lt;abbr title=&quot;HyperText Markup Language&quot;&gt;HTML&lt;/abbr&gt;
+  is the foundation of every web page.
+  It works with
+  &lt;abbr title=&quot;Cascading Style Sheets&quot;&gt;CSS&lt;/abbr&gt;
+  and
+  &lt;abbr title=&quot;JavaScript&quot;&gt;JS&lt;/abbr&gt;
+  to create complete websites.
+&lt;/p&gt;
+
+&lt;p&gt;
+  This course is taught at
+  &lt;abbr title=&quot;Gachon University&quot;&gt;GU&lt;/abbr&gt;
+  in the
+  &lt;abbr title=&quot;Web Programming&quot;&gt;Web Prog&lt;/abbr&gt;
+  module
+  &lt;abbr title=&quot;Course code K0126002&quot;&gt;K0126002&lt;/abbr&gt;.
+&lt;/p&gt;
+
+&lt;!-- Style: dotted underline signals it has a tooltip --&gt;
+&lt;style&gt;
+  abbr[title] {
+    cursor: help;
+    text-decoration: underline dotted;
+  }
+&lt;/style&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>abbr = abbreviation/acronym with full form in title attribute.</li>
+<li>Hover tooltip shows the full expansion to users.</li>
+<li>Define abbreviations on first use with abbr; later uses can be bare.</li>
+<li>Dotted underline signals hover tooltip to users.</li></ul>
+</div>
+</section>
+<section id="topic-16">
+  <div class="topic-header">
+    <span class="topic-num">16</span>
+    <h2>&lt;blockquote&gt; — Block Quotation</h2>
+    <span class="quiz-badge">Q12</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;blockquote&gt;</code> element represents a <strong>long quotation from another source</strong>. It is block-level — it starts on its own line and receives additional indentation by default. The <code>cite</code> attribute (not the <code>&lt;cite&gt;</code> element) optionally provides the URL of the source. For the attribution (author name), use a <code>&lt;footer&gt;</code> or <code>&lt;cite&gt;</code> element inside the blockquote.</p>
+<p>Do not confuse <code>&lt;blockquote&gt;</code> with the <code>&lt;q&gt;</code> element (inline quotation). Rule of thumb: if the quote requires its own paragraph, use <code>&lt;blockquote&gt;</code>. If it flows within a sentence, use <code>&lt;q&gt;</code>. Never use <code>&lt;blockquote&gt;</code> for indentation — that is a CSS job.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;article&gt;
+  &lt;h2&gt;On the Web&lt;/h2&gt;
+  &lt;p&gt;The inventor of the web described his vision clearly:&lt;/p&gt;
+
+  &lt;!-- blockquote: multi-sentence/paragraph quote, block level --&gt;
+  &lt;blockquote cite=&quot;https://www.w3.org/People/Berners-Lee/FAQ.html&quot;&gt;
+    &lt;p&gt;The original idea of the web was that it should be a
+       collaborative space where you can communicate through sharing
+       information.&lt;/p&gt;
+    &lt;footer&gt;
+      — &lt;cite&gt;Tim Berners-Lee&lt;/cite&gt;, W3C Director
+    &lt;/footer&gt;
+  &lt;/blockquote&gt;
+
+  &lt;p&gt;Today, his vision has expanded beyond what even he imagined.&lt;/p&gt;
+&lt;/article&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>blockquote = block-level quotation from another source.</li>
+<li>cite attribute = URL of the source (not shown on screen).</li>
+<li>Put attribution in &lt;footer&gt;&lt;cite&gt;Author&lt;/cite&gt;&lt;/footer&gt; inside the blockquote.</li>
+<li>Never use blockquote for indentation — use CSS margin instead.</li></ul>
+</div>
+</section>
+<section id="topic-17">
+  <div class="topic-header">
+    <span class="topic-num">17</span>
+    <h2>&lt;q&gt; — Inline Quotation</h2>
+    <span class="quiz-badge">Q13</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;q&gt;</code> element marks an <strong>inline (short) quotation</strong> that flows within the surrounding text. Browsers automatically add quotation marks around the content; you do not need to type them manually. The <code>cite</code> attribute optionally provides the source URL.</p>
+<p>Use <code>&lt;q&gt;</code> for short quotations embedded in a sentence, and <code>&lt;blockquote&gt;</code> for longer, paragraph-level quotations. Do not add your own quotation marks inside <code>&lt;q&gt;</code> — the browser provides them (and changes them to the appropriate locale's quotation style automatically).</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;p&gt;
+  Tim Berners-Lee once said,
+  &lt;q cite=&quot;https://www.w3.org/People/Berners-Lee/FAQ.html&quot;&gt;
+    The web is for everyone.
+  &lt;/q&gt;
+&lt;/p&gt;
+
+&lt;!-- Browser auto-adds &quot; &quot; around q content --&gt;
+&lt;!-- In Korean browsers, it adds 「 」 or &quot; &quot; depending on locale --&gt;
+
+&lt;p&gt;
+  As the professor explained,
+  &lt;q&gt;semantic HTML is not optional — it is the foundation of the web.&lt;/q&gt;
+&lt;/p&gt;
+
+&lt;!-- Wrong: adding your own quotes inside q --&gt;
+&lt;!-- &lt;q&gt;&quot;The web is for everyone.&quot;&lt;/q&gt; ← removes browser&#x27;s quotes --&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>q = inline (short) quotation within a sentence.</li>
+<li>Browser auto-adds quotation marks — don&#x27;t type them yourself.</li>
+<li>cite attribute = URL of the source.</li>
+<li>Use blockquote for paragraph-length quotes; q for sentence-embedded ones.</li></ul>
+</div>
+</section>
+<section id="topic-18">
+  <div class="topic-header">
+    <span class="topic-num">18</span>
+    <h2>&lt;cite&gt; — Title of a Work</h2>
+    <span class="quiz-badge">Q14</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;cite&gt;</code> element marks the <strong>title of a creative work</strong> — a book, film, song, poem, painting, game, website, or article. Browsers render it in italic by default. It is for TITLES only, not for the author's name or a general reference.</p>
+<p>Do not confuse <code>&lt;cite&gt;</code> with the <code>cite</code> attribute. The <code>cite</code> attribute (on <code>&lt;blockquote&gt;</code> and <code>&lt;q&gt;</code>) holds a URL and is invisible. The <code>&lt;cite&gt;</code> element is visible on-screen text showing the title. Also do not use <code>&lt;cite&gt;</code> for the author's name — only for the work's title.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;p&gt;
+  We recommend reading
+  &lt;cite&gt;HTML and CSS: Design and Build Websites&lt;/cite&gt;
+  by Jon Duckett.
+&lt;/p&gt;
+
+&lt;p&gt;
+  The film &lt;cite&gt;Parasite&lt;/cite&gt; (2019) by Bong Joon-ho
+  is an example of rich visual storytelling.
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The web must be universal.&lt;/p&gt;
+  &lt;!-- cite inside blockquote: the work&#x27;s title or source --&gt;
+  &lt;footer&gt;— &lt;cite&gt;Weaving the Web&lt;/cite&gt;, Tim Berners-Lee&lt;/footer&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- Wrong uses: --&gt;
+&lt;!-- &lt;cite&gt;Tim Berners-Lee&lt;/cite&gt; ← person name, not a work title --&gt;
+&lt;!-- &lt;cite&gt;https://www.w3.org&lt;/cite&gt; ← URL, not a work title --&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>cite = title of a creative work: book, film, song, article.</li>
+<li>Different from cite attribute (URL, invisible) on blockquote/q.</li>
+<li>Do NOT use cite for author names — only for work titles.</li>
+<li>Browser renders italic by default; override with CSS.</li></ul>
+</div>
+</section>
+<section id="topic-19">
+  <div class="topic-header">
+    <span class="topic-num">19</span>
+    <h2>&lt;code&gt; — Inline Code</h2>
+    <span class="quiz-badge">Q15</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;code&gt;</code> element marks <strong>inline code</strong>: variable names, function names, HTML tag names, CSS properties, file names, or any technical string that should be rendered in a monospace font to distinguish it from prose. It is an inline element and is rendered in a fixed-width (monospace) font by default.</p>
+<p>For multi-line code blocks (a full function, a config file, a terminal command) use <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — the <code>pre</code> preserves whitespace and line breaks, while the inner <code>code</code> marks it as code. Never use <code>&lt;code&gt;</code> alone for multi-line blocks (whitespace collapses). Never use <code>&lt;pre&gt;</code> alone without <code>&lt;code&gt;</code> for code — <code>pre</code> is for any preformatted text, not specifically code.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- Inline code: variable names, tag names, properties --&gt;
+&lt;p&gt;Use the &lt;code&gt;display: flex&lt;/code&gt; property to create a flexbox container.&lt;/p&gt;
+&lt;p&gt;Set &lt;code&gt;lang=&quot;ko&quot;&lt;/code&gt; on the &lt;code&gt;&amp;lt;html&amp;gt;&lt;/code&gt; element for Korean pages.&lt;/p&gt;
+&lt;p&gt;Call &lt;code&gt;document.getElementById(&#x27;nav&#x27;)&lt;/code&gt; to select the element.&lt;/p&gt;
+&lt;p&gt;Save the file as &lt;code&gt;index.html&lt;/code&gt; in your project root.&lt;/p&gt;
+
+&lt;!-- Multi-line code block: pre + code together --&gt;
+&lt;figure&gt;
+  &lt;pre&gt;&lt;code&gt;function greet(name) {
+  return &#x27;Hello, &#x27; + name + &#x27;!&#x27;;
+}
+console.log(greet(&#x27;Gachon&#x27;));&lt;/code&gt;&lt;/pre&gt;
+  &lt;figcaption&gt;A simple JavaScript greeting function.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>code = inline code/technical terms — renders in monospace font.</li>
+<li>For multi-line code: use &lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;.</li>
+<li>pre preserves whitespace; code marks the content as code.</li>
+<li>Never use &lt;code&gt; alone for multi-line blocks (whitespace collapses).</li></ul>
+</div>
+</section>
+<section id="topic-20">
+  <div class="topic-header">
+    <span class="topic-num">20</span>
+    <h2>&lt;pre&gt; — Preformatted Text</h2>
+    <span class="quiz-badge">Q16</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;pre&gt;</code> element displays text <strong>exactly as typed</strong> — all spaces, tabs, and line breaks are preserved. Browsers normally collapse multiple spaces and ignore line breaks in HTML; <code>&lt;pre&gt;</code> is the exception. It renders in a monospace font by default and is a block-level element.</p>
+<p>The two main use cases are: (1) code blocks (always pair with <code>&lt;code&gt;</code> inside: <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code>); and (2) ASCII art or any text where exact spacing is visually meaningful, like a terminal output transcript. Note: content inside <code>&lt;pre&gt;</code> still needs HTML escaping — <code>&lt;</code> must be written as <code>&amp;lt;</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- Code block: pre + code together --&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&quot;en&quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;h1&amp;gt;Hello&amp;lt;/h1&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;!-- ASCII art: spaces are meaningful --&gt;
+&lt;pre&gt;
+  /\_____/ (  o   o  )
+ (  =^.^=  )
+  (  (-)  )
+   )     (
+  (_______)
+&lt;/pre&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>pre = preserves ALL whitespace and line breaks exactly as typed.</li>
+<li>Pair with &lt;code&gt; inside for code blocks: &lt;pre&gt;&lt;code&gt;.&lt;/code&gt;&lt;/pre&gt;</li>
+<li>&lt; inside pre must still be escaped as &amp;lt;</li>
+<li>Block-level element, monospace font by default.</li></ul>
+</div>
+</section>
+<section id="topic-21">
+  <div class="topic-header">
+    <span class="topic-num">21</span>
+    <h2>&lt;details&gt; &amp; &lt;summary&gt; — Disclosure Widget</h2>
+    <span class="quiz-badge">Q17, Q18</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;details&gt;</code> element creates a <strong>native expand/collapse widget</strong> — no JavaScript required. By default the content is hidden. The user clicks to expand it. The <code>&lt;summary&gt;</code> child provides the always-visible clickable label. All other content inside <code>&lt;details&gt;</code> (after the summary) is the expandable content.</p>
+<p>The <code>open</code> attribute (no value needed) makes the widget start in the expanded state. You can listen to the <code>toggle</code> event in JavaScript if you need to react when it opens or closes. Use cases: FAQ sections, spoiler warnings, optional detail boxes, collapsible code samples. No library or CSS hack needed — it is built into the browser.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- FAQ page using details + summary --&gt;
+&lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;What is the difference between section and article?&lt;/summary&gt;
+  &lt;p&gt;An &lt;strong&gt;article&lt;/strong&gt; is self-contained and makes sense outside
+     its page (a blog post, a comment). A &lt;strong&gt;section&lt;/strong&gt; groups
+     related content that needs the surrounding page for context.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;Why should I use semantic HTML?&lt;/summary&gt;
+  &lt;p&gt;Semantic HTML improves: (1) SEO — search engines understand structure;
+     (2) Accessibility — screen readers navigate by landmarks;
+     (3) Maintainability — code is easier for humans to read.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;!-- open attribute = expanded by default --&gt;
+&lt;details open&gt;
+  &lt;summary&gt;Key rule to remember&lt;/summary&gt;
+  &lt;p&gt;Use semantic elements first. Only fall back to div/span when
+     no semantic element fits.&lt;/p&gt;
+&lt;/details&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>details = native expand/collapse — no JavaScript needed.</li>
+<li>summary = the always-visible clickable label inside details.</li>
+<li>open attribute = starts expanded.</li>
+<li>Use for: FAQs, spoilers, optional detail boxes.</li></ul>
+</div>
+</section>
+<section id="topic-22">
+  <div class="topic-header">
+    <span class="topic-num">22</span>
+    <h2>&lt;dialog&gt; — Popup/Modal</h2>
+    <span class="quiz-badge">Q20</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;dialog&gt;</code> element represents a <strong>popup dialog box or modal window</strong> — a native HTML modal that requires no third-party library. By default it is hidden. Call <code>dialog.showModal()</code> in JavaScript to display it as a true modal (blocks the rest of the page, traps focus, adds a backdrop). Call <code>dialog.show()</code> for a non-blocking popup. Close it with <code>dialog.close()</code> or by submitting a <code>&lt;form method="dialog"&gt;</code> inside it.</p>
+<p>The native dialog element handles accessibility automatically: it traps keyboard focus inside (you cannot tab to content behind it), announces itself to screen readers, and the Escape key closes it. This is much better than a custom div-based modal which requires manual ARIA attributes and focus management.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- HTML --&gt;
+&lt;button onclick=&quot;document.getElementById(&#x27;confirm&#x27;).showModal()&quot;&gt;
+  Delete Account
+&lt;/button&gt;
+
+&lt;dialog id=&quot;confirm&quot;&gt;
+  &lt;h2&gt;Confirm Deletion&lt;/h2&gt;
+  &lt;p&gt;This action cannot be undone.
+     Are you sure you want to delete your account?&lt;/p&gt;
+
+  &lt;!-- form method=&quot;dialog&quot; closes the dialog on submit --&gt;
+  &lt;form method=&quot;dialog&quot;&gt;
+    &lt;button value=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;
+    &lt;button value=&quot;delete&quot;&gt;Yes, Delete&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  const dlg = document.getElementById(&#x27;confirm&#x27;);
+  dlg.addEventListener(&#x27;close&#x27;, function() {
+    if (dlg.returnValue === &#x27;delete&#x27;) {
+      alert(&#x27;Account deleted (demo only)&#x27;);
+    }
+  });
+&lt;/script&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>dialog = native HTML modal — no library needed.</li>
+<li>showModal() = true modal (blocks page, traps focus, adds backdrop).</li>
+<li>Escape key closes it automatically.</li>
+<li>&lt;form method=&#x27;dialog&#x27;&gt; inside closes the dialog on submit.</li></ul>
+</div>
+</section>
+<section id="topic-23">
+  <div class="topic-header">
+    <span class="topic-num">23</span>
+    <h2>ARIA role Attribute</h2>
+    <span class="quiz-badge">Q24</span>
+  </div>
+  <div class="topic-theory"><p>The <code>role</code> attribute adds an <strong>ARIA (Accessible Rich Internet Applications) semantic role</strong> to an element when no native HTML element provides the right semantics. Screen readers use the role to announce what an element IS: "button", "dialog", "navigation", "alert".</p>
+<p>The golden rule: <strong>use native HTML first</strong>. A <code>&lt;button&gt;</code> already has the button role. A <code>&lt;nav&gt;</code> already has the navigation role. Only add a <code>role</code> attribute when you must use a non-semantic element (usually a <code>&lt;div&gt;</code> or <code>&lt;span&gt;</code>) to create a component that has no native HTML equivalent, or when supporting very old browsers that do not recognise newer semantic elements.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- 1. Native HTML — role is implicit, no attribute needed --&gt;
+&lt;button&gt;Submit&lt;/button&gt;        &lt;!-- role=&quot;button&quot; is automatic --&gt;
+&lt;nav&gt;...&lt;/nav&gt;                 &lt;!-- role=&quot;navigation&quot; is automatic --&gt;
+&lt;main&gt;...&lt;/main&gt;               &lt;!-- role=&quot;main&quot; is automatic --&gt;
+
+&lt;!-- 2. ARIA role — only when native element does not exist --&gt;
+&lt;!-- Custom tab widget (no native tab element in HTML) --&gt;
+&lt;div role=&quot;tablist&quot;&gt;
+  &lt;div role=&quot;tab&quot; aria-selected=&quot;true&quot;&gt;HTML&lt;/div&gt;
+  &lt;div role=&quot;tab&quot; aria-selected=&quot;false&quot;&gt;CSS&lt;/div&gt;
+&lt;/div&gt;
+&lt;div role=&quot;tabpanel&quot;&gt;
+  &lt;p&gt;HTML content here...&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Live region: screen reader announces changes immediately --&gt;
+&lt;div role=&quot;alert&quot; id=&quot;status&quot;&gt;
+  &lt;!-- JS updates this text; screen reader reads it aloud --&gt;
+&lt;/div&gt;
+
+&lt;!-- Never: adding role to a native element redundantly --&gt;
+&lt;!-- &lt;nav role=&quot;navigation&quot;&gt; ← redundant, not wrong but unnecessary --&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>role = ARIA semantic role for screen readers.</li>
+<li>Use native HTML first — it already has the right role.</li>
+<li>Only add role when no native element fits (custom widgets).</li>
+<li>role=&#x27;alert&#x27; announces dynamic updates to screen readers.</li></ul>
+</div>
+</section>
+<section id="topic-24">
+  <div class="topic-header">
+    <span class="topic-num">24</span>
+    <h2>Semantic Landmarks &amp; Accessibility</h2>
+    <span class="quiz-badge">Q21</span>
+  </div>
+  <div class="topic-theory"><p>Semantic HTML elements automatically create <strong>landmark regions</strong> that screen reader users can jump between directly, like bookmarks in a document. Each semantic element maps to a WAI-ARIA landmark role: <code>&lt;header&gt;</code> → <code>banner</code>, <code>&lt;nav&gt;</code> → <code>navigation</code>, <code>&lt;main&gt;</code> → <code>main</code>, <code>&lt;aside&gt;</code> → <code>complementary</code>, <code>&lt;footer&gt;</code> → <code>contentinfo</code>, <code>&lt;section&gt;</code> → <code>region</code> (when labelled).</p>
+<p>Screen reader users press a shortcut key (e.g., <kbd>D</kbd> in NVDA, <kbd>R</kbd> in VoiceOver) to cycle through landmarks, instantly jumping to "navigation", "main content", or "footer" without reading every word on the page. A page with good semantic structure lets a screen reader user navigate in seconds. A page of div soup forces them to read linearly from top to bottom — potentially hundreds of lines before reaching the actual content.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- This structure creates 5 landmarks automatically: --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;&lt;!-- lang=&quot;ko&quot; for Korean content --&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;강의자료 — 웹프로그래밍&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;         &lt;!-- landmark: banner --&gt;
+    &lt;h1&gt;Web Programming K0126002&lt;/h1&gt;
+    &lt;nav&gt;          &lt;!-- landmark: navigation --&gt;
+      &lt;a href=&quot;/&quot;&gt;홈&lt;/a&gt;
+      &lt;a href=&quot;/schedule&quot;&gt;일정&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;           &lt;!-- landmark: main --&gt;
+    &lt;h2&gt;Week 2: Semantic HTML&lt;/h2&gt;
+    &lt;article&gt;...&lt;/article&gt;
+
+    &lt;aside&gt;        &lt;!-- landmark: complementary --&gt;
+      &lt;h2&gt;관련 자료&lt;/h2&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;         &lt;!-- landmark: contentinfo --&gt;
+    &lt;p&gt;&amp;copy; 2026 가천대학교&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Semantic elements automatically create ARIA landmark regions.</li>
+<li>header→banner, nav→navigation, main→main, footer→contentinfo.</li>
+<li>Screen reader users jump between landmarks with a single keystroke.</li>
+<li>Div soup = no landmarks = screen reader user reads linearly from top to bottom.</li></ul>
+</div>
+</section>
+<section id="topic-25">
+  <div class="topic-header">
+    <span class="topic-num">25</span>
+    <h2>Complete Semantic Page — All Together</h2>
+    <span class="quiz-badge">Q1–Q25</span>
+  </div>
+  <div class="topic-theory"><p>This final topic shows how all 25 semantic elements combine into one complete, valid, accessible HTML5 page — the kind you will build in Friday's lab. Every element earns its place: the page structure is clear to humans, screen readers, search engines, and browser developer tools alike.</p>
+<p>After building any page, check it with two free tools: (1) <strong>validator.w3.org</strong> — paste your HTML, fix all errors; (2) <strong>Wave tool (wave.webaim.org)</strong> — checks accessibility, shows landmarks, flags missing alt text and heading issues. Aim for zero errors in both before submitting any assignment.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Kim Jisoo — Web Portfolio · Gachon University&lt;/title&gt;
+  &lt;meta name=&quot;description&quot; content=&quot;Portfolio of Kim Jisoo, CS student.&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Kim Jisoo&lt;/h1&gt;
+    &lt;nav aria-label=&quot;Main navigation&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;#about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#projects&quot;&gt;Projects&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section id=&quot;about&quot;&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;img src=&quot;profile.jpg&quot; alt=&quot;Kim Jisoo smiling in front of Gachon Library&quot;
+             width=&quot;200&quot; height=&quot;200&quot;&gt;
+        &lt;figcaption&gt;Computer Science, Class of 2028&lt;/figcaption&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;I am a &lt;strong&gt;second-year CS student&lt;/strong&gt; at
+         &lt;abbr title=&quot;Gachon University&quot;&gt;GU&lt;/abbr&gt; learning
+         &lt;mark&gt;full-stack web development&lt;/mark&gt;.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;projects&quot;&gt;
+      &lt;h2&gt;Projects&lt;/h2&gt;
+      &lt;article&gt;
+        &lt;header&gt;
+          &lt;h3&gt;Portfolio Website&lt;/h3&gt;
+          &lt;p&gt;Built: &lt;time datetime=&quot;2026-09&quot;&gt;September 2026&lt;/time&gt;&lt;/p&gt;
+        &lt;/header&gt;
+        &lt;p&gt;My first semantic HTML project. Uses
+           &lt;code&gt;header&lt;/code&gt;, &lt;code&gt;main&lt;/code&gt;, &lt;code&gt;footer&lt;/code&gt;
+           and proper heading hierarchy.&lt;/p&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;aside aria-label=&quot;Skills sidebar&quot;&gt;
+      &lt;h2&gt;Tech Stack&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;HTML5&lt;/li&gt;
+        &lt;li&gt;CSS3&lt;/li&gt;
+        &lt;li&gt;JavaScript&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+
+    &lt;section id=&quot;contact&quot;&gt;
+      &lt;h2&gt;Contact&lt;/h2&gt;
+      &lt;address&gt;
+        &lt;a href=&quot;mailto:jisoo@gachon.ac.kr&quot;&gt;jisoo@gachon.ac.kr&lt;/a&gt;&lt;br&gt;
+        &lt;a href=&quot;https://github.com/jisoo&quot;
+           target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;GitHub&lt;/a&gt;
+      &lt;/address&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Kim Jisoo · Web Programming K0126002&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Every element earns its place — no divs where semantic elements fit.</li>
+<li>Validate at validator.w3.org + check accessibility at wave.webaim.org.</li>
+<li>This is the template for Friday&#x27;s lab portfolio assignment.</li>
+<li>header→nav→main→(section/article/aside/figure/address)→footer.</li></ul>
+</div>
+</section>
+    <section id="exercises" style="margin-top:60px">
+      <h2>Practice Exercises</h2>
+      <p class="intro">Study the example → read the task → write HTML → click ▶ Preview.
+         Hint and Solution are available if you get stuck — but try first!</p>
+      <article class="exercise" id="exercise-1">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 1</span>
+    <h3>Convert Div Soup to Semantic HTML</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- Semantic structure for a simple page --&gt;
+&lt;header&gt;
+  &lt;h1&gt;My Site&lt;/h1&gt;
+  &lt;nav&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt; &lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;&lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;section id=&quot;welcome&quot;&gt;
+    &lt;h2&gt;Welcome&lt;/h2&gt;
+    &lt;p&gt;Content here.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+&lt;footer&gt;&lt;p&gt;&amp;copy; 2026&lt;/p&gt;&lt;/footer&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">The code below is div soup. Convert it to semantic HTML by replacing each <code>&lt;div class='...'&gt;</code> with the correct semantic element. The class names are hints for which element to use.<br><br><code style='display:block;background:var(--cb);color:var(--ct);padding:12px;border-radius:6px;white-space:pre;font-size:12px'>&lt;div class="header"&gt;
+  &lt;h1&gt;Gachon Blog&lt;/h1&gt;
+  &lt;div class="nav"&gt;
+    &lt;a href="/"&gt;Home&lt;/a&gt;
+    &lt;a href="/posts"&gt;Posts&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="main"&gt;
+  &lt;div class="article"&gt;
+    &lt;h2&gt;My First Post&lt;/h2&gt;
+    &lt;p&gt;Today I learned about semantic HTML...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="sidebar"&gt;
+    &lt;h2&gt;Recent Posts&lt;/h2&gt;
+    &lt;ul&gt;&lt;li&gt;Intro to HTML&lt;/li&gt;&lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;&lt;p&gt;&amp;copy; 2026&lt;/p&gt;&lt;/div&gt;</code></div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex1-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Gachon Blog&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;header&quot;&gt;
+    &lt;h1&gt;Gachon Blog&lt;/h1&gt;
+    &lt;div class=&quot;nav&quot;&gt;
+      &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;/posts&quot;&gt;Posts&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;main&quot;&gt;
+    &lt;div class=&quot;article&quot;&gt;
+      &lt;h2&gt;My First Post&lt;/h2&gt;
+      &lt;p&gt;Today I learned about semantic HTML...&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;sidebar&quot;&gt;
+      &lt;h2&gt;Recent Posts&lt;/h2&gt;
+      &lt;ul&gt;&lt;li&gt;Intro to HTML&lt;/li&gt;&lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;&lt;p&gt;&amp;copy; 2026&lt;/p&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex1-editor','ex1-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex1-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex1-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex1-hint" hidden>div class=&#x27;header&#x27; → header, div class=&#x27;nav&#x27; → nav, div class=&#x27;main&#x27; → main, div class=&#x27;article&#x27; → article, div class=&#x27;sidebar&#x27; → aside, div class=&#x27;footer&#x27; → footer.</div>
+      <div class="solution-box" id="ex1-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Gachon Blog&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Gachon Blog&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;/posts&quot;&gt;Posts&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;h2&gt;My First Post&lt;/h2&gt;
+      &lt;p&gt;Today I learned about semantic HTML...&lt;/p&gt;
+    &lt;/article&gt;
+    &lt;aside&gt;
+      &lt;h2&gt;Recent Posts&lt;/h2&gt;
+      &lt;ul&gt;&lt;li&gt;Intro to HTML&lt;/li&gt;&lt;/ul&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;&lt;p&gt;&amp;copy; 2026&lt;/p&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex1-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-2">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 2</span>
+    <h3>Blog Article with header &amp; footer</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;article&gt;
+  &lt;header&gt;
+    &lt;h2&gt;My First CSS Project&lt;/h2&gt;
+    &lt;p&gt;By Kim Jisoo · &lt;time datetime=&quot;2026-09-05&quot;&gt;Sep 5, 2026&lt;/time&gt;&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;p&gt;Today I styled my portfolio page using CSS flexbox...&lt;/p&gt;
+  &lt;footer&gt;
+    &lt;p&gt;Tags: CSS · Layout · Beginner&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Write a <code>&lt;article&gt;</code> for a blog post about YOUR favourite topic. Inside it: an <code>&lt;article&gt;&lt;header&gt;</code> with an h2 title + a paragraph showing author and <code>&lt;time datetime='...'&gt;</code> for the date, two body paragraphs (use <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code>), and an <code>&lt;article&gt;&lt;footer&gt;</code> with tags.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex2-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Blog Post&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;article&gt;
+  &lt;header&gt;
+    &lt;!-- h2 title + p with author and time element --&gt;
+  &lt;/header&gt;
+  &lt;!-- two body paragraphs with strong and em --&gt;
+  &lt;footer&gt;
+    &lt;!-- Tags line --&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex2-editor','ex2-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex2-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex2-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex2-hint" hidden>Structure: article &gt; header(h2 + p with time) &gt; p + p &gt; footer(p with tags). The time element needs datetime=&#x27;YYYY-MM-DD&#x27;.</div>
+      <div class="solution-box" id="ex2-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Blog Post&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;article&gt;
+  &lt;header&gt;
+    &lt;h2&gt;Why I Love Web Development&lt;/h2&gt;
+    &lt;p&gt;By Park Minho · &lt;time datetime=&quot;2026-09-05&quot;&gt;September 5, 2026&lt;/time&gt;&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;p&gt;Web development is the &lt;strong&gt;perfect blend of creativity and logic&lt;/strong&gt;.
+     Every page I build teaches me something new about how the internet works.&lt;/p&gt;
+  &lt;p&gt;My favourite part is seeing the page come alive in the browser — that
+     &lt;em&gt;aha moment&lt;/em&gt; when the layout finally clicks into place is addictive.&lt;/p&gt;
+  &lt;footer&gt;
+    &lt;p&gt;Tags: HTML · CSS · Learning&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex2-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-3">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 3</span>
+    <h3>Figure, figcaption &amp; time</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;figure&gt;
+  &lt;img src=&quot;https://picsum.photos/400/250?random=5&quot;
+       alt=&quot;Colourful abstract design&quot; width=&quot;400&quot; height=&quot;250&quot;&gt;
+  &lt;figcaption&gt;Figure 1: A random placeholder image from picsum.photos.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The image above was captured on
+  &lt;time datetime=&quot;2026-09-05&quot;&gt;September 5, 2026&lt;/time&gt;.
+&lt;/p&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a page with <strong>two figures</strong>. Figure 1: <code>https://picsum.photos/400/250?random=10</code> with a meaningful alt text and a figcaption. Figure 2: a <code>&lt;pre&gt;&lt;code&gt;</code> block of your HTML skeleton (the 7-line template), wrapped in figure with a figcaption. Between them, write a sentence with a <code>&lt;time datetime='2026-09-05'&gt;</code> showing today's date.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex3-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Figures&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Figure 1: image with figcaption --&gt;
+  &lt;figure&gt;
+
+  &lt;/figure&gt;
+
+  &lt;!-- Sentence with time element --&gt;
+  &lt;p&gt;...&lt;/p&gt;
+
+  &lt;!-- Figure 2: pre+code block with figcaption --&gt;
+  &lt;figure&gt;
+
+  &lt;/figure&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex3-editor','ex3-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex3-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex3-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex3-hint" hidden>For figure 2: put your pre+code block inside figure tags. The figcaption can say &#x27;Listing 1: HTML5 skeleton template.&#x27;</div>
+      <div class="solution-box" id="ex3-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Figures&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;figure&gt;
+    &lt;img src=&quot;https://picsum.photos/400/250?random=10&quot;
+         alt=&quot;Students working at computer desks in a university lab&quot;
+         width=&quot;400&quot; height=&quot;250&quot;&gt;
+    &lt;figcaption&gt;Figure 1: Gachon University computer lab session.&lt;/figcaption&gt;
+  &lt;/figure&gt;
+
+  &lt;p&gt;This guide was last updated on
+     &lt;time datetime=&quot;2026-09-05&quot;&gt;September 5, 2026&lt;/time&gt;.
+  &lt;/p&gt;
+
+  &lt;figure&gt;
+    &lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&quot;en&quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;
+  &amp;lt;title&amp;gt;Page Title&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+    &lt;figcaption&gt;Listing 1: The HTML5 skeleton template.&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex3-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-4">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 4</span>
+    <h3>FAQ with &lt;details&gt; &amp; &lt;summary&gt;</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;details&gt;
+  &lt;summary&gt;What does semantic HTML mean?&lt;/summary&gt;
+  &lt;p&gt;Semantic HTML means choosing elements based on their
+     meaning, not their appearance.&lt;/p&gt;
+&lt;/details&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Build a FAQ section with <strong>four questions</strong> about HTML/web programming using <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>. The first one should start <code>open</code> (already expanded). Wrap all four in a <code>&lt;section&gt;</code> with an h2 heading.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex4-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Web Programming FAQ&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;section id=&quot;faq&quot;&gt;
+  &lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+  &lt;!-- 4 details elements; first one has open attribute --&gt;
+
+&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex4-editor','ex4-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex4-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex4-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex4-hint" hidden>Structure: section &gt; h2 &gt; details(open) &gt; summary + p, then 3 more details. The &#x27;open&#x27; attribute on details makes it start expanded.</div>
+      <div class="solution-box" id="ex4-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Web Programming FAQ&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;section id=&quot;faq&quot;&gt;
+  &lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+
+  &lt;details open&gt;
+    &lt;summary&gt;What is HTML?&lt;/summary&gt;
+    &lt;p&gt;HTML stands for HyperText Markup Language. It is the standard language
+       for creating web pages and describes the structure of content.&lt;/p&gt;
+  &lt;/details&gt;
+
+  &lt;details&gt;
+    &lt;summary&gt;What is the difference between &amp;lt;section&amp;gt; and &amp;lt;article&amp;gt;?&lt;/summary&gt;
+    &lt;p&gt;A &lt;strong&gt;section&lt;/strong&gt; groups related content that needs its
+       surrounding context. An &lt;strong&gt;article&lt;/strong&gt; is fully self-contained
+       and could be published independently.&lt;/p&gt;
+  &lt;/details&gt;
+
+  &lt;details&gt;
+    &lt;summary&gt;Why is the alt attribute important?&lt;/summary&gt;
+    &lt;p&gt;The alt attribute provides alternative text for images.
+       Screen readers read it to visually impaired users, and it displays
+       when the image fails to load.&lt;/p&gt;
+  &lt;/details&gt;
+
+  &lt;details&gt;
+    &lt;summary&gt;What does DOCTYPE do?&lt;/summary&gt;
+    &lt;p&gt;The DOCTYPE declaration tells the browser which version of HTML
+       the document uses. &amp;lt;!DOCTYPE html&amp;gt; triggers standards mode
+       for consistent rendering across all browsers.&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex4-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-5">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 5</span>
+    <h3>Full Semantic Portfolio Page</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- Semantic skeleton — the full structure at a glance --&gt;
+&lt;header&gt;&lt;h1&gt;Name&lt;/h1&gt;&lt;nav&gt;...&lt;/nav&gt;&lt;/header&gt;
+&lt;main&gt;
+  &lt;section id=&quot;about&quot;&gt;&lt;h2&gt;About&lt;/h2&gt;...&lt;/section&gt;
+  &lt;section id=&quot;projects&quot;&gt;
+    &lt;h2&gt;Projects&lt;/h2&gt;
+    &lt;article&gt;
+      &lt;header&gt;&lt;h3&gt;Project Name&lt;/h3&gt;&lt;p&gt;&lt;time datetime=&quot;2026-09&quot;&gt;Sep 2026&lt;/time&gt;&lt;/p&gt;&lt;/header&gt;
+      &lt;p&gt;Description with &lt;code&gt;technical term&lt;/code&gt;.&lt;/p&gt;
+    &lt;/article&gt;
+  &lt;/section&gt;
+  &lt;aside&gt;&lt;h2&gt;Skills&lt;/h2&gt;&lt;ul&gt;...&lt;/ul&gt;&lt;/aside&gt;
+  &lt;section id=&quot;contact&quot;&gt;&lt;h2&gt;Contact&lt;/h2&gt;&lt;address&gt;...&lt;/address&gt;&lt;/section&gt;
+&lt;/main&gt;
+&lt;footer&gt;&lt;p&gt;&amp;copy; 2026 Name&lt;/p&gt;&lt;/footer&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Build your complete semantic portfolio page. Must include: <code>&lt;header&gt;</code> with h1 name + <code>&lt;nav&gt;</code> (4 links with fragment hrefs), <code>&lt;main&gt;</code> containing: About section (with <code>&lt;figure&gt;</code>+<code>&lt;img&gt;</code>+<code>&lt;figcaption&gt;</code>, and a paragraph with <code>&lt;abbr&gt;</code>+<code>&lt;mark&gt;</code>), Projects section (one <code>&lt;article&gt;</code> with its own header+time), <code>&lt;aside&gt;</code> with skills list, Contact section with <code>&lt;address&gt;</code>. End with a <code>&lt;footer&gt;</code>.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex5-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Portfolio&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- header: h1 + nav with 4 links --&gt;
+
+  &lt;main&gt;
+    &lt;!-- section#about: figure+img+figcaption, p with abbr+mark --&gt;
+    &lt;!-- section#projects: article with header+time --&gt;
+    &lt;!-- aside: skills list --&gt;
+    &lt;!-- section#contact: address element --&gt;
+  &lt;/main&gt;
+
+  &lt;!-- footer: copyright --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex5-editor','ex5-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex5-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex5-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex5-hint" hidden>Start with the skeleton structure, then fill each section one at a time. Test Preview after adding each section.</div>
+      <div class="solution-box" id="ex5-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Kim Jisoo — Portfolio&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Kim Jisoo&lt;/h1&gt;
+    &lt;nav aria-label=&quot;Main navigation&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;#about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#projects&quot;&gt;Projects&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#skills&quot;&gt;Skills&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section id=&quot;about&quot;&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;img src=&quot;https://picsum.photos/200/200?random=20&quot;
+             alt=&quot;Kim Jisoo, CS student at Gachon University&quot;
+             width=&quot;200&quot; height=&quot;200&quot;&gt;
+        &lt;figcaption&gt;Computer Science, Gachon University, Class of 2028&lt;/figcaption&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;I am a student at &lt;abbr title=&quot;Gachon University&quot;&gt;GU&lt;/abbr&gt;
+         specialising in &lt;mark&gt;web development&lt;/mark&gt; and UI design.
+         I enjoy building &lt;strong&gt;accessible, semantic&lt;/strong&gt; websites.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;projects&quot;&gt;
+      &lt;h2&gt;My Projects&lt;/h2&gt;
+      &lt;article&gt;
+        &lt;header&gt;
+          &lt;h3&gt;Portfolio Website&lt;/h3&gt;
+          &lt;p&gt;Completed: &lt;time datetime=&quot;2026-09&quot;&gt;September 2026&lt;/time&gt;&lt;/p&gt;
+        &lt;/header&gt;
+        &lt;p&gt;A personal portfolio using semantic &lt;code&gt;HTML5&lt;/code&gt; elements
+           including &lt;code&gt;header&lt;/code&gt;, &lt;code&gt;main&lt;/code&gt;, &lt;code&gt;article&lt;/code&gt;,
+           and &lt;code&gt;aside&lt;/code&gt;.&lt;/p&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;aside id=&quot;skills&quot; aria-label=&quot;Skills&quot;&gt;
+      &lt;h2&gt;Skills&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;HTML5 &amp;amp; Semantic markup&lt;/li&gt;
+        &lt;li&gt;CSS3 &amp;amp; Flexbox&lt;/li&gt;
+        &lt;li&gt;JavaScript basics&lt;/li&gt;
+        &lt;li&gt;Accessibility (WCAG)&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+
+    &lt;section id=&quot;contact&quot;&gt;
+      &lt;h2&gt;Contact&lt;/h2&gt;
+      &lt;address&gt;
+        &lt;a href=&quot;mailto:jisoo@gachon.ac.kr&quot;&gt;jisoo@gachon.ac.kr&lt;/a&gt;&lt;br&gt;
+        Gachon University, Seongnam, Korea&lt;br&gt;
+        &lt;a href=&quot;https://github.com/jisoo&quot;
+           target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;GitHub&lt;/a&gt;
+      &lt;/address&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Kim Jisoo · Web Programming K0126002 · Gachon University&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex5-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-6">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 6</span>
+    <h3>Fix Semantic Errors</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- Correct semantic nesting --&gt;
+&lt;header&gt;&lt;h1&gt;Site Title&lt;/h1&gt;&lt;nav&gt;...&lt;/nav&gt;&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;header&gt;&lt;h2&gt;Post Title&lt;/h2&gt;&lt;/header&gt;
+    &lt;figure&gt;&lt;img src=&quot;img.jpg&quot; alt=&quot;Description&quot;&gt;&lt;figcaption&gt;Caption&lt;/figcaption&gt;&lt;/figure&gt;
+    &lt;aside&gt;&lt;p&gt;Related info&lt;/p&gt;&lt;/aside&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;&lt;p&gt;&amp;copy; 2026&lt;/p&gt;&lt;/footer&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Find and fix all <strong>6 semantic errors</strong> in the code below. Paste into the editor, fix them, and verify with Preview.<br><br><code style='display:block;background:var(--cb);color:var(--ct);padding:12px;border-radius:6px;white-space:pre;font-size:12px'>&lt;head&gt;
+  &lt;h1&gt;My Blog&lt;/h1&gt;
+  &lt;navigation&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/navigation&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Semantic HTML&lt;/h2&gt;
+    &lt;figure&gt;
+      &lt;img src="img.jpg"&gt;
+    &lt;/figure&gt;
+    &lt;footer&gt;
+      &lt;p&gt;Related: &lt;a href="/html"&gt;HTML Guide&lt;/a&gt;&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/article&gt;
+  &lt;sidebar&gt;&lt;h2&gt;Topics&lt;/h2&gt;&lt;/sidebar&gt;
+&lt;/body&gt;</code></div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex6-editor">&lt;head&gt;
+  &lt;h1&gt;My Blog&lt;/h1&gt;
+  &lt;navigation&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/navigation&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Semantic HTML&lt;/h2&gt;
+    &lt;figure&gt;
+      &lt;img src=&quot;img.jpg&quot;&gt;
+    &lt;/figure&gt;
+    &lt;footer&gt;
+      &lt;p&gt;Related: &lt;a href=&quot;/html&quot;&gt;HTML Guide&lt;/a&gt;&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/article&gt;
+  &lt;sidebar&gt;&lt;h2&gt;Topics&lt;/h2&gt;&lt;/sidebar&gt;
+&lt;/body&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex6-editor','ex6-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex6-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex6-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex6-hint" hidden>Errors: (1) h1 and nav inside head (should be in body, inside header), (2) navigation is not valid — use nav, (3) img missing alt, (4) related sidebar content inside article footer should be aside outside the article, (5) sidebar is not valid — use aside.</div>
+      <div class="solution-box" id="ex6-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Blog&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Fix 1+2: h1 and nav go in body inside header, not in &lt;head&gt; --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;My Blog&lt;/h1&gt;
+    &lt;nav&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/nav&gt;  &lt;!-- fix 2: navigation → nav --&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;h2&gt;Semantic HTML&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;!-- Fix 3: add alt attribute --&gt;
+        &lt;img src=&quot;img.jpg&quot; alt=&quot;Diagram showing semantic HTML elements&quot;&gt;
+      &lt;/figure&gt;
+      &lt;!-- Fix 4: related content is NOT part of the article footer --&gt;
+    &lt;/article&gt;
+
+    &lt;!-- Fix 4+5: use aside, not footer inside article, not sidebar --&gt;
+    &lt;aside&gt;
+      &lt;h2&gt;Topics&lt;/h2&gt;
+      &lt;p&gt;Related: &lt;a href=&quot;/html&quot;&gt;HTML Guide&lt;/a&gt;&lt;/p&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex6-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-7">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 7</span>
+    <h3>Quotation &amp; Citation Page</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;p&gt;Einstein once said, &lt;q&gt;Imagination is more important than knowledge.&lt;/q&gt;&lt;/p&gt;
+&lt;blockquote cite=&quot;https://example.com/speech&quot;&gt;
+  &lt;p&gt;The internet is the greatest tool humanity has ever created
+     for sharing knowledge.&lt;/p&gt;
+  &lt;footer&gt;— &lt;cite&gt;A Web Pioneer&lt;/cite&gt;, 2026&lt;/footer&gt;
+&lt;/blockquote&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a 'Inspirational Quotes' page with: an h1 heading, one inline quote using <code>&lt;q&gt;</code> embedded in a sentence, two <code>&lt;blockquote&gt;</code> elements each with a <code>&lt;footer&gt;</code> containing the author name in <code>&lt;cite&gt;</code>, and a <code>&lt;details&gt;</code> section for 'About these quotes' explaining where you found them (using <code>&lt;abbr&gt;</code> for any acronyms).</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex7-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Inspirational Quotes&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Quotes on Learning&lt;/h1&gt;
+
+  &lt;!-- One p containing an inline &lt;q&gt; quote --&gt;
+
+  &lt;!-- Two blockquote elements with footer + cite --&gt;
+
+  &lt;!-- details + summary: About these quotes (with abbr) --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex7-editor','ex7-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex7-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex7-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex7-hint" hidden>q goes INSIDE a regular p sentence. blockquote stands alone with footer inside. details+summary at the end. cite wraps the author&#x27;s WORK title or name inside a blockquote footer.</div>
+      <div class="solution-box" id="ex7-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Inspirational Quotes&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Quotes on Learning&lt;/h1&gt;
+
+  &lt;p&gt;
+    As the saying goes,
+    &lt;q&gt;The more I learn, the more I realise how much I don&#x27;t know.&lt;/q&gt;
+  &lt;/p&gt;
+
+  &lt;blockquote cite=&quot;https://en.wikiquote.org/wiki/Albert_Einstein&quot;&gt;
+    &lt;p&gt;Imagination is more important than knowledge. For knowledge is limited,
+       whereas imagination embraces the entire world, stimulating progress,
+       giving birth to evolution.&lt;/p&gt;
+    &lt;footer&gt;— &lt;cite&gt;Albert Einstein&lt;/cite&gt;, physicist and Nobel laureate&lt;/footer&gt;
+  &lt;/blockquote&gt;
+
+  &lt;blockquote&gt;
+    &lt;p&gt;Any sufficiently advanced technology is indistinguishable from magic.&lt;/p&gt;
+    &lt;footer&gt;— &lt;cite&gt;Profiles of the Future&lt;/cite&gt;, Arthur C. Clarke (1962)&lt;/footer&gt;
+  &lt;/blockquote&gt;
+
+  &lt;details&gt;
+    &lt;summary&gt;About these quotes&lt;/summary&gt;
+    &lt;p&gt;These quotes were sourced from
+       &lt;abbr title=&quot;Wikipedia&#x27;s sister site for quotations&quot;&gt;Wikiquote&lt;/abbr&gt;
+       and public domain publications. All quotes are
+       &lt;abbr title=&quot;Creative Commons&quot;&gt;CC&lt;/abbr&gt;-licensed.
+    &lt;/p&gt;
+  &lt;/details&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex7-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-8">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 8</span>
+    <h3>News Article — All Semantic Elements</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- A newspaper-style article uses almost every semantic element --&gt;
+&lt;article&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Headline&lt;/h1&gt;
+    &lt;p&gt;By &lt;address&gt;Reporter Name&lt;/address&gt; ·
+       &lt;time datetime=&quot;2026-09-05&quot;&gt;Sep 5, 2026&lt;/time&gt;&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;figure&gt;&lt;img src=&quot;photo.jpg&quot; alt=&quot;...&quot;&gt;&lt;figcaption&gt;Caption&lt;/figcaption&gt;&lt;/figure&gt;
+  &lt;section&gt;&lt;h2&gt;Background&lt;/h2&gt;&lt;p&gt;...&lt;/p&gt;&lt;/section&gt;
+  &lt;blockquote&gt;&lt;p&gt;Quote.&lt;/p&gt;&lt;footer&gt;&lt;cite&gt;Source&lt;/cite&gt;&lt;/footer&gt;&lt;/blockquote&gt;
+  &lt;aside&gt;&lt;h2&gt;Key Facts&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;&lt;/aside&gt;
+  &lt;footer&gt;&lt;p&gt;Tags: Technology · Web&lt;/p&gt;&lt;/footer&gt;
+&lt;/article&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Write a <strong>complete news article page</strong> about a technology topic of your choice (AI, Web development, gaming, etc.). Must include ALL of these: outer <code>&lt;header&gt;</code>+<code>&lt;nav&gt;</code>+<code>&lt;main&gt;</code>+<code>&lt;footer&gt;</code>, inside main: an <code>&lt;article&gt;</code> with its own <code>&lt;header&gt;</code> (h1 headline + <code>&lt;time&gt;</code>), a <code>&lt;figure&gt;</code>+<code>&lt;img&gt;</code>, two <code>&lt;section&gt;</code>s (Background + Analysis), a <code>&lt;blockquote&gt;</code> with <code>&lt;cite&gt;</code>, an <code>&lt;aside&gt;</code> (Key Facts), and the article's <code>&lt;footer&gt;</code>. Use <code>&lt;mark&gt;</code>, <code>&lt;abbr&gt;</code>, and <code>&lt;code&gt;</code> at least once each.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex8-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;News Article&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Page header + nav --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Gachon Tech News&lt;/h1&gt;
+    &lt;nav&gt;...&lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;!-- Article header: h1 headline + time --&gt;
+
+      &lt;!-- figure + img --&gt;
+
+      &lt;!-- section: Background (2 paragraphs, abbr, code) --&gt;
+
+      &lt;!-- blockquote + cite --&gt;
+
+      &lt;!-- section: Analysis (mark) --&gt;
+
+      &lt;!-- aside: Key Facts --&gt;
+
+      &lt;!-- Article footer: tags --&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+
+  &lt;!-- Page footer --&gt;
+  &lt;footer&gt;...&lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex8-editor','ex8-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex8-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex8-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex8-hint" hidden>Build outside-in: page shell (header/main/footer) first → main article → each section one at a time → blockquote → aside → inline elements (mark/abbr/code) last. Preview often.</div>
+      <div class="solution-box" id="ex8-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;HTML5 Transforms Web Development — Gachon Tech News&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Gachon Tech News&lt;/h1&gt;
+    &lt;nav aria-label=&quot;Main navigation&quot;&gt;
+      &lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt; · &lt;a href=&quot;/tech&quot;&gt;Technology&lt;/a&gt; · &lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h1&gt;&lt;mark&gt;HTML5&lt;/mark&gt; Semantic Elements Transform How We Build the Web&lt;/h1&gt;
+        &lt;p&gt;By the Web Programming Team ·
+           Published &lt;time datetime=&quot;2026-09-05&quot;&gt;September 5, 2026&lt;/time&gt;
+        &lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;figure&gt;
+        &lt;img src=&quot;https://picsum.photos/600/300?random=42&quot;
+             alt=&quot;A developer viewing HTML code on a large monitor&quot;
+             width=&quot;600&quot; height=&quot;300&quot;&gt;
+        &lt;figcaption&gt;Modern web development relies on semantic
+          &lt;abbr title=&quot;HyperText Markup Language&quot;&gt;HTML&lt;/abbr&gt; structure.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;section&gt;
+        &lt;h2&gt;Background&lt;/h2&gt;
+        &lt;p&gt;Before 2008, web developers built pages entirely from
+           &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt; elements — a practice now called
+           &lt;strong&gt;div soup&lt;/strong&gt;. Every layout box was a faceless container
+           with a class name that had meaning only to the developer who wrote it.&lt;/p&gt;
+        &lt;p&gt;The &lt;abbr title=&quot;World Wide Web Consortium&quot;&gt;W3C&lt;/abbr&gt; addressed this
+           with HTML5, introducing structural elements like
+           &lt;code&gt;&amp;lt;header&amp;gt;&lt;/code&gt;, &lt;code&gt;&amp;lt;nav&amp;gt;&lt;/code&gt;,
+           &lt;code&gt;&amp;lt;main&amp;gt;&lt;/code&gt;, and &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt;.
+        &lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;blockquote cite=&quot;https://www.w3.org&quot;&gt;
+        &lt;p&gt;Semantic HTML is not an optional best practice — it is the
+           foundation of an accessible, indexable, interoperable web.&lt;/p&gt;
+        &lt;footer&gt;— &lt;cite&gt;Web Accessibility Initiative&lt;/cite&gt;, W3C&lt;/footer&gt;
+      &lt;/blockquote&gt;
+
+      &lt;section&gt;
+        &lt;h2&gt;Analysis&lt;/h2&gt;
+        &lt;p&gt;Pages written with semantic elements consistently rank higher in
+           search results. Google&#x27;s crawlers can identify the
+           &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt; as the primary content and ignore
+           repeated navigation, improving indexing accuracy.&lt;/p&gt;
+        &lt;p&gt;For the &lt;mark&gt;95 students&lt;/mark&gt; in K0126002, mastering semantic
+           HTML this week means every future project starts on solid footing.&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;aside aria-label=&quot;Key facts&quot;&gt;
+        &lt;h2&gt;Key Facts&lt;/h2&gt;
+        &lt;ul&gt;
+          &lt;li&gt;HTML5 released: &lt;time datetime=&quot;2014-10-28&quot;&gt;October 2014&lt;/time&gt;&lt;/li&gt;
+          &lt;li&gt;~30 new semantic elements added&lt;/li&gt;
+          &lt;li&gt;Supported by all modern browsers&lt;/li&gt;
+          &lt;li&gt;WCAG 2.1 requires semantic structure&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/aside&gt;
+
+      &lt;footer&gt;
+        &lt;p&gt;Tags: HTML5 · Semantic Web · Accessibility · SEO&lt;/p&gt;
+      &lt;/footer&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Gachon Tech News · Web Programming K0126002&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex8-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+    </section>
+  </main>
+</div>
+<footer id="site-footer">K0126002 Web Programming · Gachon University · Week 2 Friday · Semantic HTML</footer>
+<script>
+// ── Syntax highlighter (single-pass) ─────────────────────
+function highlight(raw){
+  var e=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  return raw.split('\n').map(function(line){
+    var esc=e(line);
+    if(/^\s*&lt;!--/.test(esc)) return '<span class="hc">'+esc+'</span>';
+    return esc.replace(
+      /(&lt;\/?)([ a-zA-Z!][a-zA-Z0-9]*)((?:\s+[a-zA-Z][a-zA-Z0-9-]*(?:="[^"]*")?)*\s*)(\/?)(&gt;)/g,
+      function(_,lt,tag,attrs,sc,gt){
+        var ca=attrs.replace(/(\s+)([a-zA-Z][a-zA-Z0-9-]*)(?:="([^"]*)")?/g,
+          function(_,sp,nm,v){
+            return v!=null
+              ? sp+'<span class="ha">'+nm+'</span>=<span class="hv">"'+e(v)+'"</span>'
+              : sp+'<span class="ha">'+nm+'</span>';
+          });
+        if(tag[0]==='!'||tag==='DOCTYPE') return lt+tag+ca+sc+gt;
+        return lt+'<span class="ht">'+tag+'</span>'+ca+sc+gt;
+      });
+  }).join('\n');
+}
+document.querySelectorAll('.raw-code').forEach(function(el){
+  var code=el.querySelector('code');
+  if(code){ code.dataset.raw=code.textContent; code.innerHTML=highlight(code.textContent); }
+});
+
+// ── Copy ─────────────────────────────────────────────────
+function copyCode(btn){
+  var wrap=btn.closest('.code-wrap');
+  var raw=wrap.querySelector('code');
+  var text=raw.dataset.raw||raw.textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    var orig=btn.textContent; btn.textContent='Copied!';
+    setTimeout(function(){btn.textContent=orig;},1500);
+  });
+}
+// ── Inline preview ────────────────────────────────────────
+function previewCode(btn){
+  var wrap=btn.closest('.code-wrap');
+  var raw=wrap.querySelector('code');
+  var text=raw.dataset.raw||raw.textContent;
+  var frame=wrap.nextElementSibling;
+  if(!frame||!frame.classList.contains('inline-preview')){
+    frame=document.createElement('iframe');
+    frame.className='inline-preview';
+    frame.style.cssText='width:100%;height:340px;border:1px solid var(--brd);border-radius:0 0 8px 8px;margin-top:-4px;display:none;background:#fff';
+    wrap.parentNode.insertBefore(frame,wrap.nextSibling);
+  }
+  if(frame.style.display==='none'){
+    var blob=new Blob([text],{type:'text/html'});
+    frame.src=URL.createObjectURL(blob);
+    frame.style.display='block';
+    btn.textContent='Hide Preview';
+  }else{
+    frame.style.display='none';
+    btn.textContent='Preview';
+  }
+}
+// ── Exercise preview ─────────────────────────────────────
+function runPreview(edId,frameId){
+  var code=document.getElementById(edId).value;
+  var frame=document.getElementById(frameId);
+  var blob=new Blob([code],{type:'text/html'});
+  frame.src=URL.createObjectURL(blob);
+  frame.style.display='block';
+}
+function toggleEl(id){
+  var el=document.getElementById(id);
+  el.hidden=!el.hidden;
+}
+// ── Theme ─────────────────────────────────────────────────
+(function(){
+  var stored=localStorage.getItem('theme-fri');
+  if(stored) document.documentElement.setAttribute('data-theme',stored);
+})();
+function toggleTheme(){
+  var r=document.documentElement;
+  var cur=r.getAttribute('data-theme');
+  var next=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  localStorage.setItem('theme-fri',next);
+  document.querySelector('.theme-btn').textContent=next==='dark'?'☀ Light':'🌙 Dark';
+}
+// ── Sidebar active ────────────────────────────────────────
+var sections=document.querySelectorAll('section[id],article[id]');
+var navLinks=document.querySelectorAll('#sidebar nav a');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      navLinks.forEach(function(a){a.classList.remove('active');});
+      var active=document.querySelector('#sidebar nav a[href="#'+e.target.id+'"]');
+      if(active) active.classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(function(s){obs.observe(s);});
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+</script>
+</body>
+</html>

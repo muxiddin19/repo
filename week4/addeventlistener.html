@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>addEventListener - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">07</span><h1>addEventListener</h1></div>
+<div class="theory"><p><code>addEventListener(event, callback)</code> tells the browser: when <em>this</em> happens on <em>this</em> element, run <em>this</em> function. Common events: <code>click</code>, <code>input</code>, <code>keydown</code>, <code>submit</code>, <code>mouseover</code>.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>let count = 0;
+btn.addEventListener(&#x27;click&#x27;, () =&gt; {
+  count++;
+  display.textContent = count;
+});
+input.addEventListener(&#x27;input&#x27;, () =&gt; {
+  echo.textContent = input.value;
+});</code></pre></div>
+<div class="demo-box"><h4>Live demo - three events</h4>
+<div class="row" style="align-items:center;gap:20px"><button class="demo-btn" id="btn" style="font-size:18px;padding:14px 28px">Click me!</button><div class="big-num" id="n">0</div></div>
+<div class="row" style="margin-top:16px"><input type="text" id="inp" placeholder="Type here (input event)"></div>
+<p style="margin-top:8px">You typed: <strong id="echo">(empty)</strong></p>
+<div class="box" id="hover" style="margin-top:10px">Hover over me</div>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>addEventListener(event, callback)</code> attaches a listener.</li><li>You can attach many listeners to one element.</li><li>The callback runs every time the event fires.</li></ul></div>
+<nav class="pager"><span><a href="classlist.html">&larr; classList - Styling with JavaScript</a></span><span><a href="eventobject.html">The Event Object (e) &rarr;</a></span></nav>
+</main>
+<script>
+let n=0;const d=document.getElementById('n');
+document.getElementById('btn').addEventListener('click',()=>{n++;d.textContent=n});
+const i=document.getElementById('inp'),e=document.getElementById('echo');
+i.addEventListener('input',()=>{e.textContent=i.value||'(empty)'});
+const h=document.getElementById('hover');
+h.addEventListener('mouseover',()=>{h.textContent='Mouse is over me';h.style.background='#e0eaff'});
+h.addEventListener('mouseout',()=>{h.textContent='Hover over me';h.style.background=''});
+</script>
+</body>
+</html>

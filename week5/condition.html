@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions (if/else)</title>
+</head>
+<body>
+<h1>Grade Checker</h1>
+<label>Score (0-100):<input type="number" id="score" value="75" min="0" max="100"></label>
+<button onclick="checkGrade()">Check Grade</button>
+<h3>Grade: <span id="result">-</span></h3>
+<script>
+    function checkGrade() {
+        const score = parseInt(document.getElementById('score').value);
+        let grade;
+
+        if (score >= 90) {
+            grade = 'A';
+        } else if (score >= 80) {
+            grade = 'B';
+        } else if (score >= 70) {
+            grade = 'C';
+        } else if (score >= 60) {
+            grade = 'D';
+        } else {
+            grade = 'F';
+        }
+        console.log(`Score: ${score}, Grade: ${grade}`);
+
+        document.getElementById('result').textContent = grade;
+    }
+</script>
+
+</body>
+</html>

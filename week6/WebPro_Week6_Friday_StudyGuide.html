@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 6 Study Guide — Fetch API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4ff;--surf:#fff;--surf2:#e8eefa;--brd:#c8d4f0;
+  --tx:#1a2340;--mu:#5a6a8a;--ac:#1a56db;--acl:#dbeafe;
+  --jsyel:#f7df1e;--jsdk:#3a3000;
+  --lime:#16a34a;--limel:#dcfce7;--cor:#dc2626;--corl:#fee2e2;
+  --warn:#d97706;--warnl:#fef3c7;
+  --code-bg:#1a2540;--code-tx:#c8daf8;
+  --demo:#0f3460;--demol:#e0eaff;
+  font-family:'Inter',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#0f172a;--surf:#1e293b;--surf2:#1e2d50;--brd:#2a3f6a;
+  --tx:#e2e8f0;--mu:#94a3b8;--acl:#1e3a5f;--demol:#1e2d50;
+  color-scheme:dark;
+}}
+:root[data-theme=dark]{
+  --bg:#0f172a;--surf:#1e293b;--surf2:#1e2d50;--brd:#2a3f6a;
+  --tx:#e2e8f0;--mu:#94a3b8;--acl:#1e3a5f;--demol:#1e2d50;color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 80px}
+
+/* header */
+.cover{background:var(--code-bg);padding:36px 32px 30px;border-radius:0 0 16px 16px;margin-bottom:36px;border-bottom:4px solid var(--jsyel);position:relative}
+.cover-badge{display:inline-block;background:var(--jsyel);color:var(--jsdk);font-weight:700;font-size:11px;padding:3px 10px;border-radius:6px;letter-spacing:.06em;margin-bottom:12px}
+.cover h1{color:#fff;font-size:1.7rem;font-weight:800;margin-bottom:6px}
+.cover p{color:#94a3b8;font-size:14px}
+.theme-btn{position:absolute;top:16px;right:20px;background:#1e293b;border:1px solid #2a3f6a;color:#94a3b8;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+
+/* sections */
+.section{margin-bottom:52px}
+.section-label{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--brd)}
+.section-label .num{width:34px;height:34px;background:var(--ac);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.section-label h2{font-size:1.25rem;font-weight:700}
+
+/* TRY IT FIRST box */
+.try-first{background:var(--code-bg);border:2px solid var(--jsyel);border-radius:14px;padding:24px;margin-bottom:32px}
+.try-first .tf-top{color:var(--jsyel);font-weight:700;font-size:12px;letter-spacing:.08em;margin-bottom:12px}
+.try-first h2{color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.try-first p{color:#94a3b8;font-size:14px;margin-bottom:18px}
+.big-btn{background:var(--jsyel);color:var(--jsdk);border:none;padding:12px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;font-family:inherit}
+.big-btn:active{transform:scale(.97)}
+.big-btn:disabled{opacity:.6;cursor:default}
+.demo-output{margin-top:18px;min-height:64px;background:#0a0f1e;border-radius:10px;padding:16px 18px;border:1px solid #1e3a5f;display:none}
+.demo-output .setup{color:#94a3b8;font-size:13px;margin-bottom:4px}
+.demo-output .punchline{color:var(--jsyel);font-size:16px;font-weight:600}
+.demo-output .meta{color:#475569;font-size:11px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+.reveal-box{background:var(--jsyel);color:var(--jsdk);border-radius:8px;padding:12px 16px;font-weight:600;font-size:15px;margin-top:14px;display:none}
+
+/* explanation card */
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card p{font-size:14.5px;color:var(--tx);line-height:1.7;margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.card .em{color:var(--ac);font-weight:600}
+
+/* analogy box */
+.analogy{background:var(--demol);border-left:4px solid var(--ac);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;font-size:14.5px}
+.analogy strong{color:var(--ac)}
+
+/* alerts */
+.alert{border-radius:8px;padding:12px 16px;font-size:14px;margin:14px 0;border-left:4px solid}
+.alert-ok{background:var(--limel);border-color:var(--lime)}
+.alert-warn{background:var(--warnl);border-color:var(--warn)}
+.alert-danger{background:var(--corl);border-color:var(--cor)}
+.alert strong{font-weight:600}
+
+/* code blocks */
+.code-wrap{border-radius:10px;overflow:hidden;margin:14px 0;border:1px solid var(--brd)}
+.code-head{background:var(--code-bg);display:flex;justify-content:space-between;align-items:center;padding:6px 16px}
+.code-lang{font-size:10px;font-weight:700;color:var(--jsyel);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+.copy-btn{background:none;border:1px solid #2a3f6a;color:#94a3b8;padding:2px 10px;border-radius:5px;cursor:pointer;font-size:11px;font-family:inherit}
+pre{background:var(--code-bg);color:var(--code-tx);padding:16px 18px;overflow-x:auto;font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;line-height:1.8}
+code{font-family:'JetBrains Mono',monospace;font-size:.87em;background:var(--surf2);padding:1px 5px;border-radius:4px;color:var(--ac)}
+.hl-kw{color:#c792ea}.hl-fn{color:#82aaff}.hl-str{color:#c3e88d}.hl-cm{color:#546e7a;font-style:italic}.hl-kw2{color:var(--jsyel)}
+
+/* line stepper */
+.stepper-wrap{position:relative;margin:14px 0}
+.step-line{display:block;padding:2px 0;border-radius:4px;transition:background .3s}
+.step-line.active{background:rgba(247,223,30,.15);outline:2px solid rgba(247,223,30,.4)}
+.step-explain{margin-top:10px;background:var(--jsyel);color:var(--jsdk);padding:10px 14px;border-radius:8px;font-size:14px;font-weight:500;display:none}
+.step-nav{display:flex;gap:8px;margin-top:8px}
+.step-btn{background:var(--ac);color:#fff;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.step-btn.prev{background:var(--surf2);color:var(--tx);border:1px solid var(--brd)}
+
+/* network animation */
+.net-anim{background:var(--code-bg);border-radius:12px;padding:20px 16px;margin:16px 0;position:relative;overflow:hidden}
+.net-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.net-node{background:#1e3a5f;border:2px solid #2a5298;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;color:#93c5fd;text-align:center;min-width:90px}
+.net-node.you{border-color:var(--jsyel);color:var(--jsyel)}
+.net-node.server{border-color:var(--lime);color:#86efac}
+.net-arrow{flex:1;height:2px;background:var(--brd);position:relative;overflow:hidden}
+.net-arrow::after{content:'';position:absolute;top:0;height:100%;width:30%;background:var(--ac);border-radius:2px;animation:none;opacity:0}
+.net-arrow.sending::after{animation:travel 0.8s ease forwards}
+.net-arrow.returning::after{animation:travel-back 0.8s ease forwards;background:var(--lime)}
+@keyframes travel{from{left:-30%}to{left:130%}}
+@keyframes travel-back{from{right:-30%}to{right:130%}}
+.net-label{color:#94a3b8;font-size:12px;text-align:center;font-family:'JetBrains Mono',monospace}
+.net-status{color:#94a3b8;font-size:13px;text-align:center;padding:8px;min-height:24px;transition:color .3s}
+.net-status.active{color:var(--jsyel)}
+.net-status.done{color:#86efac}
+.net-play-btn{background:var(--ac);color:#fff;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;margin-top:6px;font-family:inherit;display:block;margin:10px auto 0}
+
+/* promise states */
+.promise-states{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.pstate{border-radius:10px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s;background:var(--surf2)}
+.pstate.pending{border-color:#f59e0b;color:#92400e;background:#fef3c7}
+.pstate.fulfilled{border-color:var(--lime);color:#14532d;background:var(--limel)}
+.pstate.rejected{border-color:var(--cor);color:#7f1d1d;background:var(--corl)}
+:root[data-theme=dark] .pstate.pending{color:#fbbf24}
+:root[data-theme=dark] .pstate.fulfilled{color:#86efac}
+:root[data-theme=dark] .pstate.rejected{color:#fca5a5}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .pstate.pending{color:#fbbf24}:root:not([data-theme=light]) .pstate.fulfilled{color:#86efac}:root:not([data-theme=light]) .pstate.rejected{color:#fca5a5}}
+.pstate .icon{font-size:1.8rem;margin-bottom:6px}
+.pstate .name{font-weight:700;font-size:14px}
+.pstate .desc{font-size:12px;margin-top:4px;opacity:.8}
+.pstate-info{min-height:40px;margin-top:10px;padding:12px 16px;border-radius:8px;background:var(--surf2);font-size:14px;text-align:center;color:var(--mu)}
+
+/* comparison side by side */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.compare-col h4{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.compare-col pre{font-size:12px;border-radius:8px;border:1px solid var(--brd)}
+.compare-equal{text-align:center;font-size:22px;display:flex;align-items:center;justify-content:center}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600}
+.badge-old{background:#fee2e2;color:#7f1d1d}
+.badge-new{background:var(--limel);color:#14532d}
+:root[data-theme=dark] .badge-old{background:#3f1010;color:#fca5a5}
+:root[data-theme=dark] .badge-new{background:#052e16;color:#86efac}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .badge-old{background:#3f1010;color:#fca5a5}:root:not([data-theme=light]) .badge-new{background:#052e16;color:#86efac}}
+
+/* error demo */
+.err-demo{background:var(--surf2);border:1px solid var(--brd);border-radius:12px;padding:18px;margin:14px 0}
+.err-demo label{font-size:13px;font-weight:600;margin-bottom:6px;display:block}
+.err-demo input{width:100%;padding:8px 12px;border-radius:7px;border:1px solid var(--brd);background:var(--surf);color:var(--tx);font-size:13px;font-family:'JetBrains Mono',monospace;margin-bottom:10px}
+.err-result{min-height:36px;padding:10px 14px;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;display:none}
+.err-result.ok{background:var(--limel);border:1px solid var(--lime);color:#14532d}
+.err-result.err{background:var(--corl);border:1px solid var(--cor);color:#7f1d1d}
+
+/* step builder */
+.step-builder{margin:14px 0}
+.build-step{border:1px solid var(--brd);border-radius:10px;overflow:hidden;margin-bottom:8px}
+.build-head{background:var(--surf2);padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.build-body{display:none;padding:12px 16px;font-size:14px;line-height:1.7;border-top:1px solid var(--brd)}
+.build-body pre{font-size:12px;margin-top:8px}
+
+/* quiz */
+.quiz-q{background:var(--surf2);border:1px solid var(--brd);border-radius:10px;padding:16px 20px;margin-bottom:12px}
+.quiz-q p{font-weight:600;margin-bottom:10px;font-size:14.5px}
+.quiz-opts label{display:block;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:14px;margin-bottom:4px}
+.quiz-opts input{margin-right:8px;accent-color:var(--ac)}
+.quiz-reveal{display:none;margin-top:10px;padding:10px 14px;border-radius:7px;font-size:14px;border-left:4px solid}
+.quiz-reveal.ok{background:var(--limel);border-color:var(--lime)}
+.quiz-reveal.no{background:var(--corl);border-color:var(--cor)}
+.check-btn{background:var(--ac);color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:13px;margin-top:8px;font-family:inherit;font-weight:600}
+
+/* summary */
+.sum-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+.sum-card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px 16px}
+.sum-card .kw{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--ac);font-size:13px;margin-bottom:5px}
+.sum-card .def{font-size:13.5px;color:var(--mu)}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.checklist li{display:flex;align-items:baseline;gap:10px;font-size:14px;background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:9px 14px}
+.checklist li::before{content:'☐';font-size:16px;color:var(--ac);flex-shrink:0}
+@media(max-width:580px){
+  .compare{grid-template-columns:1fr}
+  .compare-equal{display:none}
+  .promise-states{grid-template-columns:1fr}
+  .sum-grid{grid-template-columns:1fr}
+  .cover h1{font-size:1.35rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Cover -->
+<div class="cover">
+  <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+  <div class="cover-badge">WEEK 6 · FRIDAY · STUDY GUIDE</div>
+  <h1>Fetch API &amp; Async/Await</h1>
+  <p>Web Programming K0126002 · Gachon University · Dr. Mukhiddin Toshpulatov</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     0. TRY IT FIRST — before any explanation
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="try-first">
+    <div class="tf-top">STEP 1 — DO THIS FIRST, THEN WE EXPLAIN</div>
+    <h2>Click the button below 👇</h2>
+    <p>Don't worry about how it works yet. Just click and watch what happens.</p>
+    <button class="big-btn" id="jokeBtn" onclick="loadJoke()">Load a Joke</button>
+    <div class="demo-output" id="jokeOut">
+      <div class="setup" id="jokeSetup"></div>
+      <div class="punchline" id="jokePunch"></div>
+      <div class="meta" id="jokeMeta"></div>
+    </div>
+    <div class="reveal-box" id="jokeReveal">
+      ✅ You just used <code style="background:rgba(0,0,0,.15);color:inherit">fetch()</code> to load real data from the internet — without reloading the page!
+    </div>
+  </div>
+  <div class="card">
+    <p>That button ran <strong>one line of code</strong>: <code>fetch('https://official-joke-api.appspot.com/random_joke')</code>.</p>
+    <p>It reached out to a server on the internet, asked for a joke, received it as data, and put it on the page. The whole page never reloaded. That is <span class="em">fetch()</span>. Everything below explains how it works.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     1. What just happened? (visual journey)
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">1</div>
+    <h2>What just happened? — The request journey</h2>
+  </div>
+
+  <div class="card">
+    <p>When you clicked that button, your browser took a trip to the internet and back. Here is that trip, step by step:</p>
+  </div>
+
+  <div class="net-anim" id="netAnim">
+    <div class="net-row">
+      <div class="net-node you">YOUR<br>BROWSER</div>
+      <div class="net-arrow" id="arrow1"></div>
+      <div class="net-node" style="border-color:#7c3aed;color:#c4b5fd">INTERNET</div>
+      <div class="net-arrow" id="arrow2"></div>
+      <div class="net-node server">JOKE<br>SERVER</div>
+    </div>
+    <div class="net-label">
+      <span id="net-step1">① Browser sends a request</span> &nbsp;→&nbsp;
+      <span id="net-step2">② Server finds a joke</span> &nbsp;→&nbsp;
+      <span id="net-step3">③ Data comes back</span> &nbsp;→&nbsp;
+      <span id="net-step4">④ Page updates</span>
+    </div>
+    <div class="net-status" id="netStatus">Click Play to see the journey</div>
+    <button class="net-play-btn" onclick="playNetAnim()">▶ Play animation</button>
+  </div>
+
+  <div class="card">
+    <p>The important thing: <span class="em">your page did NOT freeze</span> while waiting for the server to respond. You could still scroll, click, and interact. This is called <strong>asynchronous</strong> — it happens "in the background."</p>
+  </div>
+
+  <div class="analogy">
+    <strong>Everyday analogy:</strong> Ordering food at a busy restaurant. You place your order (fetch), go back to chatting with friends (your code keeps running), and the waiter brings your food when it's ready (the data arrives). You don't stand frozen at the counter.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     2. fetch() basics
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">2</div>
+    <h2>fetch() — how to write it</h2>
+  </div>
+
+  <div class="card">
+    <p>Here is the exact code that powered the joke demo above. Click <strong>Next →</strong> to go through each line:</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-head"><span class="code-lang">JavaScript — step through it</span></div>
+    <pre id="stepper1-code"><span class="step-line" id="s1-0"><span class="hl-kw">async function</span> <span class="hl-fn">loadJoke</span>() {</span>
+<span class="step-line" id="s1-1">  <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://official-joke-api.appspot.com/random_joke'</span>);</span>
+<span class="step-line" id="s1-2">  <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();</span>
+<span class="step-line" id="s1-3">  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'jokeSetup'</span>).textContent <span class="hl-kw">=</span> data.setup;</span>
+<span class="step-line" id="s1-4">  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'jokePunch'</span>).textContent <span class="hl-kw">=</span> data.punchline;</span>
+<span class="step-line" id="s1-5">}</span></pre>
+  </div>
+  <div class="step-explain" id="s1-explain"></div>
+  <div class="step-nav">
+    <button class="step-btn prev" onclick="stepperNav(1,-1)">← Prev</button>
+    <button class="step-btn" onclick="stepperNav(1,1)">Next →</button>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>What does <code>fetch(url)</code> actually do?</h3>
+    <p>1. It creates an HTTP GET request and sends it to the URL you give it.</p>
+    <p>2. It <span class="em">immediately returns</span> a <strong>Promise</strong> — you don't wait, your code keeps going.</p>
+    <p>3. When the server answers, the Promise "resolves" and you can use the data.</p>
+  </div>
+
+  <div class="alert alert-ok">
+    <strong>What is a URL?</strong> The web address of the data you want. You've typed these into a browser your whole life — <code>https://official-joke-api.appspot.com/random_joke</code> is just a web address that returns data instead of a webpage.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     3. Promise
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">3</div>
+    <h2>Promise — a ticket for future data</h2>
+  </div>
+
+  <div class="analogy">
+    <strong>Think of it like this:</strong> You order coffee at a café. The barista gives you a paper cup with your name on it (a <em>Promise</em>). You can walk away; you don't get the coffee yet. A few minutes later, either your coffee is ready (fulfilled ✅), or they're out of oat milk (rejected ❌). The cup is the Promise — it represents the coffee you will (or won't) get.
+  </div>
+
+  <div class="card">
+    <p>A Promise can be in <strong>one of exactly 3 states</strong>. Click each box below:</p>
+  </div>
+
+  <div class="promise-states">
+    <div class="pstate pending" onclick="showState('pending')">
+      <div class="icon">⏳</div>
+      <div class="name">Pending</div>
+      <div class="desc">Waiting…</div>
+    </div>
+    <div class="pstate fulfilled" onclick="showState('fulfilled')">
+      <div class="icon">✅</div>
+      <div class="name">Fulfilled</div>
+      <div class="desc">Got the data!</div>
+    </div>
+    <div class="pstate rejected" onclick="showState('rejected')">
+      <div class="icon">❌</div>
+      <div class="name">Rejected</div>
+      <div class="desc">Something failed</div>
+    </div>
+  </div>
+  <div class="pstate-info" id="pstate-info">Click a state above to learn what it means</div>
+
+  <div class="code-wrap" style="margin-top:18px">
+    <div class="code-head"><span class="code-lang">JavaScript — handling a Promise</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-fn">fetch</span>(<span class="hl-str">'https://api.example.com/data'</span>)
+  .<span class="hl-fn">then</span>(response <span class="hl-kw">=></span> {
+    <span class="hl-cm">// runs when fulfilled (data arrived!)</span>
+    <span class="hl-kw">return</span> response.<span class="hl-fn">json</span>();
+  })
+  .<span class="hl-fn">then</span>(data <span class="hl-kw">=></span> {
+    <span class="hl-cm">// runs with the actual JSON data</span>
+    <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(data);
+  })
+  .<span class="hl-fn">catch</span>(error <span class="hl-kw">=></span> {
+    <span class="hl-cm">// runs if rejected (no internet, etc.)</span>
+    <span class="hl-fn">console</span>.<span class="hl-fn">error</span>(<span class="hl-str">'Failed:'</span>, error);
+  });</pre>
+  </div>
+
+  <div class="alert alert-warn">
+    <strong>Note on .then():</strong> You need TWO .then() calls for fetch — one to parse the JSON (which is <em>also</em> a Promise!), and one to use the data. You're waiting for two things: the network response, then the JSON parsing.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     4. async / await
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">4</div>
+    <h2>async / await — the easier way to write it</h2>
+  </div>
+
+  <div class="card">
+    <p><code>async/await</code> does <em>exactly the same thing</em> as .then() chains — it's just easier to read. Under the hood, they are identical. Most modern code uses async/await.</p>
+  </div>
+
+  <div class="compare">
+    <div class="compare-col">
+      <h4><span class="badge badge-old">Old style</span> .then() chain</h4>
+      <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px 14px;border-radius:8px;font-size:12.5px;border:1px solid var(--brd)"><span class="hl-fn">fetch</span>(<span class="hl-str">'/api/joke'</span>)
+  .<span class="hl-fn">then</span>(res <span class="hl-kw">=></span> res.<span class="hl-fn">json</span>())
+  .<span class="hl-fn">then</span>(data <span class="hl-kw">=></span> {
+    show(data);
+  })
+  .<span class="hl-fn">catch</span>(err <span class="hl-kw">=></span> {
+    error(err);
+  });</pre>
+    </div>
+    <div class="compare-equal">⟺</div>
+    <div class="compare-col">
+      <h4><span class="badge badge-new">New style</span> async/await</h4>
+      <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px 14px;border-radius:8px;font-size:12.5px;border:1px solid var(--brd)"><span class="hl-kw">async function</span> <span class="hl-fn">getJoke</span>() {
+  <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'/api/joke'</span>);
+  <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+  <span class="hl-fn">show</span>(data);
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The two rules — just two things to remember</h3>
+    <p><span class="em">Rule 1:</span> Write <code>async</code> before the function name. This tells JS: "this function uses the internet."</p>
+    <p><span class="em">Rule 2:</span> Write <code>await</code> before any Promise. This tells JS: "wait here until we hear back, but let the rest of the page keep running."</p>
+  </div>
+
+  <div class="analogy">
+    <strong>Think of await like this:</strong> You're cooking dinner and put pasta on to boil. You don't stand staring at the pot — you go chop vegetables. <code>await</code> is you saying "I'll come back to this when it's ready." The kitchen (browser) keeps working on other things meanwhile.
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-head"><span class="code-lang">JavaScript — step through async/await</span></div>
+    <pre id="stepper2-code"><span class="step-line" id="s2-0"><span class="hl-kw">async function</span> <span class="hl-fn">loadUser</span>() {</span>
+<span class="step-line" id="s2-1">  <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://jsonplaceholder.typicode.com/users/1'</span>);</span>
+<span class="step-line" id="s2-2">  <span class="hl-kw">const</span> user <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();</span>
+<span class="step-line" id="s2-3">  <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Name:'</span>, user.name);   <span class="hl-cm">// → "Leanne Graham"</span></span>
+<span class="step-line" id="s2-4">  <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Email:'</span>, user.email);  <span class="hl-cm">// → "Sincere@april.biz"</span></span>
+<span class="step-line" id="s2-5">}</span></pre>
+  </div>
+  <div class="step-explain" id="s2-explain"></div>
+  <div class="step-nav">
+    <button class="step-btn prev" onclick="stepperNav(2,-1)">← Prev</button>
+    <button class="step-btn" onclick="stepperNav(2,1)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     5. What can go wrong?
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">5</div>
+    <h2>What can go wrong? — Error handling</h2>
+  </div>
+
+  <div class="card">
+    <h3>The sneaky surprise: 404 does NOT throw an error!</h3>
+    <p>Most beginners expect that if the server says "Not Found" (404), the fetch automatically fails. <span class="em">It does not.</span> fetch() only rejects (throws) if there is <strong>no internet at all</strong>. A 404 from the server still "succeeds" from fetch()'s point of view.</p>
+    <p>This is a famous "gotcha" that confuses even experienced developers. You must always check <code>response.ok</code> yourself.</p>
+  </div>
+
+  <div class="err-demo">
+    <label>Try a URL — type a real one or a fake one and see what happens:</label>
+    <input type="text" id="errUrl" value="https://jsonplaceholder.typicode.com/posts/1" />
+    <button class="check-btn" onclick="tryFetch()">Try fetch()</button>
+    <div class="err-result" id="errResult"></div>
+  </div>
+
+  <div class="code-wrap" style="margin-top:16px">
+    <div class="code-head"><span class="code-lang">JavaScript — the correct pattern</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadData</span>(url) {
+  <span class="hl-kw">try</span> {
+
+    <span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(url);
+
+    <span class="hl-cm">// ← YOU must check this. fetch() won't do it for you!</span>
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">`HTTP error: ${res.status}`</span>);
+
+    <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+    <span class="hl-fn">showData</span>(data);       <span class="hl-cm">// happy path</span>
+
+  } <span class="hl-kw">catch</span> (err) {
+    <span class="hl-fn">showError</span>(err.message); <span class="hl-cm">// any error lands here</span>
+
+  } <span class="hl-kw">finally</span> {
+    <span class="hl-fn">hideSpinner</span>();         <span class="hl-cm">// ALWAYS runs (success or fail)</span>
+  }
+}</pre>
+  </div>
+
+  <div class="card">
+    <h3>What does try / catch / finally mean?</h3>
+    <p><code>try</code> — "run this code, but be careful."</p>
+    <p><code>catch</code> — "if ANYTHING goes wrong in try, do this instead."</p>
+    <p><code>finally</code> — "do this no matter what happened. Always." (Great for hiding loading spinners!)</p>
+  </div>
+
+  <div class="alert alert-warn">
+    <strong>Quick reference — when does fetch reject vs. when must you check?</strong><br>
+    ❌ No internet → fetch() <em>auto-throws</em> → goes to catch<br>
+    ⚠️ Server says 404 → fetch() <em>resolves</em> → you must check <code>!res.ok</code><br>
+    ⚠️ Server says 500 → fetch() <em>resolves</em> → you must check <code>!res.ok</code>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     6. Build it step by step
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">6</div>
+    <h2>Build the joke app — step by step</h2>
+  </div>
+
+  <div class="card">
+    <p>Let's build the joke button from the top of this page. Click each step to expand it:</p>
+  </div>
+
+  <div class="step-builder">
+    <div class="build-step">
+      <div class="build-head" onclick="toggleBuild(this)">Step 1 — The HTML skeleton <span>▸</span></div>
+      <div class="build-body">
+        <p>First, just the HTML pieces we need: a button, a place for the joke, and a place for errors.</p>
+        <div class="code-wrap"><div class="code-head"><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="hl-cm">&lt;!-- A button the user clicks --&gt;</span>
+&lt;<span class="hl-kw">button</span> <span class="hl-fn">onclick</span>=<span class="hl-str">"loadJoke()"</span>&gt;Load a Joke&lt;/<span class="hl-kw">button</span>&gt;
+
+<span class="hl-cm">&lt;!-- Where the joke will appear --&gt;</span>
+&lt;<span class="hl-kw">div</span> <span class="hl-fn">id</span>=<span class="hl-str">"joke-area"</span>&gt;&lt;/<span class="hl-kw">div</span>&gt;
+
+<span class="hl-cm">&lt;!-- Loading and error text --&gt;</span>
+&lt;<span class="hl-kw">p</span> <span class="hl-fn">id</span>=<span class="hl-str">"status"</span>&gt;&lt;/<span class="hl-kw">p</span>&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="build-step">
+      <div class="build-head" onclick="toggleBuild(this)">Step 2 — Show a loading message <span>▸</span></div>
+      <div class="build-body">
+        <p>Before we fetch anything, show the user that something is happening. Nobody likes a blank screen.</p>
+        <div class="code-wrap"><div class="code-head"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadJoke</span>() {
+  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'status'</span>).textContent <span class="hl-kw">=</span> <span class="hl-str">'Loading…'</span>;
+  <span class="hl-cm">// fetch code goes here next</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="build-step">
+      <div class="build-head" onclick="toggleBuild(this)">Step 3 — Fetch and parse the data <span>▸</span></div>
+      <div class="build-body">
+        <p>Now add the actual fetch(). Two awaits: one for the response, one for the JSON parsing.</p>
+        <div class="code-wrap"><div class="code-head"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadJoke</span>() {
+  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'status'</span>).textContent <span class="hl-kw">=</span> <span class="hl-str">'Loading…'</span>;
+
+  <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://official-joke-api.appspot.com/random_joke'</span>);
+  <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+  <span class="hl-cm">// data now has: { setup: "...", punchline: "..." }</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="build-step">
+      <div class="build-head" onclick="toggleBuild(this)">Step 4 — Put the joke on the page <span>▸</span></div>
+      <div class="build-body">
+        <p>Use the DOM (from Week 4!) to display the joke's setup and punchline.</p>
+        <div class="code-wrap"><div class="code-head"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadJoke</span>() {
+  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'status'</span>).textContent <span class="hl-kw">=</span> <span class="hl-str">'Loading…'</span>;
+
+  <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://official-joke-api.appspot.com/random_joke'</span>);
+  <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+
+  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'joke-area'</span>).innerHTML <span class="hl-kw">=</span>
+    <span class="hl-str">`&lt;p&gt;&lt;strong&gt;${data.setup}&lt;/strong&gt;&lt;/p&gt;
+     &lt;p&gt;${data.punchline}&lt;/p&gt;`</span>;
+  document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'status'</span>).textContent <span class="hl-kw">=</span> <span class="hl-str">''</span>;
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="build-step">
+      <div class="build-head" onclick="toggleBuild(this)">Step 5 — Add error handling (the professional finish) <span>▸</span></div>
+      <div class="build-body">
+        <p>Wrap it in try/catch/finally so it never breaks silently.</p>
+        <div class="code-wrap"><div class="code-head"><span class="code-lang">JavaScript — complete version</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadJoke</span>() {
+  <span class="hl-kw">const</span> status <span class="hl-kw">=</span> document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'status'</span>);
+  status.textContent <span class="hl-kw">=</span> <span class="hl-str">'Loading…'</span>;
+
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://official-joke-api.appspot.com/random_joke'</span>);
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">`HTTP ${res.status}`</span>);
+    <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+
+    document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'joke-area'</span>).innerHTML <span class="hl-kw">=</span>
+      <span class="hl-str">`&lt;p&gt;&lt;strong&gt;${data.setup}&lt;/strong&gt;&lt;/p&gt;
+       &lt;p&gt;${data.punchline}&lt;/p&gt;`</span>;
+
+  } <span class="hl-kw">catch</span> (err) {
+    status.textContent <span class="hl-kw">=</span> <span class="hl-str">'Error: '</span> <span class="hl-kw">+</span> err.message;
+
+  } <span class="hl-kw">finally</span> {
+    <span class="hl-kw">if</span> (!status.textContent.startsWith(<span class="hl-str">'Error'</span>))
+      status.textContent <span class="hl-kw">=</span> <span class="hl-str">''</span>;
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     7. Quick Quiz
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">7</div>
+    <h2>Quick Quiz — Check yourself</h2>
+  </div>
+
+  <div class="quiz-q">
+    <p>1. What does <code>fetch(url)</code> return right away?</p>
+    <div class="quiz-opts">
+      <label><input type="radio" name="q1" value="a"> A. The JSON data from the server</label>
+      <label><input type="radio" name="q1" value="b"> B. A Promise (a "ticket" for future data)</label>
+      <label><input type="radio" name="q1" value="c"> C. A DOM element</label>
+      <label><input type="radio" name="q1" value="d"> D. Nothing (undefined)</label>
+    </div>
+    <button class="check-btn" onclick="checkQ('q1','b','h1')">Check</button>
+    <div class="quiz-reveal" id="h1"><strong>✅ B — A Promise.</strong> fetch() returns a Promise immediately so your code can keep running while the network request is happening in the background.</div>
+  </div>
+
+  <div class="quiz-q">
+    <p>2. The server returns HTTP 404. What does fetch() do?</p>
+    <div class="quiz-opts">
+      <label><input type="radio" name="q2" value="a"> A. It automatically throws an error</label>
+      <label><input type="radio" name="q2" value="b"> B. It goes to the catch block</label>
+      <label><input type="radio" name="q2" value="c"> C. It resolves the Promise — you must check res.ok yourself</label>
+      <label><input type="radio" name="q2" value="d"> D. It returns null</label>
+    </div>
+    <button class="check-btn" onclick="checkQ('q2','c','h2')">Check</button>
+    <div class="quiz-reveal" id="h2"><strong>✅ C.</strong> The big gotcha! fetch() only rejects when there is NO internet. A 404 or 500 from the server still resolves the Promise. Always write <code>if (!res.ok) throw new Error(...)</code>.</div>
+  </div>
+
+  <div class="quiz-q">
+    <p>3. Which keyword goes BEFORE the function declaration to allow <code>await</code> inside?</p>
+    <div class="quiz-opts">
+      <label><input type="radio" name="q3" value="a"> A. promise</label>
+      <label><input type="radio" name="q3" value="b"> B. await</label>
+      <label><input type="radio" name="q3" value="c"> C. async</label>
+      <label><input type="radio" name="q3" value="d"> D. fetch</label>
+    </div>
+    <button class="check-btn" onclick="checkQ('q3','c','h3')">Check</button>
+    <div class="quiz-reveal" id="h3"><strong>✅ C — async.</strong> <code>async function myFn() { ... }</code> — the <code>async</code> keyword before the function name enables <code>await</code> inside that function.</div>
+  </div>
+
+  <div class="quiz-q">
+    <p>4. Which block runs whether fetch() succeeds OR fails?</p>
+    <div class="quiz-opts">
+      <label><input type="radio" name="q4" value="a"> A. try</label>
+      <label><input type="radio" name="q4" value="b"> B. catch</label>
+      <label><input type="radio" name="q4" value="c"> C. finally</label>
+      <label><input type="radio" name="q4" value="d"> D. always</label>
+    </div>
+    <button class="check-btn" onclick="checkQ('q4','c','h4')">Check</button>
+    <div class="quiz-reveal" id="h4"><strong>✅ C — finally.</strong> The <code>finally</code> block always runs: after try succeeds, or after catch handles an error. Perfect for hiding loading spinners.</div>
+  </div>
+
+  <div class="quiz-q">
+    <p>5. You have a .then() chain and forget to write <code>return</code> in the first .then(). What happens?</p>
+    <div class="quiz-opts">
+      <label><input type="radio" name="q5" value="a"> A. An error is thrown</label>
+      <label><input type="radio" name="q5" value="b"> B. The next .then() receives <code>undefined</code></label>
+      <label><input type="radio" name="q5" value="c"> C. The value passes automatically</label>
+      <label><input type="radio" name="q5" value="d"> D. The chain stops</label>
+    </div>
+    <button class="check-btn" onclick="checkQ('q5','b','h5')">Check</button>
+    <div class="quiz-reveal" id="h5"><strong>✅ B — undefined.</strong> Each .then() passes its <code>return</code> value to the next .then(). Forgetting <code>return</code> means the next step gets <code>undefined</code> — a silent bug!</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     8. Summary
+     ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">8</div>
+    <h2>Summary — the 6 things to remember</h2>
+  </div>
+
+  <div class="sum-grid">
+    <div class="sum-card"><div class="kw">fetch(url)</div><div class="def">Sends an HTTP GET request. Returns a Promise immediately — page stays interactive.</div></div>
+    <div class="sum-card"><div class="kw">res.json()</div><div class="def">Parses the response body as JSON. Also returns a Promise — await it too.</div></div>
+    <div class="sum-card"><div class="kw">res.ok</div><div class="def">true for HTTP 200-299. fetch() does NOT auto-reject on 404/500 — check this yourself.</div></div>
+    <div class="sum-card"><div class="kw">async function</div><div class="def">Marks a function as one that uses the internet. Enables await inside it.</div></div>
+    <div class="sum-card"><div class="kw">await</div><div class="def">Pauses THIS function (not the page) until the Promise resolves. Other JS keeps running.</div></div>
+    <div class="sum-card"><div class="kw">finally</div><div class="def">Always runs — after try OR after catch. Use it to hide spinners and reset buttons.</div></div>
+  </div>
+
+  <div class="code-wrap" style="margin-top:22px">
+    <div class="code-head"><span class="code-lang">JavaScript — the pattern to memorise</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadData</span>(url) {
+  <span class="hl-fn">showSpinner</span>();          <span class="hl-cm">// show loading before anything</span>
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(url);
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">`HTTP ${res.status}`</span>);
+    <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+    <span class="hl-fn">render</span>(data);           <span class="hl-cm">// success! show the data</span>
+  } <span class="hl-kw">catch</span> (err) {
+    <span class="hl-fn">showError</span>(err.message); <span class="hl-cm">// something went wrong</span>
+  } <span class="hl-kw">finally</span> {
+    <span class="hl-fn">hideSpinner</span>();          <span class="hl-cm">// always hide loading</span>
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- Assignment -->
+<div class="section">
+  <div class="section-label">
+    <div class="num">📝</div>
+    <h2>Assignment — Random Joke Fetcher</h2>
+  </div>
+  <div class="card">
+    <p><strong>Build a webpage with a "Load Joke" button that:</strong></p>
+    <ul class="checklist">
+      <li>Fetches from <code>official-joke-api.appspot.com/random_joke</code></li>
+      <li>Shows "Loading…" while the request runs</li>
+      <li>Displays the setup text and punchline separately</li>
+      <li>Shows a friendly error message if something goes wrong</li>
+      <li>(Challenge) Shows a spinner animation while loading</li>
+      <li>(Extra) "Save Favourite" button that stores jokes in localStorage</li>
+    </ul>
+    <p style="margin-top:14px;color:var(--mu);font-size:13.5px">Submit your GitHub Pages link via the Week 6 homework form.</p>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── theme ──
+function toggleTheme() {
+  const t = document.documentElement.dataset.theme;
+  document.documentElement.dataset.theme = t === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('wk6-theme', document.documentElement.dataset.theme); } catch(e){}
+}
+try { const t = localStorage.getItem('wk6-theme'); if(t) document.documentElement.dataset.theme = t; } catch(e){}
+
+// ── copy code ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  }).catch(() => {});
+}
+
+// ── joke demo (top of page) ──
+const FALLBACK_JOKE = { setup: "Why do programmers prefer dark mode?", punchline: "Because light attracts bugs! 🐛" };
+async function loadJoke() {
+  const btn = document.getElementById('jokeBtn');
+  const out = document.getElementById('jokeOut');
+  const reveal = document.getElementById('jokeReveal');
+  btn.disabled = true;
+  btn.textContent = 'Loading…';
+  out.style.display = 'block';
+  document.getElementById('jokeSetup').textContent = 'Asking the server for a joke…';
+  document.getElementById('jokePunch').textContent = '';
+  document.getElementById('jokeMeta').textContent = '';
+  try {
+    const res  = await fetch('https://official-joke-api.appspot.com/random_joke');
+    const data = res.ok ? await res.json() : FALLBACK_JOKE;
+    document.getElementById('jokeSetup').textContent  = data.setup;
+    document.getElementById('jokePunch').textContent  = data.punchline;
+    document.getElementById('jokeMeta').textContent   = 'Category: ' + (data.type || 'general') + '  |  Data from the internet ✓';
+  } catch(e) {
+    const d = FALLBACK_JOKE;
+    document.getElementById('jokeSetup').textContent = d.setup;
+    document.getElementById('jokePunch').textContent = d.punchline;
+    document.getElementById('jokeMeta').textContent  = '(demo fallback — same concept applies)';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Load Another Joke';
+  reveal.style.display = 'block';
+}
+
+// ── network animation ──
+let netTimer;
+function playNetAnim() {
+  clearTimeout(netTimer);
+  const status = document.getElementById('netStatus');
+  const a1 = document.getElementById('arrow1');
+  const a2 = document.getElementById('arrow2');
+  const steps = [
+    [null,null,'🌐 Browser sends fetch() request to the internet…'],
+    [a1,null,'📡 Request travels across the internet to the server…'],
+    [a1,a2,'🗃️ Server finds a joke and sends it back…'],
+    [null,null,'✅ Data arrives! JavaScript updates the page.'],
+  ];
+  function run(i) {
+    if (i >= steps.length) { status.className='net-status done'; return; }
+    const [send,recv,msg] = steps[i];
+    status.className = 'net-status active'; status.textContent = msg;
+    if(send){ send.classList.remove('sending','returning'); void send.offsetWidth; send.classList.add('sending'); }
+    if(recv){ recv.classList.remove('sending','returning'); void recv.offsetWidth; recv.classList.add('returning'); }
+    netTimer = setTimeout(() => run(i+1), 1200);
+  }
+  a1.classList.remove('sending','returning');
+  a2.classList.remove('sending','returning');
+  status.className = 'net-status'; status.textContent = 'Starting…';
+  netTimer = setTimeout(() => run(0), 300);
+}
+
+// ── Promise state descriptions ──
+const stateInfo = {
+  pending: '⏳ <strong>Pending</strong> — The request is on its way. JavaScript is waiting for the server to respond. Nothing has arrived yet.',
+  fulfilled: '✅ <strong>Fulfilled</strong> — The server responded! The data is here. Your .then() callback (or the line after await) will now run.',
+  rejected: '❌ <strong>Rejected</strong> — Something went wrong: no internet, server crashed, etc. Your .catch() callback (or try/catch) handles this.'
+};
+function showState(s) {
+  document.getElementById('pstate-info').innerHTML = stateInfo[s];
+}
+
+// ── steppers ──
+const stepData = {
+  1: [
+    { line:'s1-0', text: 'Declare an async function named loadJoke. The word "async" tells JavaScript: this function uses the internet and can wait.' },
+    { line:'s1-1', text: 'Call fetch() with the URL. "await" means: pause HERE until the server sends a response. The variable "res" will hold that response.' },
+    { line:'s1-2', text: 'Call res.json() to parse the response body as JSON. Also "awaited" because parsing is also a Promise. "data" is now a plain JavaScript object.' },
+    { line:'s1-3', text: 'Use the DOM (getElementById) to put the joke\'s "setup" text into the page. data.setup is the first part of the joke.' },
+    { line:'s1-4', text: 'Same thing for the punchline. data.punchline is the funny part. Both lines are normal DOM manipulation — just like Week 4!' },
+    { line:'s1-5', text: 'Closing brace — function ends here. That\'s the complete joke loader!' },
+  ],
+  2: [
+    { line:'s2-0', text: '"async function loadUser()" — async before the function name = this function is allowed to use await inside.' },
+    { line:'s2-1', text: 'await fetch(url) — send the request and WAIT for the server. "res" is the HTTP response object (not the data yet).' },
+    { line:'s2-2', text: 'await res.json() — read the response body and parse it as JSON. "user" is now a JavaScript object with all the user\'s data.' },
+    { line:'s2-3', text: 'user.name — access the name property. JavaScript objects work like dictionaries: user.name, user.email, user.phone, etc.' },
+    { line:'s2-4', text: 'user.email — another property from the same object. The API returned all this data in one fetch call.' },
+    { line:'s2-5', text: 'Closing brace. Done! Just 4 meaningful lines to fetch and display real internet data.' },
+  ],
+};
+const stepPos = { 1: -1, 2: -1 };
+
+function stepperNav(id, dir) {
+  const steps = stepData[id];
+  stepPos[id] = Math.max(-1, Math.min(steps.length - 1, stepPos[id] + dir));
+  const p = stepPos[id];
+  steps.forEach((s, i) => document.getElementById(s.line).classList.toggle('active', i === p));
+  const expl = document.getElementById(`s${id}-explain`);
+  if (p >= 0) { expl.style.display = 'block'; expl.textContent = steps[p].text; }
+  else { expl.style.display = 'none'; }
+}
+
+// ── error demo ──
+async function tryFetch() {
+  const url = document.getElementById('errUrl').value.trim();
+  const out  = document.getElementById('errResult');
+  out.style.display = 'block';
+  out.className = 'err-result';
+  out.textContent = 'Fetching…';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      out.className = 'err-result err';
+      out.textContent = `HTTP ${res.status} — res.ok is FALSE. fetch() did NOT throw automatically — only this if(!res.ok) check caught it!`;
+    } else {
+      const text = await res.text();
+      const preview = text.length > 120 ? text.substring(0, 120) + '…' : text;
+      out.className = 'err-result ok';
+      out.textContent = `Success! res.ok = true  |  Preview: ${preview}`;
+    }
+  } catch(e) {
+    out.className = 'err-result err';
+    out.textContent = `Network error — fetch() rejected (auto-thrown): ${e.message}. This is the ONLY case where catch runs automatically.`;
+  }
+}
+
+// ── accordion build steps ──
+function toggleBuild(el) {
+  const body = el.nextElementSibling;
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  el.querySelector('span').textContent = open ? '▸' : '▾';
+}
+
+// ── quiz ──
+function checkQ(name, correct, hintId) {
+  const sel  = document.querySelector(`input[name=${name}]:checked`);
+  const hint = document.getElementById(hintId);
+  hint.style.display = 'block';
+  if (!sel) { hint.className='quiz-reveal'; hint.innerHTML='Please select an answer first.'; return; }
+  if (sel.value === correct) { hint.className='quiz-reveal ok'; }
+  else { hint.className='quiz-reveal no'; }
+}
+</script>
+</body>
+</html>

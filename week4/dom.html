@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is the DOM? - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">01</span><h1>What is the DOM?</h1></div>
+<div class="theory"><p>The browser reads your HTML and builds a <strong>tree of objects</strong> in memory called the <strong>DOM</strong> (Document Object Model). Every tag becomes a <em>node</em> that JavaScript can read and change. <code>document</code> is the root of the tree.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>const sample = document.getElementById(&#x27;sample&#x27;);
+console.log(sample.children);        // child elements
+console.log(sample.parentElement);   // its parent
+document.getElementById(&#x27;title&#x27;).textContent = &#x27;Changed!&#x27;;</code></pre></div>
+<div class="demo-box"><h4>Live demo - walk the DOM tree</h4>
+<div id="sample" class="panel"><h3 id="title">Hello</h3><p>World</p><ul><li>One</li><li>Two</li></ul></div>
+<div class="row"><button class="demo-btn yellow" id="show">Show DOM tree</button><button class="demo-btn" id="change">Change title</button></div>
+<pre class="out" id="out">Click "Show DOM tree"</pre>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li>DOM = the browser's in-memory tree of the page.</li><li>Every HTML tag becomes a node (object) JavaScript can access.</li><li><code>document</code> is the root and starting point for all DOM access.</li><li>Changing the DOM updates the page without reloading.</li></ul></div>
+<nav class="pager"><span></span><span><a href="select.html">Selecting Elements &rarr;</a></span></nav>
+</main>
+<script>
+function tree(node,d){let s='';for(const c of node.children){s+='  '.repeat(d)+c.tagName.toLowerCase()+(c.id?'#'+c.id:'')+'\n'+tree(c,d+1)}return s}
+const sample=document.getElementById('sample'),out=document.getElementById('out');
+document.getElementById('show').addEventListener('click',()=>{out.textContent='div#sample\n'+tree(sample,1)});
+document.getElementById('change').addEventListener('click',()=>{document.getElementById('title').textContent='Changed by JS - no reload!'});
+</script>
+</body>
+</html>

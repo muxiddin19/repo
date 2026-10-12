@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    h1 {
+      color: #15803d;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    p {
+      color: #64748b;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>CSS is Beautiful</h1>
+  <p>With just a few lines of CSS, plain HTML transforms into a polished page.</p>
+</body>
+</html>

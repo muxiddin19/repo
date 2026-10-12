@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .palette {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+    .swatch {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+    .c1 { background-color: #EF4444; }
+    .c2 { background-color: #F59E0B; }
+    .c3 { background-color: #10B981; }
+    .c4 { background-color: #3B82F6; }
+    .c5 { background-color: #8B5CF6; }
+  </style>
+</head>
+<body>
+  <div class="palette">
+    <div class="swatch c1">#EF4444</div>
+    <div class="swatch c2">#F59E0B</div>
+    <div class="swatch c3">#10B981</div>
+    <div class="swatch c4">#3B82F6</div>
+    <div class="swatch c5">#8B5CF6</div>
+  </div>
+</body>
+</html>

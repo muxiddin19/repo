@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<body style="font-family:system-ui;padding:2rem;max-width:500px;margin:0 auto">
+  <h2 id="setup">Open Seoul meteo info</h2>
+  <p id="punchline" style="color:#666;font-style:italic"></p>
+  <button onclick="fetchJoke()">Meteo info</button>
+
+  <script>
+    async function fetchJoke() {
+      document.getElementById('setup').textContent = 'Loading meteo info...';
+      document.getElementById('punchline').textContent = '';
+      try {
+        const res  = await fetch(
+          'https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0¤t=temperature_2m');
+        if (!res.ok) throw new Error('Status ' + res.status);
+        const blog = await res.json();
+        document.getElementById('setup').textContent     = blog.title;
+        document.getElementById('punchline').textContent = blog.body;
+      } catch (err) {
+        document.getElementById('setup').textContent = 'Error: ' + err.message;
+      }
+    }
+    fetchJoke(); // load on open
+  </script>
+</body>

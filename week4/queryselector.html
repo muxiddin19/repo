@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>querySelector &amp; querySelectorAll - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">03</span><h1>querySelector &amp; querySelectorAll</h1></div>
+<div class="theory"><p><code>querySelector()</code> returns the <strong>first</strong> element matching a CSS selector. <code>querySelectorAll()</code> returns <strong>all</strong> matches as a NodeList you can loop with <code>forEach</code>.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>const first = document.querySelector(&#x27;li&#x27;);
+const one   = document.querySelector(&#x27;#special&#x27;);
+const all   = document.querySelectorAll(&#x27;.citrus&#x27;);
+
+all.forEach(item =&gt; {
+  item.classList.add(&#x27;hit&#x27;);
+});</code></pre></div>
+<div class="demo-box"><h4>Live demo - which elements match?</h4>
+<ul class="items" id="fruits"><li>Apple</li><li class="citrus">Orange</li><li class="citrus">Lemon</li><li id="special">Banana</li></ul>
+<div class="row"><button class="demo-btn yellow sm" id="b1">querySelector('li')</button><button class="demo-btn yellow sm" id="b2">querySelectorAll('.citrus')</button><button class="demo-btn yellow sm" id="b3">querySelector('#special')</button><button class="demo-btn outline sm" id="b4">Clear</button></div>
+<pre class="out" id="info">Pick a selector above</pre>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>querySelector()</code> returns the first match or <code>null</code>.</li><li><code>querySelectorAll()</code> returns a NodeList of all matches (may be empty).</li><li>Any valid CSS selector works: <code>.class</code>, <code>#id</code>, <code>tag</code>, <code>ul &gt; li</code>.</li></ul></div>
+<nav class="pager"><span><a href="select.html">&larr; Selecting Elements</a></span><span><a href="textcontent.html">textContent - Reading &amp; Writing Text &rarr;</a></span></nav>
+</main>
+<script>
+const info=document.getElementById('info');
+function mark(sel,all){document.querySelectorAll('#fruits li').forEach(l=>l.classList.remove('hit'));
+  const found=all?document.querySelectorAll(sel):[document.querySelector(sel)];
+  found.forEach(l=>l.classList.add('hit'));
+  info.textContent=(all?'querySelectorAll':'querySelector')+"('"+sel+"') -> "+found.length+' element(s)'}
+document.getElementById('b1').addEventListener('click',()=>mark('#fruits li',false));
+document.getElementById('b2').addEventListener('click',()=>mark('.citrus',true));
+document.getElementById('b3').addEventListener('click',()=>mark('#special',false));
+document.getElementById('b4').addEventListener('click',()=>{document.querySelectorAll('#fruits li').forEach(l=>l.classList.remove('hit'));info.textContent='Pick a selector above'});
+</script>
+</body>
+</html>

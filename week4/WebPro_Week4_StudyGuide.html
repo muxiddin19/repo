@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS DOM &amp; Events — Week 4 Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0f4ff;--surf:#fff;--surf2:#e8eefa;--brd:#c8d4f0;
+  --tx:#1a2340;--mu:#5a6a8a;
+  --ac:#1a56db;--acl:#e0eaff;--ac2:#1240b0;
+  --jsyel:#f7df1e;--jsdk:#3a3000;
+  --lime:#16a34a;--limel:#dcfce7;
+  --cor:#dc2626;--corl:#fee2e2;
+  --warn:#d97706;--warnl:#fef3c7;
+  --cb:#1a2540;--ct:#c8daf8;
+  --cyan:#0891b2;--cyanl:#e0f2fe;
+  --purple:#7c3aed;--purplel:#ede9fe;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#060d16;--surf:#0d1b2a;--surf2:#122236;--brd:#1e3256;
+  --tx:#dbeafe;--mu:#6080b0;
+  --ac:#60a5fa;--acl:#0a1830;--ac2:#93c5fd;
+  --jsyel:#f7df1e;--jsdk:#1a1400;
+  --lime:#4ade80;--limel:#052e16;
+  --cor:#f87171;--corl:#450a0a;
+  --warn:#fbbf24;--warnl:#1a1000;
+  --cb:#060d16;--ct:#bfdbfe;
+  --cyan:#22d3ee;--cyanl:#042f2e;
+  --purple:#a78bfa;--purplel:#2e1065;
+}}
+:root[data-theme=dark]{
+  --bg:#060d16;--surf:#0d1b2a;--surf2:#122236;--brd:#1e3256;
+  --tx:#dbeafe;--mu:#6080b0;
+  --ac:#60a5fa;--acl:#0a1830;--ac2:#93c5fd;
+  --jsyel:#f7df1e;--jsdk:#1a1400;
+  --lime:#4ade80;--limel:#052e16;
+  --cor:#f87171;--corl:#450a0a;
+  --warn:#fbbf24;--warnl:#1a1000;
+  --cb:#060d16;--ct:#bfdbfe;
+  --cyan:#22d3ee;--cyanl:#042f2e;
+  --purple:#a78bfa;--purplel:#2e1065;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+kbd{background:var(--surf2);border:1px solid var(--brd);border-radius:4px;padding:1px 6px;font-size:12px;font-family:'JetBrains Mono',monospace}
+code{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--surf2);padding:1px 5px;border-radius:3px;color:var(--ac2)}
+
+/* ── Header ── */
+#site-header{
+  position:sticky;top:0;z-index:100;
+  background:var(--surf);border-bottom:2px solid var(--jsyel);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px;
+}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.js-badge{background:var(--jsyel);color:var(--jsdk);font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:18px;padding:4px 10px;border-radius:6px;letter-spacing:.02em}
+.hdr-info{display:flex;flex-direction:column;gap:1px}
+.hdr-course{font-size:11px;color:var(--mu);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:var(--tx);font-family:'Space Grotesk',sans-serif}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 14px;border-radius:20px;cursor:pointer;font-size:13px;white-space:nowrap}
+.theme-btn:hover{border-color:var(--ac);color:var(--ac)}
+
+/* ── Layout ── */
+#layout{display:flex;min-height:calc(100vh - 53px)}
+
+/* ── Sidebar ── */
+#sidebar{
+  width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);
+  position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto;padding:12px 0;
+}
+#sidebar nav a{
+  display:flex;align-items:center;gap:8px;padding:5px 14px;
+  font-size:13px;color:var(--mu);border-left:3px solid transparent;transition:all .15s;
+}
+#sidebar nav a:hover{color:var(--tx);background:var(--surf2);text-decoration:none}
+#sidebar nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl);font-weight:600}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);min-width:26px;font-weight:700}
+.nav-num.ex{color:var(--warn)}
+.nav-label{font-size:10px;font-weight:700;color:var(--mu);letter-spacing:.07em;text-transform:uppercase;
+  padding:12px 14px 4px}
+
+/* ── Main ── */
+#main{flex:1;padding:36px 44px;max-width:920px}
+
+/* ── Topic Sections ── */
+.topic{margin-bottom:56px;padding-bottom:44px;border-bottom:1px solid var(--brd)}
+.topic:last-child{border-bottom:none}
+.topic-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.t-num{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  color:var(--jsdk);background:var(--jsyel);padding:2px 10px;border-radius:5px}
+.topic-hdr h2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--tx)}
+.difficulty{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
+.diff-easy{background:var(--limel);color:var(--lime)}
+.diff-med{background:var(--warnl);color:var(--warn)}
+.diff-hard{background:var(--corl);color:var(--cor)}
+:root[data-theme=dark] .diff-easy,:root:not([data-theme=light]) .diff-easy{background:var(--limel);color:var(--lime)}
+:root[data-theme=dark] .diff-med,:root:not([data-theme=light]) .diff-med{background:var(--warnl);color:var(--warn)}
+:root[data-theme=dark] .diff-hard,:root:not([data-theme=light]) .diff-hard{background:var(--corl);color:var(--cor)}
+
+.theory{margin-bottom:18px;color:var(--tx)}
+.theory p{margin-bottom:10px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--brd)}
+.code-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);padding:6px 14px;border-bottom:1px solid var(--brd);
+}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);font-weight:700}
+.copy-btn{background:transparent;border:1px solid var(--brd);color:var(--mu);
+  padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.copy-btn:hover{color:var(--ac);border-color:var(--ac)}
+.code-block{background:var(--cb);padding:18px 20px;overflow-x:auto;margin:0}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;
+  color:var(--ct);white-space:pre;background:none;padding:0;border-radius:0}
+/* Syntax */
+.sk{color:#c084fc}.sf{color:#f7df1e}.ss{color:#86efac}
+.sc{color:#64748b;font-style:italic}.sn{color:#fb923c}.sp{color:#60a5fa}
+
+/* ── Key Points ── */
+.keypoints{background:var(--acl);border-left:4px solid var(--ac);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin-top:14px}
+.keypoints h4{font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.keypoints ul{padding-left:18px}
+.keypoints li{font-size:14px;margin-bottom:4px}
+
+/* ── Warning / Note boxes ── */
+.alert{display:flex;gap:12px;padding:14px 16px;border-radius:8px;margin:14px 0;font-size:14px}
+.alert-warn{background:var(--warnl);border-left:4px solid var(--warn)}
+.alert-danger{background:var(--corl);border-left:4px solid var(--cor)}
+.alert-info{background:var(--cyanl);border-left:4px solid var(--cyan)}
+.alert-ok{background:var(--limel);border-left:4px solid var(--lime)}
+.alert-icon{font-size:20px;flex-shrink:0;line-height:1.4}
+.alert strong{display:block;margin-bottom:3px}
+
+/* ── Visual demo boxes ── */
+.demo-box{
+  background:var(--surf2);border:1px solid var(--brd);border-radius:10px;
+  padding:20px;margin:16px 0;
+}
+.demo-box h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--mu);margin-bottom:14px}
+.demo-label{font-size:11px;color:var(--mu);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+
+/* DOM Tree visual */
+.dom-tree{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;
+  background:var(--cb);color:var(--ct);padding:20px 24px;border-radius:8px;overflow-x:auto}
+.dom-tree .tag{color:#f7df1e}.dom-tree .attr{color:#86efac}
+.dom-tree .val{color:#fb923c}.dom-tree .txt{color:#94a3b8}
+.dom-tree .line{display:block}
+
+/* Sandbox (live demo with iframe) */
+.sandbox{margin:16px 0;border:1px solid var(--brd);border-radius:10px;overflow:hidden}
+.sandbox-bar{background:var(--surf2);padding:8px 14px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sandbox-bar span{font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.sandbox-run{background:var(--jsyel);color:var(--jsdk);border:none;padding:5px 16px;
+  border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.sandbox-run:hover{opacity:.85}
+.sandbox-reset{background:var(--surf2);border:1px solid var(--brd);color:var(--mu);
+  padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer}
+.sandbox-body{display:flex;min-height:160px}
+.sandbox-editor{flex:1;padding:0;background:var(--cb)}
+.sandbox-editor textarea{
+  width:100%;height:100%;min-height:160px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:14px;
+  border:none;resize:vertical;line-height:1.65;outline:none;
+}
+.sandbox-preview{flex:1;border-left:1px solid var(--brd);background:#fff}
+.sandbox-preview iframe{width:100%;height:100%;min-height:160px;border:none;display:block}
+.sandbox-split{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Interactive buttons in demos */
+.demo-btn{
+  background:var(--ac);color:#fff;border:none;padding:8px 18px;
+  border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+}
+.demo-btn:hover{background:var(--ac2)}
+.demo-btn.yellow{background:var(--jsyel);color:var(--jsdk)}
+.demo-btn.green{background:var(--lime);color:#fff}
+.demo-btn.red{background:var(--cor);color:#fff}
+.demo-btn.outline{background:transparent;border:2px solid var(--ac);color:var(--ac)}
+.demo-btn.sm{padding:5px 12px;font-size:12px}
+
+/* Output area */
+.demo-output{
+  background:var(--surf);border:2px dashed var(--brd);border-radius:8px;
+  padding:14px;margin-top:10px;min-height:50px;font-size:14px;
+}
+.demo-output.has-content{border-style:solid;border-color:var(--ac)}
+
+/* Bubbling animation */
+.bubble-vis{position:relative;padding:20px;background:var(--surf2);border-radius:10px;border:1px solid var(--brd)}
+.bv-el{
+  border-radius:10px;padding:12px 18px;text-align:center;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;
+  transition:background .2s,transform .1s;border:2px solid transparent;
+}
+.bv-window{background:var(--purplel);color:var(--purple);border-color:var(--purple)}
+.bv-doc{background:var(--cyanl);color:var(--cyan);border-color:var(--cyan)}
+.bv-body{background:var(--acl);color:var(--ac);border-color:var(--ac)}
+.bv-div{background:var(--warnl);color:var(--warn);border-color:var(--warn)}
+.bv-btn{background:var(--limel);color:var(--lime);border-color:var(--lime)}
+.bv-el.lit{transform:scale(1.04);box-shadow:0 0 0 4px currentColor40;opacity:1!important}
+.bubble-arrow{text-align:center;font-size:18px;color:var(--mu);padding:3px 0}
+.bubble-log{margin-top:12px;background:var(--cb);border-radius:6px;padding:10px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ct);min-height:44px;max-height:100px;overflow-y:auto}
+
+/* classList demo */
+.cls-target{
+  padding:20px 24px;border-radius:10px;border:2px solid var(--brd);
+  font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;
+  text-align:center;transition:all .3s;background:var(--surf);
+}
+.cls-target.highlighted{background:var(--jsyel);color:var(--jsdk);border-color:var(--jsyel)}
+.cls-target.rounded{border-radius:50px}
+.cls-target.shadowed{box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.cls-target.big{font-size:22px;padding:28px}
+.cls-badge{
+  display:inline-block;background:var(--acl);color:var(--ac);
+  font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;margin:2px;
+}
+.cls-badge.active{background:var(--lime);color:#fff}
+
+/* Event log */
+.event-log{background:var(--cb);border-radius:8px;padding:12px;max-height:140px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ct)}
+.event-log .ev-line{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.event-log .ev-type{color:var(--jsyel);margin-right:8px}
+.event-log .ev-val{color:var(--lime)}
+
+/* Exercises section */
+#exercises h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;margin-bottom:8px}
+.ex-intro{color:var(--mu);margin-bottom:32px;font-size:15px}
+.exercise{background:var(--surf);border:1px solid var(--brd);border-radius:12px;margin-bottom:32px;overflow:hidden}
+.ex-header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--surf2);border-bottom:1px solid var(--brd)}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--warn);
+  background:var(--warnl);padding:2px 8px;border-radius:4px}
+.ex-header h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;flex:1}
+.ex-body{padding:20px}
+.task-box{background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:14px 16px;margin-bottom:16px;font-size:15px}
+.task-box ul{padding-left:18px;margin-top:6px}
+.task-box li{margin-bottom:4px}
+.editor-row{display:flex;gap:0;border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-top:12px}
+.editor-row textarea{
+  flex:1;min-height:200px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:14px;
+  border:none;resize:vertical;line-height:1.65;outline:none;
+}
+.editor-row iframe{flex:1;border:none;border-left:1px solid var(--brd);background:#fff;min-height:200px}
+.ex-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn-run{background:var(--jsyel);color:var(--jsdk);border:none;padding:7px 18px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-hint{background:var(--surf2);color:var(--tx);border:1px solid var(--brd);padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer}
+.btn-hint:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sol{background:var(--surf2);color:var(--tx);border:1px solid var(--brd);padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer}
+.btn-sol:hover{border-color:var(--lime);color:var(--lime)}
+.hint-box{margin-top:10px;padding:12px 16px;background:var(--acl);border-left:3px solid var(--ac);border-radius:0 6px 6px 0;font-size:14px;display:none}
+.sol-box{margin-top:10px;display:none}
+
+/* Footer */
+#site-footer{text-align:center;padding:24px;color:var(--mu);font-size:13px;border-top:1px solid var(--brd);margin-top:40px}
+
+/* Mobile */
+@media(max-width:768px){
+  #sidebar{display:none;position:fixed;top:53px;left:0;height:calc(100vh - 53px);z-index:90;box-shadow:4px 0 20px rgba(0,0,0,.3)}
+  #sidebar.open{display:block}
+  #main{padding:20px 16px}
+  .sandwich{display:block!important}
+  .sandbox-body{flex-direction:column}
+  .editor-row{flex-direction:column}
+}
+.sandwich{display:none;background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 12px;border-radius:6px;cursor:pointer;font-size:18px}
+
+/* Progress bar */
+#progress-bar{position:fixed;top:53px;left:0;height:3px;background:var(--jsyel);width:0%;z-index:101;transition:width .1s}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="site-header">
+  <div class="hdr-left">
+    <button class="sandwich" onclick="toggleSidebar()">☰</button>
+    <span class="js-badge">JS</span>
+    <div class="hdr-info">
+      <span class="hdr-course">K0126002 · Web Programming · Week 4 Friday</span>
+      <span class="hdr-title">JavaScript DOM &amp; Events — Class Activity Guide</span>
+    </div>
+  </div>
+  <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+</header>
+
+<div id="layout">
+<aside id="sidebar">
+  <nav>
+    <div class="nav-label">DOM Basics</div>
+    <a href="#t01"><span class="nav-num">01</span>What is the DOM?</a>
+    <a href="#t02"><span class="nav-num">02</span>Select Elements</a>
+    <a href="#t03"><span class="nav-num">03</span>querySelector</a>
+    <div class="nav-label">Changing Content</div>
+    <a href="#t04"><span class="nav-num">04</span>textContent</a>
+    <a href="#t05"><span class="nav-num">05</span>innerHTML ⚠️</a>
+    <a href="#t06"><span class="nav-num">06</span>classList</a>
+    <div class="nav-label">Events</div>
+    <a href="#t07"><span class="nav-num">07</span>addEventListener</a>
+    <a href="#t08"><span class="nav-num">08</span>Event Object</a>
+    <a href="#t09"><span class="nav-num">09</span>preventDefault</a>
+    <a href="#t10"><span class="nav-num">10</span>Bubbling &amp; Delegation</a>
+    <div class="nav-label">Dynamic DOM</div>
+    <a href="#t11"><span class="nav-num">11</span>createElement</a>
+    <a href="#t12"><span class="nav-num">12</span>Remove Elements</a>
+    <div class="nav-label">Practice</div>
+    <a href="#ex1"><span class="nav-num ex">E1</span>Click Counter</a>
+    <a href="#ex2"><span class="nav-num ex">E2</span>Class Toggler</a>
+    <a href="#ex3"><span class="nav-num ex">E3</span>Live To-Do List</a>
+    <a href="#ex4"><span class="nav-num ex">E4</span>Event Delegation</a>
+  </nav>
+</aside>
+
+<main id="main">
+
+<!-- ── Intro ── -->
+<section style="margin-bottom:44px">
+  <h1 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;margin-bottom:8px">JavaScript DOM &amp; Events</h1>
+  <p style="color:var(--mu);font-size:15px;margin-bottom:16px">12 topics · 4 interactive exercises · beginner-friendly with live demos</p>
+  <div class="alert alert-info">
+    <span class="alert-icon">💡</span>
+    <div><strong>How to use this guide</strong>
+    Read the explanation, then try the live demos — click the buttons, type in the boxes. Each demo runs right here in your browser. After the 12 topics, complete the exercises in the practice section.</div>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 01 ════════════════ -->
+<section class="topic" id="t01">
+  <div class="topic-hdr">
+    <span class="t-num">01</span>
+    <h2>What is the DOM?</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>When a browser loads an HTML file, it reads it and builds a <strong>tree of objects</strong> in memory. This tree is called the <strong>DOM — Document Object Model</strong>. Every HTML tag becomes a <strong>node</strong> (an object) in the tree, and JavaScript can read and change any node.</p>
+    <p>Think of the DOM as a living map of the page. You write HTML once; the DOM lets JavaScript update the page at any time — without reloading.</p>
+  </div>
+
+  <div class="demo-box">
+    <h4>Visual — The DOM Tree</h4>
+    <p style="font-size:14px;color:var(--mu);margin-bottom:12px">This HTML file becomes this tree in memory:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="demo-label">HTML file</div>
+        <div class="code-block" style="border-radius:8px;font-size:12px"><code><span class="sk">&lt;html&gt;</span>
+  <span class="sk">&lt;head&gt;</span>
+    <span class="sk">&lt;title&gt;</span><span class="ss">My Page</span><span class="sk">&lt;/title&gt;</span>
+  <span class="sk">&lt;/head&gt;</span>
+  <span class="sk">&lt;body&gt;</span>
+    <span class="sk">&lt;h1</span> <span class="sf">id</span>=<span class="ss">"title"</span><span class="sk">&gt;</span>Hello<span class="sk">&lt;/h1&gt;</span>
+    <span class="sk">&lt;p&gt;</span>World<span class="sk">&lt;/p&gt;</span>
+  <span class="sk">&lt;/body&gt;</span>
+<span class="sk">&lt;/html&gt;</span></code></div>
+      </div>
+      <div>
+        <div class="demo-label">DOM Tree in memory</div>
+        <div class="dom-tree">
+<span class="line"><span class="tag">document</span></span>
+<span class="line">└── <span class="tag">html</span></span>
+<span class="line">    ├── <span class="tag">head</span></span>
+<span class="line">    │   └── <span class="tag">title</span> <span class="txt">"My Page"</span></span>
+<span class="line">    └── <span class="tag">body</span></span>
+<span class="line">        ├── <span class="tag">h1</span> <span class="attr">id</span>=<span class="val">"title"</span></span>
+<span class="line">        │   └── <span class="txt">"Hello"</span></span>
+<span class="line">        └── <span class="tag">p</span></span>
+<span class="line">            └── <span class="txt">"World"</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-ok" style="margin-top:14px">
+      <span class="alert-icon">✅</span>
+      <div>JavaScript uses <code>document</code> (the root object) to access any part of this tree. Change a node → the page updates instantly.</div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li>DOM = Document Object Model — the browser's in-memory tree of the page.</li>
+      <li>Every HTML tag becomes a <em>node</em> (object) JavaScript can access.</li>
+      <li><code>document</code> is the root — the starting point for all DOM access.</li>
+      <li>Changing the DOM updates the page <em>without reloading</em>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 02 ════════════════ -->
+<section class="topic" id="t02">
+  <div class="topic-hdr">
+    <span class="t-num">02</span>
+    <h2>Selecting Elements</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>Before you can change anything on the page, you need to <strong>select</strong> it. JavaScript has several ways to grab elements from the DOM.</p>
+    <p>The oldest (but still used) method is <code>getElementById()</code> — it finds one element by its <code>id</code> attribute. It returns <strong>the element object</strong>, or <code>null</code> if nothing matches.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// Grab the element with id="greeting"</span>
+<span class="sk">const</span> heading = document.<span class="sf">getElementById</span>(<span class="ss">'greeting'</span>);
+
+<span class="sc">// Now 'heading' is the actual DOM element — you can change it</span>
+heading.textContent = <span class="ss">'Hello, class!'</span>;
+heading.style.color = <span class="ss">'blue'</span>;</code></div>
+  </div>
+
+  <!-- Live demo -->
+  <div class="demo-box" id="demo-t02">
+    <h4>Try it — getElementById live demo</h4>
+    <p id="demo02-text" style="font-size:20px;font-weight:600;padding:16px;border:2px dashed var(--brd);border-radius:8px;text-align:center;transition:all .3s">
+      I am the element with id="demo02-text"
+    </p>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="demo-btn yellow" onclick="
+        document.getElementById('demo02-text').textContent = '✅ Text changed by JavaScript!';
+      ">Change Text</button>
+      <button class="demo-btn" onclick="
+        document.getElementById('demo02-text').style.color = '#1a56db';
+        document.getElementById('demo02-text').style.background = '#e0eaff';
+      ">Change Color</button>
+      <button class="demo-btn outline" onclick="
+        const el = document.getElementById('demo02-text');
+        el.textContent = 'I am the element with id="demo02-text"';
+        el.style.color = '';el.style.background = '';
+      ">Reset</button>
+    </div>
+    <div class="demo-label" style="margin-top:14px">What JS ran:</div>
+    <div class="code-block" style="border-radius:6px;font-size:12px"><code id="demo02-code"><span class="sc">// Click a button above to see the code that ran</span></code></div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>getElementById('id')</code> returns one element (or <code>null</code>).</li>
+      <li>The returned object has properties: <code>.textContent</code>, <code>.style</code>, <code>.classList</code>, etc.</li>
+      <li>IDs must be unique on the page — each <code>getElementById</code> call finds at most one element.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 03 ════════════════ -->
+<section class="topic" id="t03">
+  <div class="topic-hdr">
+    <span class="t-num">03</span>
+    <h2>querySelector &amp; querySelectorAll</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>Modern JavaScript uses CSS selector syntax to find elements. <code>querySelector()</code> returns the <strong>first</strong> matching element; <code>querySelectorAll()</code> returns <strong>all</strong> matching elements as a NodeList (like an array).</p>
+    <p>This is powerful — any CSS selector you know works here: <code>.class</code>, <code>#id</code>, <code>tag</code>, <code>tag.class</code>, <code>[attr]</code>, etc.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// querySelector — returns FIRST match (or null)</span>
+<span class="sk">const</span> btn   = document.<span class="sf">querySelector</span>(<span class="ss">'button'</span>);
+<span class="sk">const</span> title = document.<span class="sf">querySelector</span>(<span class="ss">'#main-title'</span>);
+<span class="sk">const</span> card  = document.<span class="sf">querySelector</span>(<span class="ss">'.card.active'</span>);
+
+<span class="sc">// querySelectorAll — returns ALL matches (NodeList)</span>
+<span class="sk">const</span> allBtns = document.<span class="sf">querySelectorAll</span>(<span class="ss">'button'</span>);
+<span class="sk">const</span> items   = document.<span class="sf">querySelectorAll</span>(<span class="ss">'.list-item'</span>);
+
+<span class="sc">// Loop through all results</span>
+items.<span class="sf">forEach</span>(item =&gt; {
+  item.style.color = <span class="ss">'blue'</span>;
+});</code></div>
+  </div>
+
+  <div class="demo-box">
+    <h4>Visual — Selector Cheat Sheet</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'p'</div>
+        <div style="color:var(--mu)">All &lt;p&gt; tags</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'#myId'</div>
+        <div style="color:var(--mu)">Element with id="myId"</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'.myClass'</div>
+        <div style="color:var(--mu)">All elements with class="myClass"</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'li.active'</div>
+        <div style="color:var(--mu)">&lt;li&gt; tags that also have class="active"</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'ul &gt; li'</div>
+        <div style="color:var(--mu)">Direct &lt;li&gt; children of &lt;ul&gt;</div>
+      </div>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--jsyel);font-weight:700;margin-bottom:6px">'[type="text"]'</div>
+        <div style="color:var(--mu)">Inputs with type="text"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>querySelector()</code> → first match only (or <code>null</code>).</li>
+      <li><code>querySelectorAll()</code> → NodeList of ALL matches (may be empty).</li>
+      <li>Use <code>.forEach()</code> to loop through a NodeList.</li>
+      <li>Any valid CSS selector works as the argument.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 04 ════════════════ -->
+<section class="topic" id="t04">
+  <div class="topic-hdr">
+    <span class="t-num">04</span>
+    <h2>textContent — Reading &amp; Writing Text</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p><code>textContent</code> reads or sets the <strong>plain text</strong> content of an element. When you set it, any HTML tags in the string are treated as literal characters — not as HTML. This makes it the <strong>safe</strong> way to insert user-provided text.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sk">const</span> title = document.<span class="sf">querySelector</span>(<span class="ss">'#title'</span>);
+
+<span class="sc">// READ the current text</span>
+<span class="sp">console</span>.<span class="sf">log</span>(title.textContent);  <span class="sc">// "Hello"</span>
+
+<span class="sc">// WRITE new text</span>
+title.textContent = <span class="ss">'Welcome to Web Programming!'</span>;
+
+<span class="sc">// HTML tags are treated as plain text (safe!)</span>
+title.textContent = <span class="ss">'&lt;b&gt;This will NOT be bold&lt;/b&gt;'</span>;
+<span class="sc">// Page shows: &lt;b&gt;This will NOT be bold&lt;/b&gt;</span></code></div>
+  </div>
+
+  <!-- Live sandbox -->
+  <div class="sandbox">
+    <div class="sandbox-bar">
+      <span>Live Editor — edit and run</span>
+      <div style="display:flex;gap:6px">
+        <button class="sandbox-reset" onclick="resetSB('sb04')">Reset</button>
+        <button class="sandbox-run" onclick="runSB('sb04')">▶ Run</button>
+      </div>
+    </div>
+    <div class="sandbox-body">
+      <div class="sandbox-editor">
+        <textarea id="sb04" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body style="font-family:system-ui;padding:20px"&gt;
+  &lt;h2 id="msg"&gt;Original Text&lt;/h2&gt;
+  &lt;input id="inp" type="text" placeholder="Type new text..." style="padding:8px;font-size:16px;width:200px"&gt;
+  &lt;button onclick="changeText()" style="padding:8px 16px;margin-left:8px;cursor:pointer"&gt;
+    Change Text
+  &lt;/button&gt;
+  &lt;script&gt;
+    function changeText() {
+      const newText = document.getElementById('inp').value;
+      // textContent treats HTML tags as plain text (safe!)
+      document.getElementById('msg').textContent = newText;
+    }
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</textarea>
+      </div>
+      <div class="sandbox-preview"><iframe id="sb04-frame"></iframe></div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>element.textContent</code> reads the text inside an element.</li>
+      <li>Setting <code>textContent</code> replaces ALL text inside the element.</li>
+      <li>HTML tags in the new string are shown as text — <strong>not parsed as HTML</strong>.</li>
+      <li>Use <code>textContent</code> whenever inserting user input — it's safe.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 05 ════════════════ -->
+<section class="topic" id="t05">
+  <div class="topic-hdr">
+    <span class="t-num">05</span>
+    <h2>innerHTML — Power &amp; Danger ⚠️</h2>
+    <span class="difficulty diff-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p><code>innerHTML</code> reads or sets the HTML <em>inside</em> an element. Unlike <code>textContent</code>, it <strong>parses and renders HTML tags</strong> — so <code>&lt;b&gt;</code> becomes bold, <code>&lt;img&gt;</code> loads an image, etc.</p>
+    <p>The danger: if you set <code>innerHTML</code> with user-provided text, an attacker can inject malicious JavaScript (<strong>XSS — Cross-Site Scripting</strong>). This is one of the most common web vulnerabilities.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sk">const</span> box = document.<span class="sf">querySelector</span>(<span class="ss">'#box'</span>);
+
+<span class="sc">// ✅ OK — you control the content (no user input)</span>
+box.innerHTML = <span class="ss">'&lt;strong&gt;Bold&lt;/strong&gt; and &lt;em&gt;italic&lt;/em&gt;'</span>;
+
+<span class="sc">// ❌ DANGER — never put user input directly into innerHTML!</span>
+<span class="sk">const</span> userInput = prompt(<span class="ss">'Type something:'</span>);
+box.innerHTML = userInput;  <span class="sc">// attacker types: &lt;img src=x onerror="alert('hacked!')"&gt;</span>
+
+<span class="sc">// ✅ Safe alternative for user input:</span>
+box.textContent = userInput;  <span class="sc">// tags shown as text, not executed</span></code></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0">
+    <div style="background:var(--limel);border:2px solid var(--lime);border-radius:10px;padding:16px">
+      <div style="font-weight:700;color:var(--lime);margin-bottom:8px;font-size:14px">✅ textContent (safe)</div>
+      <div id="tc-demo" style="background:var(--surf);border-radius:6px;padding:10px;font-size:14px;min-height:40px">Click button</div>
+      <button class="demo-btn green sm" style="margin-top:8px" onclick="document.getElementById('tc-demo').textContent='&lt;b&gt;Am I bold?&lt;/b&gt; No!'">Set textContent</button>
+      <div style="font-size:12px;color:var(--mu);margin-top:8px">HTML tags show as literal text</div>
+    </div>
+    <div style="background:var(--corl);border:2px solid var(--cor);border-radius:10px;padding:16px">
+      <div style="font-weight:700;color:var(--cor);margin-bottom:8px;font-size:14px">⚠️ innerHTML (powerful but risky)</div>
+      <div id="ih-demo" style="background:var(--surf);border-radius:6px;padding:10px;font-size:14px;min-height:40px">Click button</div>
+      <button class="demo-btn red sm" style="margin-top:8px" onclick="document.getElementById('ih-demo').innerHTML='&lt;b&gt;I AM bold!&lt;/b&gt; ✅'">Set innerHTML</button>
+      <div style="font-size:12px;color:var(--mu);margin-top:8px">HTML tags are rendered — use only with YOUR content</div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <span class="alert-icon">🚨</span>
+    <div><strong>XSS Attack Example</strong><br>
+    If a user types <code>&lt;img src=x onerror="stealCookies()"&gt;</code> and you put that in <code>innerHTML</code>, their script runs. Always use <code>textContent</code> for user input.</div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>innerHTML</code> reads/writes HTML markup — tags are parsed and rendered.</li>
+      <li><code>textContent</code> treats everything as plain text — tags show literally.</li>
+      <li><strong>Never</strong> put user input directly into <code>innerHTML</code> — XSS risk.</li>
+      <li>Use <code>innerHTML</code> only when YOU control the content (hardcoded templates).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 06 ════════════════ -->
+<section class="topic" id="t06">
+  <div class="topic-hdr">
+    <span class="t-num">06</span>
+    <h2>classList — Styling with JavaScript</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p><code>classList</code> is how JavaScript toggles visual styles without touching <code>style</code> directly. You define classes in CSS, then add/remove them with JS. The four methods: <code>add()</code>, <code>remove()</code>, <code>toggle()</code>, <code>contains()</code>.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sk">const</span> box = document.<span class="sf">querySelector</span>(<span class="ss">'.card'</span>);
+
+box.classList.<span class="sf">add</span>(<span class="ss">'highlighted'</span>);        <span class="sc">// adds class</span>
+box.classList.<span class="sf">remove</span>(<span class="ss">'highlighted'</span>);     <span class="sc">// removes class</span>
+box.classList.<span class="sf">toggle</span>(<span class="ss">'dark'</span>);            <span class="sc">// adds if absent, removes if present</span>
+box.classList.<span class="sf">contains</span>(<span class="ss">'active'</span>);       <span class="sc">// returns true/false</span>
+
+<span class="sc">// CSS controls what the class LOOKS like:</span>
+<span class="sc">/*</span>
+<span class="sc">.highlighted { background: yellow; font-weight: bold; }</span>
+<span class="sc">.dark         { background: #1a2340; color: #fff; }</span>
+<span class="sc">*/</span></code></div>
+  </div>
+
+  <!-- Interactive classList demo -->
+  <div class="demo-box">
+    <h4>Interactive — classList Demo</h4>
+    <div id="cls-box" class="cls-target">I am the demo box</div>
+    <div style="margin-top:12px">
+      <div class="demo-label">Current classes on the box:</div>
+      <div id="cls-list" style="margin:6px 0 12px;min-height:24px">
+        <span class="cls-badge">cls-target</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="demo-btn yellow sm" onclick="clsAction('add','highlighted')">add('highlighted')</button>
+      <button class="demo-btn outline sm" onclick="clsAction('remove','highlighted')">remove('highlighted')</button>
+      <button class="demo-btn sm" onclick="clsAction('toggle','rounded')">toggle('rounded')</button>
+      <button class="demo-btn sm" onclick="clsAction('toggle','shadowed')">toggle('shadowed')</button>
+      <button class="demo-btn sm" onclick="clsAction('toggle','big')">toggle('big')</button>
+    </div>
+    <div style="margin-top:12px;font-size:13px;color:var(--mu)" id="cls-contains-result"></div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>classList.add('x')</code> — adds class <code>x</code> (no duplicates).</li>
+      <li><code>classList.remove('x')</code> — removes class <code>x</code> (safe if absent).</li>
+      <li><code>classList.toggle('x')</code> — adds if missing, removes if present.</li>
+      <li><code>classList.contains('x')</code> — returns <code>true</code> / <code>false</code>.</li>
+      <li>Let CSS define what the class looks like; let JS control when it's applied.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 07 ════════════════ -->
+<section class="topic" id="t07">
+  <div class="topic-hdr">
+    <span class="t-num">07</span>
+    <h2>addEventListener</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p><code>addEventListener()</code> is the modern way to listen for events. You tell the browser: "when <em>this thing happens</em> on <em>this element</em>, call <em>this function</em>." Common events: <code>'click'</code>, <code>'keydown'</code>, <code>'input'</code>, <code>'submit'</code>, <code>'mouseover'</code>.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sk">const</span> btn = document.<span class="sf">querySelector</span>(<span class="ss">'#my-btn'</span>);
+
+<span class="sc">// Syntax: element.addEventListener(eventName, callback)</span>
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, <span class="sk">function</span>() {
+  <span class="sp">console</span>.<span class="sf">log</span>(<span class="ss">'Button was clicked!'</span>);
+});
+
+<span class="sc">// Arrow function — shorter syntax, same effect</span>
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, () =&gt; {
+  <span class="sp">console</span>.<span class="sf">log</span>(<span class="ss">'Also clicked!'</span>);
+});
+
+<span class="sc">// 'input' event — fires every time the value changes</span>
+<span class="sk">const</span> inp = document.<span class="sf">querySelector</span>(<span class="ss">'input'</span>);
+inp.<span class="sf">addEventListener</span>(<span class="ss">'input'</span>, () =&gt; {
+  <span class="sp">console</span>.<span class="sf">log</span>(<span class="ss">'Input value: '</span>, inp.value);
+});</code></div>
+  </div>
+
+  <!-- Live click counter demo -->
+  <div class="demo-box">
+    <h4>Live Demo — Click Counter</h4>
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <button class="demo-btn" id="count-btn" style="font-size:18px;padding:14px 28px">Click me!</button>
+      <div>
+        <div style="font-size:12px;color:var(--mu);margin-bottom:4px">Click count:</div>
+        <div id="count-display" style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:800;color:var(--ac);line-height:1">0</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="demo-label">The code that makes this work:</div>
+      <div class="code-block" style="border-radius:6px;font-size:12px"><code><span class="sk">let</span> count = <span class="sn">0</span>;
+<span class="sk">const</span> btn = document.<span class="sf">querySelector</span>(<span class="ss">'#count-btn'</span>);
+
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, () =&gt; {
+  count++;
+  document.<span class="sf">querySelector</span>(<span class="ss">'#count-display'</span>).textContent = count;
+});</code></div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>addEventListener(event, callback)</code> — attaches a listener to an element.</li>
+      <li>Common events: <code>'click'</code>, <code>'input'</code>, <code>'keydown'</code>, <code>'submit'</code>, <code>'mouseover'</code>.</li>
+      <li>You can add multiple listeners to the same element for different events.</li>
+      <li>The callback function runs every time the event fires.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 08 ════════════════ -->
+<section class="topic" id="t08">
+  <div class="topic-hdr">
+    <span class="t-num">08</span>
+    <h2>The Event Object (e)</h2>
+    <span class="difficulty diff-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>When an event fires, the browser automatically passes an <strong>event object</strong> to your callback. Name it <code>e</code> or <code>event</code>. It contains details about what happened: which element was clicked (<code>e.target</code>), which key was pressed (<code>e.key</code>), mouse position, and more.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// 'e' (or 'event') is the event object passed automatically</span>
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, (e) =&gt; {
+  <span class="sp">console</span>.<span class="sf">log</span>(e.type);        <span class="sc">// 'click'</span>
+  <span class="sp">console</span>.<span class="sf">log</span>(e.target);      <span class="sc">// the element that was clicked</span>
+  <span class="sp">console</span>.<span class="sf">log</span>(e.target.id);   <span class="sc">// its id attribute</span>
+});
+
+<span class="sc">// Keyboard events have e.key</span>
+document.<span class="sf">addEventListener</span>(<span class="ss">'keydown'</span>, (e) =&gt; {
+  <span class="sp">console</span>.<span class="sf">log</span>(e.key);         <span class="sc">// 'Enter', 'a', 'ArrowUp' ...</span>
+  <span class="sk">if</span> (e.key === <span class="ss">'Enter'</span>) sendMessage();
+});</code></div>
+  </div>
+
+  <!-- Event explorer demo -->
+  <div class="demo-box">
+    <h4>Event Explorer — click elements or press keys</h4>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="demo-btn" id="eobj-a">Button A</button>
+      <button class="demo-btn yellow" id="eobj-b">Button B</button>
+      <input type="text" id="eobj-inp" placeholder="Type here (keydown)..." style="padding:8px 12px;border:2px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--tx);font-size:14px;flex:1">
+    </div>
+    <div class="demo-label">Event log (last 5 events):</div>
+    <div class="event-log" id="eobj-log">
+      <div style="color:var(--mu);font-size:12px">← Interact with the elements above</div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li>The event object is automatically passed to your callback as the first argument.</li>
+      <li><code>e.type</code> — event name ('click', 'keydown', etc.)</li>
+      <li><code>e.target</code> — the exact element that triggered the event.</li>
+      <li><code>e.key</code> — the key pressed (for keyboard events).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 09 ════════════════ -->
+<section class="topic" id="t09">
+  <div class="topic-hdr">
+    <span class="t-num">09</span>
+    <h2>e.preventDefault()</h2>
+    <span class="difficulty diff-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>Some elements have built-in <strong>default browser behavior</strong>: a form submits and reloads the page, a link navigates to a URL, right-click opens a context menu. <code>e.preventDefault()</code> stops the browser's default action so your JavaScript can handle it instead.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sk">const</span> form = document.<span class="sf">querySelector</span>(<span class="ss">'#login-form'</span>);
+
+form.<span class="sf">addEventListener</span>(<span class="ss">'submit'</span>, (e) =&gt; {
+  e.<span class="sf">preventDefault</span>();   <span class="sc">// ← stops the page reload!</span>
+
+  <span class="sc">// Now validate and handle the form with JavaScript</span>
+  <span class="sk">const</span> email = document.<span class="sf">querySelector</span>(<span class="ss">'#email'</span>).value;
+  <span class="sk">if</span> (!email.<span class="sf">includes</span>(<span class="ss">'@'</span>)) {
+    <span class="sf">showError</span>(<span class="ss">'Please enter a valid email.'</span>);
+  } <span class="sk">else</span> {
+    <span class="sf">loginUser</span>(email);
+  }
+});</code></div>
+  </div>
+
+  <!-- preventDefault live demo -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
+    <div style="background:var(--corl);border:2px solid var(--cor);border-radius:10px;padding:16px">
+      <div style="font-weight:700;color:var(--cor);margin-bottom:10px;font-size:13px">❌ Without preventDefault</div>
+      <form action="#t09" method="get">
+        <input type="text" name="x" placeholder="Type anything..." style="padding:6px 10px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--tx);width:100%;margin-bottom:8px">
+        <button type="submit" class="demo-btn red sm" style="width:100%">Submit (page reloads!)</button>
+      </form>
+    </div>
+    <div style="background:var(--limel);border:2px solid var(--lime);border-radius:10px;padding:16px">
+      <div style="font-weight:700;color:var(--lime);margin-bottom:10px;font-size:13px">✅ With preventDefault</div>
+      <form id="safe-form">
+        <input type="text" id="safe-inp" placeholder="Type anything..." style="padding:6px 10px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--tx);width:100%;margin-bottom:8px">
+        <button type="submit" class="demo-btn green sm" style="width:100%">Submit (no reload!)</button>
+      </form>
+      <div id="safe-result" style="margin-top:8px;font-size:13px;color:var(--lime);font-weight:600"></div>
+    </div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>e.preventDefault()</code> stops the browser's default action.</li>
+      <li>Use on forms (<code>'submit'</code>) to handle validation without page reload.</li>
+      <li>Use on links (<code>'click'</code>) to prevent navigation.</li>
+      <li>Call it as the <em>first line</em> of your handler so the default never fires.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 10 ════════════════ -->
+<section class="topic" id="t10">
+  <div class="topic-hdr">
+    <span class="t-num">10</span>
+    <h2>Event Bubbling &amp; Delegation</h2>
+    <span class="difficulty diff-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>When you click a button, the click event doesn't stop there — it <strong>bubbles up</strong> through all parent elements to the document. A click on the button also fires click events on its parent <code>div</code>, then <code>body</code>, then <code>html</code>, then <code>document</code>.</p>
+    <p><strong>Event delegation</strong> is a pattern that uses bubbling to your advantage: instead of adding a listener to every child element, add <em>one listener to the parent</em>. Use <code>e.target</code> to know which child was clicked.</p>
+  </div>
+
+  <!-- Bubbling visualization -->
+  <div class="demo-box">
+    <h4>Visual — Click the Button to see bubbling</h4>
+    <div class="bubble-vis">
+      <div class="bv-el bv-window" id="bv-window">window</div>
+      <div class="bubble-arrow">↑ bubbles up</div>
+      <div class="bv-el bv-doc" id="bv-doc">document</div>
+      <div class="bubble-arrow">↑</div>
+      <div class="bv-el bv-body" id="bv-body">body</div>
+      <div class="bubble-arrow">↑</div>
+      <div class="bv-el bv-div" id="bv-div">div#container</div>
+      <div class="bubble-arrow">↑</div>
+      <div class="bv-el bv-btn" id="bv-btn" onclick="startBubble()" style="cursor:pointer">👆 Click me! (button)</div>
+      <div class="bubble-log" id="bubble-log">Click the button to see the event travel up...</div>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript — Event Delegation</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// ❌ Without delegation — a listener on EVERY button</span>
+document.<span class="sf">querySelectorAll</span>(<span class="ss">'button'</span>).<span class="sf">forEach</span>(btn =&gt; {
+  btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, handleClick);
+});
+<span class="sc">// Problem: new buttons added later won't have a listener!</span>
+
+<span class="sc">// ✅ With delegation — ONE listener on the parent</span>
+<span class="sk">const</span> list = document.<span class="sf">querySelector</span>(<span class="ss">'#todo-list'</span>);
+list.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, (e) =&gt; {
+  <span class="sc">// e.target is the element that was actually clicked</span>
+  <span class="sk">if</span> (e.target.<span class="sf">matches</span>(<span class="ss">'.delete-btn'</span>)) {
+    e.target.parentElement.<span class="sf">remove</span>();
+  }
+});
+<span class="sc">// Works for existing AND future list items!</span></code></div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li>Events <strong>bubble up</strong> — a click on a child also fires on all its parents.</li>
+      <li>Event delegation = one listener on the parent, check <code>e.target</code> to know which child.</li>
+      <li>Delegation works for dynamically added elements (existing listeners don't).</li>
+      <li><code>e.target.matches('.class')</code> checks if the clicked element matches a CSS selector.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 11 ════════════════ -->
+<section class="topic" id="t11">
+  <div class="topic-hdr">
+    <span class="t-num">11</span>
+    <h2>createElement &amp; appendChild</h2>
+    <span class="difficulty diff-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>JavaScript can <strong>create new HTML elements</strong> from scratch and insert them into the page. The 3-step pattern: <strong>create → configure → append</strong>.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// Step 1: Create</span>
+<span class="sk">const</span> li = document.<span class="sf">createElement</span>(<span class="ss">'li'</span>);
+
+<span class="sc">// Step 2: Configure</span>
+li.textContent = <span class="ss">'New item!'</span>;
+li.classList.<span class="sf">add</span>(<span class="ss">'list-item'</span>);
+
+<span class="sc">// Step 3: Append to the DOM</span>
+<span class="sk">const</span> ul = document.<span class="sf">querySelector</span>(<span class="ss">'#my-list'</span>);
+ul.<span class="sf">appendChild</span>(li);     <span class="sc">// adds at the END</span>
+
+<span class="sc">// Alternative: prepend (adds at the START)</span>
+ul.<span class="sf">prepend</span>(li);
+
+<span class="sc">// insertAdjacentHTML — faster for HTML strings</span>
+ul.<span class="sf">insertAdjacentHTML</span>(<span class="ss">'beforeend'</span>, <span class="ss">'&lt;li&gt;Another item&lt;/li&gt;'</span>);</code></div>
+  </div>
+
+  <!-- Dynamic list demo -->
+  <div class="demo-box">
+    <h4>Live Demo — Build a list dynamically</h4>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <input id="newitem-inp" type="text" placeholder="Type a new item..." style="flex:1;padding:8px 12px;border:2px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--tx);font-size:14px">
+      <button class="demo-btn" onclick="addDemoItem()">+ Add Item</button>
+    </div>
+    <ul id="demo-list" style="padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;min-height:40px">
+      <li style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+        Learn HTML <span style="color:var(--mu);font-size:12px">(example item)</span>
+      </li>
+    </ul>
+    <div style="margin-top:10px;font-size:13px;color:var(--mu)" id="demo-list-count">1 item</div>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>document.createElement('tag')</code> — creates an element (not yet in the DOM).</li>
+      <li>Configure first (textContent, classList, attributes), then append.</li>
+      <li><code>parent.appendChild(el)</code> — adds at the end.</li>
+      <li><code>parent.prepend(el)</code> — adds at the start.</li>
+      <li><code>insertAdjacentHTML('beforeend', html)</code> — faster for HTML strings.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ TOPIC 12 ════════════════ -->
+<section class="topic" id="t12">
+  <div class="topic-hdr">
+    <span class="t-num">12</span>
+    <h2>Removing Elements</h2>
+    <span class="difficulty diff-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>Elements can be removed from the DOM with <code>.remove()</code> — the simplest modern method. The element simply disappears from the page.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block"><code><span class="sc">// Select and remove an element</span>
+<span class="sk">const</span> item = document.<span class="sf">querySelector</span>(<span class="ss">'.to-delete'</span>);
+item.<span class="sf">remove</span>();    <span class="sc">// gone!</span>
+
+<span class="sc">// Remove when a delete button is clicked (inside list item)</span>
+<span class="sk">const</span> list = document.<span class="sf">querySelector</span>(<span class="ss">'#my-list'</span>);
+list.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, (e) =&gt; {
+  <span class="sk">if</span> (e.target.<span class="sf">matches</span>(<span class="ss">'.delete-btn'</span>)) {
+    e.target.closest(<span class="ss">'li'</span>).<span class="sf">remove</span>();  <span class="sc">// remove the parent li</span>
+  }
+});</code></div>
+  </div>
+
+  <!-- Remove demo -->
+  <div class="demo-box">
+    <h4>Demo — Click × to remove items</h4>
+    <ul id="rm-list" style="padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+      <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+        <span>Item One</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+      </li>
+      <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+        <span>Item Two</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+      </li>
+      <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+        <span>Item Three</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+      </li>
+    </ul>
+    <button class="demo-btn outline sm" style="margin-top:10px" onclick="resetRemoveDemo()">↺ Restore items</button>
+  </div>
+
+  <div class="keypoints">
+    <h4>Key Points</h4>
+    <ul>
+      <li><code>element.remove()</code> — removes the element from the DOM.</li>
+      <li><code>e.target.closest('li')</code> — finds the nearest ancestor matching a selector (useful in delegation).</li>
+      <li>Removed elements can still be held in JS variables and re-added later.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════ EXERCISES ════════════════ -->
+<section id="exercises">
+  <h1>Practice Exercises</h1>
+  <p class="ex-intro">Write JavaScript in the left panel. Click <strong>Run</strong> to see it live on the right. Use hints if stuck.</p>
+
+  <!-- E1 -->
+  <div class="exercise" id="ex1">
+    <div class="ex-header">
+      <span class="ex-num">E1</span>
+      <h3>Click Counter with Color Change</h3>
+      <span class="difficulty diff-easy">Beginner</span>
+    </div>
+    <div class="ex-body">
+      <div class="task-box">
+        <strong>Task:</strong> Make the button below count clicks. After 5 clicks, change the button color to green and show a congratulations message.
+        <ul>
+          <li>Select the button with <code>querySelector</code></li>
+          <li>Add a <code>'click'</code> event listener</li>
+          <li>Update the counter text with <code>textContent</code></li>
+          <li>At 5 clicks: use <code>classList.add('done')</code> and update message</li>
+        </ul>
+      </div>
+      <div class="editor-row">
+        <textarea id="ex1-editor" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body style="font-family:system-ui;padding:24px;text-align:center"&gt;
+  &lt;style&gt;
+    .done { background: #16a34a !important; }
+  &lt;/style&gt;
+
+  &lt;button id="clicker" style="
+    padding:14px 32px;font-size:18px;border:none;
+    background:#1a56db;color:white;border-radius:10px;
+    cursor:pointer;transition:background .3s"&gt;
+    Click me!
+  &lt;/button&gt;
+
+  &lt;p id="count" style="font-size:32px;font-weight:bold;margin:16px 0"&gt;0&lt;/p&gt;
+  &lt;p id="message" style="font-size:16px;color:#666"&gt;Keep clicking...&lt;/p&gt;
+
+  &lt;script&gt;
+    // YOUR CODE HERE
+    // 1. Select the button, count paragraph, and message paragraph
+    // 2. Create a counter variable starting at 0
+    // 3. Add a click listener to the button
+    // 4. Inside the listener: increment count, update #count text
+    // 5. If count >= 5: add class 'done' to button, update #message
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</textarea>
+        <iframe id="ex1-frame"></iframe>
+      </div>
+      <div class="ex-btns">
+        <button class="btn-run" onclick="runEx('ex1')">▶ Run</button>
+        <button class="btn-hint" onclick="toggleHint('ex1')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleSol('ex1')">✅ Solution</button>
+      </div>
+      <div class="hint-box" id="ex1-hint">
+        <strong>Hint:</strong> Use <code>let count = 0;</code> outside the listener so it persists between clicks.
+        Inside the listener: <code>count++;</code> then <code>countEl.textContent = count;</code>
+        Then check <code>if (count >= 5) { btn.classList.add('done'); ... }</code>
+      </div>
+      <div class="sol-box" id="ex1-sol">
+        <div class="code-wrap"><div class="code-bar"><span class="code-lang">Solution</span></div>
+        <div class="code-block"><code><span class="sk">const</span> btn = document.<span class="sf">querySelector</span>(<span class="ss">'#clicker'</span>);
+<span class="sk">const</span> countEl = document.<span class="sf">querySelector</span>(<span class="ss">'#count'</span>);
+<span class="sk">const</span> msg = document.<span class="sf">querySelector</span>(<span class="ss">'#message'</span>);
+<span class="sk">let</span> count = <span class="sn">0</span>;
+
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, () =&gt; {
+  count++;
+  countEl.textContent = count;
+  <span class="sk">if</span> (count &gt;= <span class="sn">5</span>) {
+    btn.classList.<span class="sf">add</span>(<span class="ss">'done'</span>);
+    msg.textContent = <span class="ss">'🎉 Congratulations! You clicked 5 times!'</span>;
+  }
+});</code></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E2 -->
+  <div class="exercise" id="ex2">
+    <div class="ex-header">
+      <span class="ex-num">E2</span>
+      <h3>Dark Mode Toggle Card</h3>
+      <span class="difficulty diff-easy">Beginner</span>
+    </div>
+    <div class="ex-body">
+      <div class="task-box">
+        <strong>Task:</strong> Build a profile card with a dark mode toggle button. Clicking the button should toggle a <code>dark</code> class on the card.
+        <ul>
+          <li>Select the card and the toggle button</li>
+          <li>Add a click listener to the button</li>
+          <li>Use <code>classList.toggle('dark')</code> to switch modes</li>
+          <li>Update the button text based on <code>classList.contains('dark')</code></li>
+        </ul>
+      </div>
+      <div class="editor-row">
+        <textarea id="ex2-editor" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body style="font-family:system-ui;padding:24px;display:flex;justify-content:center"&gt;
+  &lt;style&gt;
+    .card {
+      padding: 24px; border-radius: 16px; width: 260px;
+      background: #f0f4ff; border: 2px solid #c8d4f0;
+      text-align: center; transition: all 0.3s;
+    }
+    .card.dark {
+      background: #1a2340; border-color: #3a4a70;
+      color: white;
+    }
+    .avatar {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: #1a56db; display: inline-flex;
+      align-items: center; justify-content: center;
+      font-size: 32px; margin-bottom: 12px;
+    }
+    button { padding: 8px 20px; border-radius: 20px; cursor: pointer; border: none; margin-top: 14px; font-weight: bold; }
+  &lt;/style&gt;
+
+  &lt;div id="card" class="card"&gt;
+    &lt;div class="avatar"&gt;👩‍💻&lt;/div&gt;
+    &lt;h2&gt;Kim Jisoo&lt;/h2&gt;
+    &lt;p&gt;Web Programming Student&lt;/p&gt;
+    &lt;button id="toggle-btn"&gt;🌙 Dark Mode&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    // YOUR CODE HERE
+    // 1. Select #card and #toggle-btn
+    // 2. Add click listener to toggle-btn
+    // 3. Inside: toggle the 'dark' class on the card
+    // 4. Update button text: '☀️ Light Mode' or '🌙 Dark Mode'
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</textarea>
+        <iframe id="ex2-frame"></iframe>
+      </div>
+      <div class="ex-btns">
+        <button class="btn-run" onclick="runEx('ex2')">▶ Run</button>
+        <button class="btn-hint" onclick="toggleHint('ex2')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleSol('ex2')">✅ Solution</button>
+      </div>
+      <div class="hint-box" id="ex2-hint">
+        <strong>Hint:</strong> After <code>card.classList.toggle('dark')</code>, check <code>card.classList.contains('dark')</code> to set the right button text. If it's dark, show "☀️ Light Mode", otherwise "🌙 Dark Mode".
+      </div>
+      <div class="sol-box" id="ex2-sol">
+        <div class="code-wrap"><div class="code-bar"><span class="code-lang">Solution</span></div>
+        <div class="code-block"><code><span class="sk">const</span> card = document.<span class="sf">querySelector</span>(<span class="ss">'#card'</span>);
+<span class="sk">const</span> btn = document.<span class="sf">querySelector</span>(<span class="ss">'#toggle-btn'</span>);
+
+btn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, () =&gt; {
+  card.classList.<span class="sf">toggle</span>(<span class="ss">'dark'</span>);
+  <span class="sk">if</span> (card.classList.<span class="sf">contains</span>(<span class="ss">'dark'</span>)) {
+    btn.textContent = <span class="ss">'☀️ Light Mode'</span>;
+  } <span class="sk">else</span> {
+    btn.textContent = <span class="ss">'🌙 Dark Mode'</span>;
+  }
+});</code></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E3 -->
+  <div class="exercise" id="ex3">
+    <div class="ex-header">
+      <span class="ex-num">E3</span>
+      <h3>Interactive To-Do List</h3>
+      <span class="difficulty diff-med">Intermediate</span>
+    </div>
+    <div class="ex-body">
+      <div class="task-box">
+        <strong>Task:</strong> Build a working to-do list app. Users should be able to add items by typing and pressing Enter (or clicking Add), and remove items by clicking a delete button.
+        <ul>
+          <li>Use <code>createElement</code> to build each list item</li>
+          <li>Add a "✕" delete button inside each item</li>
+          <li>Listen for <code>'keydown'</code> on input: add item when <code>e.key === 'Enter'</code></li>
+          <li>Clear the input after adding (<code>input.value = ''</code>)</li>
+          <li>Use event delegation on the list for delete buttons</li>
+        </ul>
+      </div>
+      <div class="editor-row">
+        <textarea id="ex3-editor" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body style="font-family:system-ui;padding:20px;max-width:400px;margin:auto"&gt;
+  &lt;style&gt;
+    h2 { color: #1a56db; }
+    .add-row { display:flex; gap:8px; margin-bottom:14px; }
+    input { flex:1; padding:8px 12px; border:2px solid #c8d4f0; border-radius:8px; font-size:15px; }
+    button { padding:8px 16px; border:none; border-radius:8px; cursor:pointer; font-size:15px; font-weight:bold; }
+    .add-btn { background:#1a56db; color:white; }
+    #todo-list { list-style:none; padding:0; }
+    .todo-item { display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px; margin-bottom:6px; background:#f0f4ff;
+      border-radius:8px; border:1px solid #c8d4f0; }
+    .del-btn { background:#dc2626; color:white; padding:4px 10px; font-size:12px; border-radius:6px; }
+    #empty-msg { color:#9ca3af; text-align:center; padding:20px; display:none; }
+  &lt;/style&gt;
+
+  &lt;h2&gt;My To-Do List&lt;/h2&gt;
+  &lt;div class="add-row"&gt;
+    &lt;input id="todo-input" type="text" placeholder="Add a task..."&gt;
+    &lt;button id="add-btn" class="add-btn"&gt;+ Add&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;ul id="todo-list"&gt;&lt;/ul&gt;
+  &lt;p id="empty-msg"&gt;No tasks yet! Add one above.&lt;/p&gt;
+
+  &lt;script&gt;
+    // YOUR CODE HERE
+    // 1. Select input, add-btn, todo-list, empty-msg
+    // 2. Write function addTask() that:
+    //    a. Reads input.value (trim it, skip if empty)
+    //    b. Creates an &lt;li&gt; with the text and a delete button
+    //    c. Appends to the list
+    //    d. Clears the input
+    // 3. Add 'click' listener to add-btn → call addTask()
+    // 4. Add 'keydown' listener to input → if e.key === 'Enter', call addTask()
+    // 5. Add 'click' event delegation on todo-list → if .del-btn clicked, remove li
+    // BONUS: Show/hide #empty-msg based on list length
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</textarea>
+        <iframe id="ex3-frame"></iframe>
+      </div>
+      <div class="ex-btns">
+        <button class="btn-run" onclick="runEx('ex3')">▶ Run</button>
+        <button class="btn-hint" onclick="toggleHint('ex3')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleSol('ex3')">✅ Solution</button>
+      </div>
+      <div class="hint-box" id="ex3-hint">
+        <strong>Hint:</strong> To build a list item:
+        <code>const li = document.createElement('li'); li.className = 'todo-item';</code>
+        Then use <code>li.innerHTML = `&lt;span&gt;${text}&lt;/span&gt;&lt;button class="del-btn"&gt;✕&lt;/button&gt;`;</code>
+        For deletion use delegation: check <code>e.target.classList.contains('del-btn')</code> then <code>e.target.closest('li').remove()</code>.
+      </div>
+      <div class="sol-box" id="ex3-sol">
+        <div class="code-wrap"><div class="code-bar"><span class="code-lang">Solution</span></div>
+        <div class="code-block"><code><span class="sk">const</span> input = document.<span class="sf">querySelector</span>(<span class="ss">'#todo-input'</span>);
+<span class="sk">const</span> addBtn = document.<span class="sf">querySelector</span>(<span class="ss">'#add-btn'</span>);
+<span class="sk">const</span> list = document.<span class="sf">querySelector</span>(<span class="ss">'#todo-list'</span>);
+<span class="sk">const</span> emptyMsg = document.<span class="sf">querySelector</span>(<span class="ss">'#empty-msg'</span>);
+
+<span class="sk">function</span> <span class="sf">updateEmpty</span>() {
+  emptyMsg.style.display = list.children.length === <span class="sn">0</span> ? <span class="ss">'block'</span> : <span class="ss">'none'</span>;
+}
+
+<span class="sk">function</span> <span class="sf">addTask</span>() {
+  <span class="sk">const</span> text = input.value.<span class="sf">trim</span>();
+  <span class="sk">if</span> (!text) <span class="sk">return</span>;
+  <span class="sk">const</span> li = document.<span class="sf">createElement</span>(<span class="ss">'li'</span>);
+  li.className = <span class="ss">'todo-item'</span>;
+  li.innerHTML = <span class="ss">`&lt;span&gt;</span><span class="sf">${text}</span><span class="ss">&lt;/span&gt;&lt;button class="del-btn"&gt;✕&lt;/button&gt;`</span>;
+  list.<span class="sf">appendChild</span>(li);
+  input.value = <span class="ss">''</span>;
+  <span class="sf">updateEmpty</span>();
+}
+
+addBtn.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, addTask);
+input.<span class="sf">addEventListener</span>(<span class="ss">'keydown'</span>, (e) =&gt; {
+  <span class="sk">if</span> (e.key === <span class="ss">'Enter'</span>) <span class="sf">addTask</span>();
+});
+list.<span class="sf">addEventListener</span>(<span class="ss">'click'</span>, (e) =&gt; {
+  <span class="sk">if</span> (e.target.classList.<span class="sf">contains</span>(<span class="ss">'del-btn'</span>)) {
+    e.target.<span class="sf">closest</span>(<span class="ss">'li'</span>).<span class="sf">remove</span>();
+    <span class="sf">updateEmpty</span>();
+  }
+});
+<span class="sf">updateEmpty</span>();</code></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E4 -->
+  <div class="exercise" id="ex4">
+    <div class="ex-header">
+      <span class="ex-num">E4</span>
+      <h3>Live Search Filter (Advanced)</h3>
+      <span class="difficulty diff-hard">Advanced</span>
+    </div>
+    <div class="ex-body">
+      <div class="task-box">
+        <strong>Task:</strong> Build a real-time search filter. As the user types, show only the items that match the search text. No page reload, no button — filter as you type using the <code>'input'</code> event.
+        <ul>
+          <li>Listen for <code>'input'</code> event on the search box</li>
+          <li>Get <code>e.target.value.toLowerCase()</code> as the search term</li>
+          <li>Use <code>querySelectorAll('.student')</code> to get all student rows</li>
+          <li>For each: if name includes the term, show it; otherwise hide it (<code>style.display</code>)</li>
+          <li>BONUS: highlight the matching text with <code>innerHTML</code> (it's your content — safe here)</li>
+        </ul>
+      </div>
+      <div class="editor-row">
+        <textarea id="ex4-editor" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body style="font-family:system-ui;padding:20px;max-width:420px;margin:auto"&gt;
+  &lt;style&gt;
+    h2 { color: #1a56db; }
+    #search { width:100%; padding:10px 14px; font-size:16px;
+      border:2px solid #1a56db; border-radius:10px; margin-bottom:14px; }
+    .student { padding:10px 14px; margin-bottom:6px; background:#f0f4ff;
+      border-radius:8px; border:1px solid #c8d4f0; font-size:15px; }
+    mark { background: #f7df1e; border-radius: 3px; }
+    #no-results { display:none; color:#9ca3af; text-align:center; padding:20px; }
+  &lt;/style&gt;
+
+  &lt;h2&gt;Student Search&lt;/h2&gt;
+  &lt;input id="search" type="text" placeholder="Search students..."&gt;
+  &lt;div id="student-list"&gt;
+    &lt;div class="student" data-name="Kim Jisoo"&gt;Kim Jisoo — Web Programming&lt;/div&gt;
+    &lt;div class="student" data-name="Park Minjun"&gt;Park Minjun — Computer Science&lt;/div&gt;
+    &lt;div class="student" data-name="Lee Sooyeon"&gt;Lee Sooyeon — Software Engineering&lt;/div&gt;
+    &lt;div class="student" data-name="Choi Hyunwoo"&gt;Choi Hyunwoo — Artificial Intelligence&lt;/div&gt;
+    &lt;div class="student" data-name="Jung Yuna"&gt;Jung Yuna — Data Science&lt;/div&gt;
+    &lt;div class="student" data-name="Kang Seojun"&gt;Kang Seojun — Web Programming&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;p id="no-results"&gt;No students found.&lt;/p&gt;
+
+  &lt;script&gt;
+    // YOUR CODE HERE
+    // 1. Select #search and all .student elements
+    // 2. Add 'input' event listener to #search
+    // 3. Inside the listener:
+    //    a. Get the search term: e.target.value.toLowerCase()
+    //    b. For each .student: get data-name attribute, compare with term
+    //    c. Show or hide each student (style.display = '' or 'none')
+    // 4. Show #no-results if all students are hidden
+    // BONUS: wrap matched text in &lt;mark&gt; using innerHTML for highlighting
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</textarea>
+        <iframe id="ex4-frame"></iframe>
+      </div>
+      <div class="ex-btns">
+        <button class="btn-run" onclick="runEx('ex4')">▶ Run</button>
+        <button class="btn-hint" onclick="toggleHint('ex4')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleSol('ex4')">✅ Solution</button>
+      </div>
+      <div class="hint-box" id="ex4-hint">
+        <strong>Hint:</strong> Get the name from the data attribute: <code>student.dataset.name.toLowerCase()</code>.
+        Then: <code>student.style.display = name.includes(term) ? '' : 'none';</code>
+        For the bonus highlight, store the original text in <code>data-name</code> and use:
+        <code>student.innerHTML = original.replace(term, '&lt;mark&gt;' + term + '&lt;/mark&gt;')</code>
+      </div>
+      <div class="sol-box" id="ex4-sol">
+        <div class="code-wrap"><div class="code-bar"><span class="code-lang">Solution</span></div>
+        <div class="code-block"><code><span class="sk">const</span> searchInp = document.<span class="sf">querySelector</span>(<span class="ss">'#search'</span>);
+<span class="sk">const</span> students = document.<span class="sf">querySelectorAll</span>(<span class="ss">'.student'</span>);
+<span class="sk">const</span> noResults = document.<span class="sf">querySelector</span>(<span class="ss">'#no-results'</span>);
+
+searchInp.<span class="sf">addEventListener</span>(<span class="ss">'input'</span>, (e) =&gt; {
+  <span class="sk">const</span> term = e.target.value.<span class="sf">toLowerCase</span>();
+  <span class="sk">let</span> visible = <span class="sn">0</span>;
+  students.<span class="sf">forEach</span>(s =&gt; {
+    <span class="sk">const</span> name = s.dataset.name.<span class="sf">toLowerCase</span>();
+    <span class="sk">if</span> (name.<span class="sf">includes</span>(term)) {
+      s.style.display = <span class="ss">''</span>;
+      visible++;
+      <span class="sc">// Bonus: highlight match</span>
+      <span class="sk">if</span> (term) {
+        <span class="sk">const</span> rx = <span class="sk">new</span> <span class="sf">RegExp</span>(<span class="ss">`(</span><span class="sf">${term}</span><span class="ss">)`</span>, <span class="ss">'gi'</span>);
+        s.innerHTML = s.dataset.name.<span class="sf">replace</span>(rx, <span class="ss">'&lt;mark&gt;$1&lt;/mark&gt;'</span>)
+          + <span class="ss">' — '</span> + s.textContent.<span class="sf">split</span>(<span class="ss">'—'</span>)[<span class="sn">1</span>].<span class="sf">trim</span>();
+      } <span class="sk">else</span> {
+        s.textContent = s.dataset.name + <span class="ss">' — '</span>
+          + s.textContent.<span class="sf">split</span>(<span class="ss">'—'</span>)[<span class="sn">1</span>].<span class="sf">trim</span>();
+      }
+    } <span class="sk">else</span> {
+      s.style.display = <span class="ss">'none'</span>;
+    }
+  });
+  noResults.style.display = visible === <span class="sn">0</span> ? <span class="ss">'block'</span> : <span class="ss">'none'</span>;
+});</code></div></div>
+      </div>
+    </div>
+  </div>
+
+</section><!-- /exercises -->
+
+<footer id="site-footer">
+  <p>K0126002 · Web Programming · Gachon University · Week 4 Friday</p>
+  <p style="margin-top:4px">JavaScript DOM &amp; Events — Class Activity Guide</p>
+</footer>
+
+</main>
+</div><!-- /layout -->
+
+<script>
+/* ─── Theme ─── */
+function toggleTheme() {
+  const r = document.documentElement;
+  const isDark = r.dataset.theme === 'dark';
+  r.dataset.theme = isDark ? 'light' : 'dark';
+  document.getElementById('theme-toggle').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  try { localStorage.setItem('w4-theme', r.dataset.theme); } catch(e){}
+}
+try {
+  const s = localStorage.getItem('w4-theme');
+  if (s) { document.documentElement.dataset.theme = s;
+    document.getElementById('theme-toggle').textContent = s === 'dark' ? '☀️ Light' : '🌙 Dark'; }
+} catch(e){}
+
+/* ─── Sidebar ─── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+/* ─── Progress bar ─── */
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+/* ─── Active nav link ─── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('#sidebar nav a').forEach(a => a.classList.remove('active'));
+      const id = e.target.id;
+      const link = document.querySelector(`#sidebar nav a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+document.querySelectorAll('.topic, .exercise, #exercises').forEach(s => observer.observe(s));
+
+/* ─── Copy code ─── */
+function copyCode(btn) {
+  const code = btn.closest('.code-wrap').querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+/* ─── Sandbox runner ─── */
+function runSB(id) {
+  const src = document.getElementById(id).value;
+  document.getElementById(id + '-frame').srcdoc = src;
+}
+function resetSB(id) {
+  const defaults = {
+    'sb04': `<html><body style="font-family:system-ui;padding:20px">\n  <h2 id="msg">Original Text</h2>\n  <input id="inp" type="text" placeholder="Type new text..." style="padding:8px;font-size:16px;width:200px">\n  <button onclick="changeText()" style="padding:8px 16px;margin-left:8px;cursor:pointer">Change Text</button>\n  <script>\n    function changeText() {\n      const newText = document.getElementById('inp').value;\n      document.getElementById('msg').textContent = newText;\n    }\n  <\/script>\n</body></html>`
+  };
+  if (defaults[id]) document.getElementById(id).value = defaults[id];
+  document.getElementById(id + '-frame').srcdoc = '';
+}
+// Auto-run sandbox on load
+document.addEventListener('DOMContentLoaded', () => {
+  runSB('sb04');
+});
+
+/* ─── Topic 02 demo ─── */
+const codes = {
+  '02a': `const el = document.getElementById('demo02-text');\nel.textContent = '✅ Text changed by JavaScript!';`,
+  '02b': `const el = document.getElementById('demo02-text');\nel.style.color = '#1a56db';\nel.style.background = '#e0eaff';`
+};
+
+/* ─── Click counter demo ─── */
+let count02 = 0;
+const countBtn = document.getElementById('count-btn');
+const countDisp = document.getElementById('count-display');
+if (countBtn) {
+  countBtn.addEventListener('click', () => {
+    count02++;
+    countDisp.textContent = count02;
+    countDisp.style.color = count02 >= 10 ? 'var(--lime)' : 'var(--ac)';
+  });
+}
+
+/* ─── classList demo ─── */
+function clsAction(method, cls) {
+  const box = document.getElementById('cls-box');
+  box.classList[method](cls);
+  const all = Array.from(box.classList);
+  const list = document.getElementById('cls-list');
+  list.innerHTML = all.map(c => `<span class="cls-badge ${c === 'highlighted' || c === 'rounded' || c === 'shadowed' || c === 'big' ? 'active' : ''}">${c}</span>`).join('');
+  document.getElementById('cls-contains-result').textContent =
+    `classList.contains('highlighted') → ${box.classList.contains('highlighted')}`;
+}
+
+/* ─── Event explorer ─── */
+const eobjLog = document.getElementById('eobj-log');
+let evLines = [];
+function logEv(type, detail) {
+  const line = document.createElement('div');
+  line.className = 'ev-line';
+  line.innerHTML = `<span class="ev-type">${type}</span><span class="ev-val">${detail}</span>`;
+  if (eobjLog) {
+    evLines.push(line);
+    if (evLines.length > 5) { eobjLog.removeChild(evLines.shift()); }
+    eobjLog.appendChild(line);
+  }
+}
+document.querySelectorAll('#eobj-a,#eobj-b').forEach(btn => {
+  if (btn) btn.addEventListener('click', e => logEv(`click on #${e.target.id}`, `e.target.textContent = "${e.target.textContent}"`));
+});
+const eobjInp = document.getElementById('eobj-inp');
+if (eobjInp) eobjInp.addEventListener('keydown', e => logEv(`keydown`, `e.key = "${e.key}"`));
+
+/* ─── preventDefault demo ─── */
+const safeForm = document.getElementById('safe-form');
+if (safeForm) {
+  safeForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = document.getElementById('safe-inp').value;
+    document.getElementById('safe-result').textContent =
+      val ? `✅ Got value: "${val}" — no page reload!` : `✅ Form handled by JS — no reload!`;
+  });
+}
+
+/* ─── Bubbling demo ─── */
+const bvElements = [
+  { id: 'bv-btn', label: '👆 Click me! (button)' },
+  { id: 'bv-div', label: 'div#container' },
+  { id: 'bv-body', label: 'body' },
+  { id: 'bv-doc', label: 'document' },
+  { id: 'bv-window', label: 'window' }
+];
+function startBubble() {
+  const log = document.getElementById('bubble-log');
+  log.textContent = '';
+  bvElements.forEach((el, i) => {
+    setTimeout(() => {
+      const domEl = document.getElementById(el.id);
+      if (domEl) {
+        domEl.classList.add('lit');
+        setTimeout(() => domEl.classList.remove('lit'), 400);
+        const msg = document.createElement('div');
+        msg.style.cssText = 'padding:1px 0;border-bottom:1px solid rgba(255,255,255,.08)';
+        msg.textContent = `→ Event reached: ${el.label}`;
+        log.appendChild(msg);
+        log.scrollTop = log.scrollHeight;
+      }
+    }, i * 350);
+  });
+}
+
+/* ─── Dynamic list demo ─── */
+const newItemInp = document.getElementById('newitem-inp');
+const demoList = document.getElementById('demo-list');
+const demoCount = document.getElementById('demo-list-count');
+function addDemoItem() {
+  const text = newItemInp ? newItemInp.value.trim() : '';
+  if (!text) return;
+  const li = document.createElement('li');
+  li.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px';
+  const span = document.createElement('span');
+  span.textContent = text;
+  const rmBtn = document.createElement('button');
+  rmBtn.textContent = '✕';
+  rmBtn.className = 'demo-btn red sm';
+  rmBtn.onclick = () => { li.remove(); updateCount(); };
+  li.appendChild(span);
+  li.appendChild(rmBtn);
+  if (demoList) demoList.appendChild(li);
+  if (newItemInp) newItemInp.value = '';
+  updateCount();
+}
+function updateCount() {
+  if (demoList && demoCount) {
+    const n = demoList.children.length;
+    demoCount.textContent = `${n} item${n !== 1 ? 's' : ''}`;
+  }
+}
+if (newItemInp) newItemInp.addEventListener('keydown', e => { if (e.key === 'Enter') addDemoItem(); });
+
+/* ─── Remove demo ─── */
+const rmList = document.getElementById('rm-list');
+if (rmList) {
+  rmList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('rm-btn')) {
+      e.target.closest('.rm-item').remove();
+    }
+  });
+}
+const rmItemsHTML = `
+  <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+    <span>Item One</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+  </li>
+  <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+    <span>Item Two</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+  </li>
+  <li class="rm-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--brd);border-radius:6px">
+    <span>Item Three</span><button class="demo-btn red sm rm-btn">✕ Remove</button>
+  </li>`;
+function resetRemoveDemo() {
+  if (rmList) rmList.innerHTML = rmItemsHTML;
+}
+
+/* ─── Exercise runner ─── */
+function runEx(id) {
+  const src = document.getElementById(id + '-editor').value;
+  document.getElementById(id + '-frame').srcdoc = src;
+}
+function toggleHint(id) {
+  const h = document.getElementById(id + '-hint');
+  h.style.display = h.style.display === 'block' ? 'none' : 'block';
+}
+function toggleSol(id) {
+  const s = document.getElementById(id + '-sol');
+  s.style.display = s.style.display === 'block' ? 'none' : 'block';
+}
+</script>
+</body>
+</html>

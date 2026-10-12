@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<body style="font-family:system-ui;padding:2rem;max-width:500px;margin:0 auto">
+  <h2 id="setup">Loading blog post...</h2>
+  <p id="punchline" style="color:#666;font-style:italic"></p>
+  <button onclick="fetchJoke()">Blog post</button>
+
+  <script>
+    async function fetchJoke() {
+      document.getElementById('setup').textContent = 'Loading blog post...';
+      document.getElementById('punchline').textContent = '';
+      try {
+        const res  = await fetch(
+          'https://jsonplaceholder.typicode.com/posts');
+        if (!res.ok) throw new Error('Status ' + res.status);
+        const blog = await res.json();
+        document.getElementById('setup').textContent     = blog.title;
+        document.getElementById('punchline').textContent = blog.body;
+      } catch (err) {
+        document.getElementById('setup').textContent = 'Error: ' + err.message;
+      }
+    }
+    fetchJoke(); // load on open
+  </script>
+</body>

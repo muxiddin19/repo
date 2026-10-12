@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 5 — Fetch API &amp; Async/Await · Activity Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4ff;--surf:#fff;--surf2:#e8eefa;--brd:#c8d4f0;
+  --tx:#1a2340;--mu:#5a6a8a;--ac:#1a56db;--acl:#e0eaff;
+  --jsyel:#f7df1e;--jsdk:#3a3000;--lime:#16a34a;--limel:#dcfce7;
+  --cor:#dc2626;--corl:#fee2e2;--warn:#d97706;--warnl:#fff8e1;
+  --cyan:#0891b2;--cyanl:#e0f2fe;--pur:#7c3aed;--purl:#ede9fe;
+  --code-bg:#1a2540;--code-tx:#c8daf8;
+  --hdr-h:52px;--nav-w:240px;
+  font-family:'Inter',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#0f172a;--surf:#1e293b;--surf2:#263145;--brd:#2a3f6a;
+  --tx:#e2e8f0;--mu:#94a3b8;--acl:#1e3a5f;--code-bg:#111827;
+}}
+[data-theme=dark]{
+  --bg:#0f172a;--surf:#1e293b;--surf2:#263145;--brd:#2a3f6a;
+  --tx:#e2e8f0;--mu:#94a3b8;--acl:#1e3a5f;--code-bg:#111827;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);line-height:1.65;min-height:100vh}
+
+/* ── progress ── */
+#prog{position:fixed;top:var(--hdr-h);left:0;right:0;height:3px;z-index:99;background:var(--brd)}
+#prog-bar{height:100%;background:var(--ac);width:0;transition:width .3s}
+
+/* ── header ── */
+header{position:sticky;top:0;z-index:100;height:var(--hdr-h);background:var(--code-bg);display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:2px solid var(--jsyel)}
+.js-badge{background:var(--jsyel);color:var(--jsdk);font-weight:700;font-size:13px;padding:4px 10px;border-radius:6px;letter-spacing:.03em;flex-shrink:0}
+.hdr-info{color:#94a3b8;font-size:13px;line-height:1.3}
+.hdr-info strong{color:#fff}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+
+/* ── layout ── */
+.layout{display:flex;min-height:calc(100vh - var(--hdr-h))}
+
+/* ── sidebar ── */
+nav{width:var(--nav-w);flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);position:sticky;top:var(--hdr-h);height:calc(100vh - var(--hdr-h));overflow-y:auto;padding:16px 0}
+.nav-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--mu);text-transform:uppercase;padding:12px 18px 4px;margin-top:8px}
+.nav-label:first-child{margin-top:0}
+nav a{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:13px;color:var(--mu);text-decoration:none;border-left:2px solid transparent;transition:.15s}
+nav a:hover{color:var(--tx);background:var(--bg)}
+nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl)}
+.nav-num{font-size:10px;background:var(--surf2);border:1px solid var(--brd);padding:1px 6px;border-radius:10px;margin-left:auto;color:var(--mu)}
+
+/* ── main ── */
+main{flex:1;padding:32px 36px 80px;max-width:900px}
+.topic{margin-bottom:48px;scroll-margin-top:calc(var(--hdr-h)+12px)}
+.topic-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.topic-hdr .num{width:28px;height:28px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.topic-hdr h2{font-size:1.35rem;font-weight:700}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.04em}
+.badge-easy{background:var(--limel);color:var(--lime)}
+.badge-med{background:var(--warnl);color:var(--warn)}
+.badge-hard{background:var(--corl);color:var(--cor)}
+
+.theory{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:18px 22px;margin-bottom:14px;font-size:14px}
+.theory p+p{margin-top:10px}
+strong{font-weight:600}
+
+/* ── code wrap ── */
+.code-wrap{position:relative;margin-bottom:14px;border-radius:10px;overflow:hidden;border:1px solid var(--brd)}
+.code-header{background:var(--code-bg);display:flex;align-items:center;justify-content:space-between;padding:6px 14px;border-bottom:1px solid #2a3f6a}
+.code-header .lang{font-size:10px;font-weight:700;color:var(--jsyel);letter-spacing:.05em}
+.copy-btn{background:none;border:1px solid #2a3f6a;color:#94a3b8;padding:2px 10px;border-radius:5px;cursor:pointer;font-size:11px;font-family:inherit}
+.copy-btn:hover{border-color:var(--jsyel);color:var(--jsyel)}
+pre{background:var(--code-bg);color:var(--code-tx);padding:14px 18px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.65}
+.hl-kw{color:#c792ea}.hl-fn{color:#82aaff}.hl-str{color:#c3e88d}.hl-cm{color:#546e7a;font-style:italic}.hl-num{color:#f78c6c}.hl-kw2{color:var(--jsyel)}
+
+/* ── demo box ── */
+.demo-box{background:var(--surf2);border:1px solid var(--brd);border-radius:10px;padding:16px 20px;margin-bottom:14px;font-size:13.5px}
+.demo-box h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:8px}
+
+/* ── alerts ── */
+.alert{border-radius:8px;padding:11px 15px;font-size:13.5px;margin-bottom:14px;border-left:4px solid}
+.alert-info{background:var(--acl);border-color:var(--ac);color:var(--tx)}
+.alert-warn{background:var(--warnl);border-color:var(--warn);color:var(--tx)}
+.alert-danger{background:var(--corl);border-color:var(--cor);color:var(--tx)}
+.alert-ok{background:var(--limel);border-color:var(--lime);color:var(--tx)}
+
+/* ── keypoints ── */
+.keypoints{list-style:none;display:flex;flex-direction:column;gap:7px}
+.keypoints li{display:flex;align-items:baseline;gap:9px;font-size:14px}
+.keypoints li::before{content:"●";color:var(--ac);font-size:8px;flex-shrink:0;margin-top:3px}
+
+/* ── sandbox ── */
+.sandbox{border:1px solid var(--brd);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.sandbox-toolbar{background:var(--code-bg);display:flex;align-items:center;justify-content:space-between;padding:7px 14px;border-bottom:1px solid #2a3f6a}
+.sandbox-toolbar span{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em}
+.run-btn{background:var(--jsyel);color:var(--jsdk);border:none;padding:4px 14px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:700}
+.sandbox-body{display:grid;grid-template-columns:1fr 1fr}
+.sandbox-body textarea{border:none;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12.5px;resize:none;background:var(--code-bg);color:var(--code-tx);min-height:180px;outline:none;border-right:1px solid #2a3f6a}
+.sandbox-body iframe{border:none;background:#fff;min-height:180px}
+
+/* ── hint/solution ── */
+.toggle-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--mu);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;margin-bottom:8px}
+.toggle-btn:hover{border-color:var(--ac);color:var(--ac)}
+.collapsible{display:none;background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:13.5px}
+.collapsible.open{display:block}
+
+/* ── section dividers ── */
+.sec-div{display:flex;align-items:center;gap:12px;margin:48px 0 28px;color:var(--mu);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.sec-div::before,.sec-div::after{content:'';flex:1;height:1px;background:var(--brd)}
+
+@media(max-width:768px){
+  nav{display:none}
+  main{padding:20px 16px 60px}
+}
+</style>
+</head>
+<body>
+<div id="prog"><div id="prog-bar"></div></div>
+
+<header>
+  <span class="js-badge">fetch</span>
+  <div class="hdr-info"><strong>Week 5 Friday</strong> · Fetch API &amp; Async/Await<br>Web Programming K0126002 · Gachon University</div>
+  <div class="hdr-right">
+    <button class="theme-btn" onclick="toggleTheme()">🌓 Theme</button>
+  </div>
+</header>
+
+<div class="layout">
+<nav id="sidebar">
+  <div class="nav-label">Core Concepts</div>
+  <a href="#t1">  <span>What is Fetch?</span><span class="nav-num">1</span></a>
+  <a href="#t2">  <span>Basic fetch()</span><span class="nav-num">2</span></a>
+  <a href="#t3">  <span>Promises</span><span class="nav-num">3</span></a>
+  <a href="#t4">  <span>.then() chain</span><span class="nav-num">4</span></a>
+  <a href="#t5">  <span>Async/Await</span><span class="nav-num">5</span></a>
+  <a href="#t6">  <span>res.ok &amp; errors</span><span class="nav-num">6</span></a>
+  <div class="nav-label">Working with Data</div>
+  <a href="#t7">  <span>Response object</span><span class="nav-num">7</span></a>
+  <a href="#t8">  <span>URL params</span><span class="nav-num">8</span></a>
+  <a href="#t9">  <span>Loading states</span><span class="nav-num">9</span></a>
+  <a href="#t10"> <span>POST requests</span><span class="nav-num">10</span></a>
+  <a href="#t11"> <span>Real API demo</span><span class="nav-num">11</span></a>
+  <a href="#t12"> <span>Error patterns</span><span class="nav-num">12</span></a>
+  <div class="nav-label">Exercises</div>
+  <a href="#ex1"> <span>Joke fetcher</span><span class="nav-num">E1</span></a>
+  <a href="#ex2"> <span>User profile</span><span class="nav-num">E2</span></a>
+  <a href="#ex3"> <span>Fetch + DOM</span><span class="nav-num">E3</span></a>
+  <a href="#ex4"> <span>POST request</span><span class="nav-num">E4</span></a>
+</nav>
+
+<main id="main">
+
+<!-- ── T1 ── -->
+<section class="topic" id="t1">
+  <div class="topic-hdr">
+    <div class="num">1</div>
+    <h2>What is Fetch?</h2>
+    <span class="badge badge-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>Before <code>fetch()</code>, making HTTP requests required <code>XMLHttpRequest</code> — messy, verbose, and hard to read. <strong>fetch()</strong> was introduced in 2015 as the modern way to load data from a URL without reloading the page.</p>
+    <p>When you call <code>fetch(url)</code>, JavaScript sends an HTTP request in the background. Your page stays alive and interactive. When the server responds, you process the data and update the DOM — all without a page refresh. This pattern powers every live feed, search autocomplete, and dashboard.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-cm">// fetch() makes an HTTP GET request to a URL</span>
+<span class="hl-kw">const</span> response <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://api.example.com/data'</span>);
+
+<span class="hl-cm">// The response contains: status code, headers, body</span>
+<span class="hl-fn">console</span>.<span class="hl-fn">log</span>(response.status);  <span class="hl-cm">// 200</span>
+<span class="hl-fn">console</span>.<span class="hl-fn">log</span>(response.ok);      <span class="hl-cm">// true (status 200-299)</span>
+
+<span class="hl-cm">// Parse the body as JSON</span>
+<span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> response.<span class="hl-fn">json</span>();
+<span class="hl-fn">console</span>.<span class="hl-fn">log</span>(data); <span class="hl-cm">// plain JS object</span></pre>
+  </div>
+  <div class="alert alert-info">
+    <strong>Key concept:</strong> fetch() is <em>asynchronous</em> — it doesn't freeze your page while waiting for the server. The browser continues running other code (events, animations) while the request is in flight.
+  </div>
+  <ul class="keypoints">
+    <li>fetch() sends an HTTP request and returns a <strong>Promise</strong></li>
+    <li>The page stays interactive while the request is in progress</li>
+    <li>By default, fetch() makes a GET request</li>
+    <li>The response body must be explicitly parsed with <code>.json()</code> or <code>.text()</code></li>
+  </ul>
+</section>
+
+<!-- ── T2 ── -->
+<section class="topic" id="t2">
+  <div class="topic-hdr">
+    <div class="num">2</div>
+    <h2>Basic fetch() Syntax</h2>
+    <span class="badge badge-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>The simplest fetch call takes a URL string and returns a Promise. You chain <code>.then()</code> callbacks to handle the response, and <code>.catch()</code> to handle errors.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-cm">// Three-step fetch pattern:</span>
+<span class="hl-fn">fetch</span>(<span class="hl-str">'https://jsonplaceholder.typicode.com/posts/1'</span>)
+
+  <span class="hl-cm">// Step 1: get the Response, parse the JSON body</span>
+  .<span class="hl-fn">then</span>(response <span class="hl-kw">=></span> response.<span class="hl-fn">json</span>())
+
+  <span class="hl-cm">// Step 2: use the parsed data</span>
+  .<span class="hl-fn">then</span>(data <span class="hl-kw">=></span> {
+    <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(data.title);  <span class="hl-cm">// "sunt aut facere..."</span>
+    document.<span class="hl-fn">querySelector</span>(<span class="hl-str">'#output'</span>).textContent <span class="hl-kw">=</span> data.title;
+  })
+
+  <span class="hl-cm">// Step 3: handle any error</span>
+  .<span class="hl-fn">catch</span>(error <span class="hl-kw">=></span> <span class="hl-fn">console</span>.<span class="hl-fn">error</span>(<span class="hl-str">'Error:'</span>, error));</pre>
+  </div>
+  <div class="demo-box">
+    <h4>Try It — Live Output</h4>
+    <button onclick="runBasicFetch()" style="background:var(--ac);color:#fff;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:13px">Fetch Post #1</button>
+    <pre id="basic-out" style="margin-top:8px;padding:10px;background:var(--code-bg);color:var(--code-tx);border-radius:6px;font-size:12px;min-height:36px">Click the button above</pre>
+  </div>
+  <script>
+  async function runBasicFetch() {
+    const out = document.getElementById('basic-out');
+    out.textContent = 'Fetching...';
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+      const data = await res.json();
+      out.textContent = JSON.stringify(data, null, 2);
+    } catch(e) { out.textContent = 'Error: ' + e.message; }
+  }
+  </script>
+</section>
+
+<!-- ── T3 ── -->
+<section class="topic" id="t3">
+  <div class="topic-hdr">
+    <div class="num">3</div>
+    <h2>Promises</h2>
+    <span class="badge badge-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>A <strong>Promise</strong> is an object representing a future value. It starts in the <em>pending</em> state, then either <em>fulfills</em> (with a value) or <em>rejects</em> (with an error).</p>
+    <p><code>fetch()</code> returns a Promise that fulfills with a Response object when the server replies. You chain <code>.then()</code> to run code when it fulfills, and <code>.catch()</code> when it rejects.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-cm">// Creating a Promise manually (rare, but explains the concept)</span>
+<span class="hl-kw">const</span> myPromise <span class="hl-kw">=</span> <span class="hl-kw">new</span> <span class="hl-fn">Promise</span>((resolve, reject) <span class="hl-kw">=></span> {
+  <span class="hl-fn">setTimeout</span>(() <span class="hl-kw">=></span> {
+    <span class="hl-fn">resolve</span>(<span class="hl-str">'Data loaded!'</span>);  <span class="hl-cm">// or reject(new Error('Failed'))</span>
+  }, <span class="hl-num">1000</span>);
+});
+
+myPromise
+  .<span class="hl-fn">then</span>(value <span class="hl-kw">=></span> <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(value))   <span class="hl-cm">// 'Data loaded!'</span>
+  .<span class="hl-fn">catch</span>(error <span class="hl-kw">=></span> <span class="hl-fn">console</span>.<span class="hl-fn">error</span>(error));
+
+<span class="hl-cm">// States: pending → fulfilled OR rejected</span>
+<span class="hl-cm">// fetch() handles creating the Promise for you</span></pre>
+  </div>
+  <ul class="keypoints">
+    <li><strong>Pending:</strong> the async operation is in progress</li>
+    <li><strong>Fulfilled:</strong> the operation succeeded — .then() runs</li>
+    <li><strong>Rejected:</strong> the operation failed — .catch() runs</li>
+    <li>A Promise can only resolve ONCE — it won't call .then() twice</li>
+  </ul>
+</section>
+
+<!-- ── T4 ── -->
+<section class="topic" id="t4">
+  <div class="topic-hdr">
+    <div class="num">4</div>
+    <h2>.then() Chaining</h2>
+    <span class="badge badge-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p>Every <code>.then()</code> callback must <strong>return something</strong> — that return value becomes the input to the next <code>.then()</code>. This is how chains work: each step transforms and passes the data along.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-fn">fetch</span>(<span class="hl-str">'https://jsonplaceholder.typicode.com/users/1'</span>)
+  .<span class="hl-fn">then</span>(res <span class="hl-kw">=></span> {
+    <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Status:'</span>, res.status);
+    <span class="hl-kw">return</span> res.<span class="hl-fn">json</span>();  <span class="hl-cm">// MUST return — next .then() receives this</span>
+  })
+  .<span class="hl-fn">then</span>(user <span class="hl-kw">=></span> {
+    <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Name:'</span>, user.name);
+    <span class="hl-kw">return</span> user.email;   <span class="hl-cm">// pass just the email forward</span>
+  })
+  .<span class="hl-fn">then</span>(email <span class="hl-kw">=></span> {
+    <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Email:'</span>, email);
+    document.<span class="hl-fn">querySelector</span>(<span class="hl-str">'#contact'</span>).textContent <span class="hl-kw">=</span> email;
+  })
+  .<span class="hl-fn">catch</span>(err <span class="hl-kw">=></span> <span class="hl-fn">console</span>.<span class="hl-fn">error</span>(err));</pre>
+  </div>
+  <div class="alert alert-warn">
+    <strong>Common mistake:</strong> Forgetting <code>return</code> in a .then() callback. The next .then() receives <code>undefined</code> instead of your data, causing silent bugs.
+  </div>
+</section>
+
+<!-- ── T5 ── -->
+<section class="topic" id="t5">
+  <div class="topic-hdr">
+    <div class="num">5</div>
+    <h2>Async / Await</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p><strong>async/await</strong> is syntactic sugar over Promises — same engine, cleaner syntax. Mark a function <code>async</code>, then put <code>await</code> before each Promise. The function pauses at each <code>await</code> until the Promise resolves, then continues — but the rest of your page keeps running normally.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-cm">// Same fetch — async/await style:</span>
+<span class="hl-kw">async function</span> <span class="hl-fn">getPost</span>(id) {
+  <span class="hl-kw">const</span> response <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">`https://jsonplaceholder.typicode.com/posts/${id}`</span>);
+  <span class="hl-kw">const</span> post <span class="hl-kw">=</span> <span class="hl-kw2">await</span> response.<span class="hl-fn">json</span>();
+  <span class="hl-kw">return</span> post;
+}
+
+<span class="hl-cm">// Call it</span>
+<span class="hl-fn">getPost</span>(<span class="hl-num">1</span>).<span class="hl-fn">then</span>(post <span class="hl-kw">=></span> <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(post.title));
+
+<span class="hl-cm">// Or inside another async function:</span>
+<span class="hl-kw">async function</span> <span class="hl-fn">init</span>() {
+  <span class="hl-kw">const</span> post <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">getPost</span>(<span class="hl-num">1</span>);
+  <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(post.title);
+}</pre>
+  </div>
+  <div class="alert alert-ok">
+    <strong>Rule:</strong> You can ONLY use <code>await</code> inside an <code>async</code> function. Using it elsewhere causes a SyntaxError.
+  </div>
+  <ul class="keypoints">
+    <li><code>await</code> pauses the <em>function</em>, not the page</li>
+    <li>Every <code>async</code> function automatically returns a Promise</li>
+    <li>Prefer async/await for new code — it's more readable</li>
+    <li>Use <code>try/catch</code> instead of <code>.catch()</code> with async/await</li>
+  </ul>
+</section>
+
+<!-- ── T6 ── -->
+<section class="topic" id="t6">
+  <div class="topic-hdr">
+    <div class="num">6</div>
+    <h2>res.ok and Error Handling</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p><strong>Critical gotcha:</strong> <code>fetch()</code> only rejects (throws an error) when there is a <em>network failure</em> — no internet, DNS error, etc. A <strong>404 or 500 from the server is still a fulfilled Promise!</strong> You must check <code>response.ok</code> yourself.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadData</span>(url) {
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(url);
+
+    <span class="hl-cm">// response.ok is true for status 200-299</span>
+    <span class="hl-kw">if</span> (!res.ok) {
+      <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">`HTTP error: ${res.status}`</span>);
+    }
+
+    <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+    <span class="hl-kw">return</span> data;
+
+  } <span class="hl-kw">catch</span> (error) {
+    <span class="hl-cm">// catches: network failure, !res.ok throw, JSON parse errors</span>
+    <span class="hl-fn">console</span>.<span class="hl-fn">error</span>(<span class="hl-str">'Failed:'</span>, error.message);
+    <span class="hl-kw">throw</span> error; <span class="hl-cm">// re-throw so caller knows it failed</span>
+  }
+}</pre>
+  </div>
+  <div class="alert alert-danger">
+    <strong>Never do this:</strong> <code>const data = await fetch(url).then(r => r.json())</code> without checking <code>res.ok</code> — a 404 will give you an HTML error page parsed as JSON, causing a confusing crash later.
+  </div>
+</section>
+
+<!-- ── T7 ── -->
+<section class="topic" id="t7">
+  <div class="topic-hdr">
+    <div class="num">7</div>
+    <h2>The Response Object</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>When fetch() resolves, you get a <strong>Response object</strong> with several useful properties and methods.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(url);
+
+<span class="hl-cm">// Properties</span>
+res.status;     <span class="hl-cm">// 200, 404, 500...  (HTTP status code)</span>
+res.ok;         <span class="hl-cm">// true if status 200-299</span>
+res.statusText; <span class="hl-cm">// "OK", "Not Found"...</span>
+res.headers;    <span class="hl-cm">// Headers object</span>
+res.url;        <span class="hl-cm">// the final URL (after redirects)</span>
+
+<span class="hl-cm">// Body reading methods (each returns a Promise, call once only)</span>
+<span class="hl-kw">const</span> data   <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();   <span class="hl-cm">// parse as JSON object</span>
+<span class="hl-kw">const</span> text   <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">text</span>();   <span class="hl-cm">// raw string</span>
+<span class="hl-kw">const</span> blob   <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">blob</span>();   <span class="hl-cm">// binary (images, files)</span>
+
+<span class="hl-cm">// Read a specific header</span>
+res.headers.<span class="hl-fn">get</span>(<span class="hl-str">'content-type'</span>);  <span class="hl-cm">// 'application/json'</span></pre>
+  </div>
+  <div class="alert alert-warn">
+    <strong>Body can only be read once.</strong> Calling <code>.json()</code> and then <code>.text()</code> on the same response throws an error — the stream is consumed.
+  </div>
+</section>
+
+<!-- ── T8 ── -->
+<section class="topic" id="t8">
+  <div class="topic-hdr">
+    <div class="num">8</div>
+    <h2>URL Parameters</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>Most APIs accept parameters in the URL query string (e.g. <code>?id=1&limit=10</code>). Build them safely using <code>URLSearchParams</code> — it handles encoding special characters automatically.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-cm">// Option 1: Template literal (simple, but no encoding)</span>
+<span class="hl-kw">const</span> id <span class="hl-kw">=</span> <span class="hl-num">42</span>;
+<span class="hl-fn">fetch</span>(<span class="hl-str">`/api/posts?userId=${id}&_limit=5`</span>);
+
+<span class="hl-cm">// Option 2: URLSearchParams (safe, handles special chars)</span>
+<span class="hl-kw">const</span> params <span class="hl-kw">=</span> <span class="hl-kw">new</span> <span class="hl-fn">URLSearchParams</span>({
+  userId: id,
+  _limit: <span class="hl-num">5</span>,
+  q: <span class="hl-str">'hello world'</span>  <span class="hl-cm">// automatically encoded as hello+world</span>
+});
+<span class="hl-fn">fetch</span>(<span class="hl-str">`/api/posts?${params}`</span>);
+
+<span class="hl-cm">// Result: /api/posts?userId=42&_limit=5&q=hello+world</span></pre>
+  </div>
+</section>
+
+<!-- ── T9 ── -->
+<section class="topic" id="t9">
+  <div class="topic-hdr">
+    <div class="num">9</div>
+    <h2>Loading States</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>Good UX means showing a loading indicator while fetching. Use a <code>finally</code> block to hide the spinner — it runs whether the fetch succeeded or failed.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">loadWithSpinner</span>() {
+  <span class="hl-kw">const</span> spinner <span class="hl-kw">=</span> document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'spinner'</span>);
+  <span class="hl-kw">const</span> content <span class="hl-kw">=</span> document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'content'</span>);
+
+  spinner.style.display <span class="hl-kw">=</span> <span class="hl-str">'block'</span>;  <span class="hl-cm">// show spinner</span>
+  content.textContent <span class="hl-kw">=</span> <span class="hl-str">''</span>;
+
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res  <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://jsonplaceholder.typicode.com/posts/1'</span>);
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">'HTTP '</span> <span class="hl-kw">+</span> res.status);
+    <span class="hl-kw">const</span> data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+    content.textContent <span class="hl-kw">=</span> data.title;
+  } <span class="hl-kw">catch</span> (err) {
+    content.textContent <span class="hl-kw">=</span> <span class="hl-str">'Error: '</span> <span class="hl-kw">+</span> err.message;
+  } <span class="hl-kw">finally</span> {
+    spinner.style.display <span class="hl-kw">=</span> <span class="hl-str">'none'</span>;  <span class="hl-cm">// ALWAYS hide spinner</span>
+  }
+}</pre>
+  </div>
+  <ul class="keypoints">
+    <li><code>finally</code> runs after try OR catch — perfect for cleanup</li>
+    <li>Show loading state BEFORE the await, hide AFTER in finally</li>
+    <li>Disable buttons during fetch to prevent duplicate requests</li>
+  </ul>
+</section>
+
+<!-- ── T10 ── -->
+<section class="topic" id="t10">
+  <div class="topic-hdr">
+    <div class="num">10</div>
+    <h2>POST Requests</h2>
+    <span class="badge badge-hard">Advanced</span>
+  </div>
+  <div class="theory">
+    <p>To send data (create, update), use a POST request with a <code>method</code>, <code>headers</code>, and <code>body</code> in the options object. The body must be a string, so use <code>JSON.stringify()</code> for objects.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">createPost</span>(title, body) {
+  <span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://jsonplaceholder.typicode.com/posts'</span>, {
+    method: <span class="hl-str">'POST'</span>,
+    headers: {
+      <span class="hl-str">'Content-Type'</span>: <span class="hl-str">'application/json'</span>,  <span class="hl-cm">// tell server what we're sending</span>
+    },
+    body: <span class="hl-fn">JSON</span>.<span class="hl-fn">stringify</span>({ title, body, userId: <span class="hl-num">1</span> }),
+  });
+
+  <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">'POST failed: '</span> <span class="hl-kw">+</span> res.status);
+  <span class="hl-kw">const</span> newPost <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+  <span class="hl-fn">console</span>.<span class="hl-fn">log</span>(<span class="hl-str">'Created:'</span>, newPost.id);  <span class="hl-cm">// server returns new resource</span>
+  <span class="hl-kw">return</span> newPost;
+}</pre>
+  </div>
+</section>
+
+<!-- ── T11 ── -->
+<section class="topic" id="t11">
+  <div class="topic-hdr">
+    <div class="num">11</div>
+    <h2>Real API Demo</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p>Let's fetch from a real public API — the Official Joke API — and display the result dynamically in the DOM.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">fetchJoke</span>() {
+  <span class="hl-kw">const</span> setup <span class="hl-kw">=</span> document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'setup'</span>);
+  <span class="hl-kw">const</span> punchline <span class="hl-kw">=</span> document.<span class="hl-fn">getElementById</span>(<span class="hl-str">'punchline'</span>);
+  setup.textContent <span class="hl-kw">=</span> <span class="hl-str">'Loading...'</span>;
+  punchline.textContent <span class="hl-kw">=</span> <span class="hl-str">''</span>;
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(<span class="hl-str">'https://official-joke-api.appspot.com/random_joke'</span>);
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">'Status '</span> <span class="hl-kw">+</span> res.status);
+    <span class="hl-kw">const</span> joke <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+    setup.textContent <span class="hl-kw">=</span> joke.setup;
+    punchline.textContent <span class="hl-kw">=</span> joke.punchline;
+  } <span class="hl-kw">catch</span> (err) {
+    setup.textContent <span class="hl-kw">=</span> <span class="hl-str">'Error: '</span> <span class="hl-kw">+</span> err.message;
+  }
+}</pre>
+  </div>
+  <div class="demo-box">
+    <h4>Live Demo</h4>
+    <p id="setup" style="font-size:1.05em;font-weight:600;margin-bottom:6px">Click "New Joke" to load one</p>
+    <p id="punchline" style="color:var(--mu);font-style:italic;margin-bottom:10px"></p>
+    <button onclick="fetchJoke()" style="background:var(--ac);color:#fff;border:none;padding:7px 18px;border-radius:7px;cursor:pointer;font-size:13px">New Joke</button>
+  </div>
+  <script>
+  async function fetchJoke() {
+    const setup = document.getElementById('setup');
+    const punchline = document.getElementById('punchline');
+    setup.textContent = 'Loading...'; punchline.textContent = '';
+    try {
+      const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+      if (!res.ok) throw new Error('Status ' + res.status);
+      const joke = await res.json();
+      setup.textContent = joke.setup;
+      punchline.textContent = joke.punchline;
+    } catch(err) { setup.textContent = 'Error: ' + err.message; }
+  }
+  </script>
+</section>
+
+<!-- ── T12 ── -->
+<section class="topic" id="t12">
+  <div class="topic-hdr">
+    <div class="num">12</div>
+    <h2>Error Patterns</h2>
+    <span class="badge badge-hard">Advanced</span>
+  </div>
+  <div class="theory">
+    <p>In production, handle errors gracefully — show the user something useful, not a blank screen or a JavaScript error.</p>
+  </div>
+  <div class="code-wrap">
+    <div class="code-header"><span class="lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="hl-kw">async function</span> <span class="hl-fn">robustFetch</span>(url) {
+  <span class="hl-kw">let</span> data <span class="hl-kw">=</span> <span class="hl-kw">null</span>;
+  <span class="hl-kw">let</span> error <span class="hl-kw">=</span> <span class="hl-kw">null</span>;
+  <span class="hl-kw">let</span> loading <span class="hl-kw">=</span> <span class="hl-kw">true</span>;
+
+  <span class="hl-kw">try</span> {
+    <span class="hl-kw">const</span> res <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">fetch</span>(url);
+    <span class="hl-kw">if</span> (!res.ok) <span class="hl-kw">throw new</span> <span class="hl-fn">Error</span>(<span class="hl-str">`${res.status} ${res.statusText}`</span>);
+    data <span class="hl-kw">=</span> <span class="hl-kw2">await</span> res.<span class="hl-fn">json</span>();
+  } <span class="hl-kw">catch</span> (e) {
+    <span class="hl-cm">// Distinguish network error vs HTTP error:</span>
+    error <span class="hl-kw">=</span> e.message.startsWith(<span class="hl-str">'Failed to fetch'</span>)
+      ? <span class="hl-str">'No internet connection'</span>
+      : <span class="hl-str">`Server error: ${e.message}`</span>;
+  } <span class="hl-kw">finally</span> {
+    loading <span class="hl-kw">=</span> <span class="hl-kw">false</span>;
+  }
+
+  <span class="hl-kw">return</span> { data, error, loading };
+}
+
+<span class="hl-cm">// Usage</span>
+<span class="hl-kw">const</span> { data, error } <span class="hl-kw">=</span> <span class="hl-kw2">await</span> <span class="hl-fn">robustFetch</span>(<span class="hl-str">'/api/posts'</span>);
+<span class="hl-kw">if</span> (error) showErrorBanner(error);
+<span class="hl-kw">else</span> renderPosts(data);</pre>
+  </div>
+</section>
+
+<!-- ── EXERCISES ── -->
+<div class="sec-div">Hands-On Exercises</div>
+
+<!-- ── EX1 ── -->
+<section class="topic" id="ex1">
+  <div class="topic-hdr">
+    <div class="num" style="background:var(--lime)">E1</div>
+    <h2>Exercise 1 — Joke Fetcher</h2>
+    <span class="badge badge-easy">Beginner</span>
+  </div>
+  <div class="theory">
+    <p><strong>Goal:</strong> Build a page that fetches a random joke when a button is clicked. Show setup and punchline separately. Display "Loading…" while fetching.</p>
+  </div>
+  <div class="alert alert-info"><strong>API:</strong> <code>https://official-joke-api.appspot.com/random_joke</code> — Returns: <code>{ "setup": "...", "punchline": "..." }</code></div>
+  <div class="sandbox">
+    <div class="sandbox-toolbar"><span>Live Editor</span><button class="run-btn" onclick="runSandbox('s1')">Run</button></div>
+    <div class="sandbox-body">
+      <textarea id="s1" spellcheck="false">&lt;!-- Edit and click Run --&gt;
+&lt;h3 id="setup"&gt;Click New Joke&lt;/h3&gt;
+&lt;p id="punchline" style="color:gray;font-style:italic"&gt;&lt;/p&gt;
+&lt;button onclick="getJoke()"&gt;New Joke&lt;/button&gt;
+
+&lt;script&gt;
+async function getJoke() {
+  document.getElementById('setup').textContent = 'Loading...';
+  document.getElementById('punchline').textContent = '';
+  // TODO: fetch from official-joke-api.appspot.com/random_joke
+  // TODO: check res.ok
+  // TODO: set setup and punchline textContent
+}
+&lt;/script&gt;</textarea>
+      <iframe id="s1-frame"></iframe>
+    </div>
+  </div>
+  <button class="toggle-btn" onclick="toggle('h1')">💡 Show Hint</button>
+  <div class="collapsible" id="h1">Use <code>async function getJoke()</code>, <code>await fetch(...)</code>, check <code>res.ok</code>, then <code>await res.json()</code>. Set textContent from <code>joke.setup</code> and <code>joke.punchline</code>.</div>
+  <button class="toggle-btn" onclick="toggle('sol1')">✅ Show Solution</button>
+  <div class="collapsible" id="sol1">
+    <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px;border-radius:6px;font-size:12px;overflow-x:auto">&lt;h3 id="setup"&gt;Click New Joke&lt;/h3&gt;
+&lt;p id="punchline" style="color:gray;font-style:italic"&gt;&lt;/p&gt;
+&lt;button onclick="getJoke()"&gt;New Joke&lt;/button&gt;
+
+&lt;script&gt;
+async function getJoke() {
+  const setup = document.getElementById('setup');
+  const punchline = document.getElementById('punchline');
+  setup.textContent = 'Loading...';
+  punchline.textContent = '';
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    if (!res.ok) throw new Error('Status ' + res.status);
+    const joke = await res.json();
+    setup.textContent = joke.setup;
+    punchline.textContent = joke.punchline;
+  } catch(err) {
+    setup.textContent = 'Error: ' + err.message;
+  }
+}
+&lt;/script&gt;</pre>
+  </div>
+</section>
+
+<!-- ── EX2 ── -->
+<section class="topic" id="ex2">
+  <div class="topic-hdr">
+    <div class="num" style="background:var(--lime)">E2</div>
+    <h2>Exercise 2 — User Profile Card</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p><strong>Goal:</strong> Fetch a user by ID from JSONPlaceholder and display their name, email, and city in a styled card. Include a number input so the user can pick user ID 1-10.</p>
+  </div>
+  <div class="alert alert-info"><strong>API:</strong> <code>https://jsonplaceholder.typicode.com/users/{id}</code> — Returns user object with name, email, address.city, company.name</div>
+  <div class="sandbox">
+    <div class="sandbox-toolbar"><span>Live Editor</span><button class="run-btn" onclick="runSandbox('s2')">Run</button></div>
+    <div class="sandbox-body">
+      <textarea id="s2" spellcheck="false">&lt;style&gt;
+.card{border:1px solid #c8d4f0;border-radius:10px;padding:16px;max-width:280px;margin:10px 0;font-family:system-ui}
+.card h3{margin:0 0 6px}.card p{margin:2px 0;color:#666;font-size:13px}
+&lt;/style&gt;
+ID: &lt;input type="number" id="uid" value="1" min="1" max="10"&gt;
+&lt;button onclick="fetchUser()"&gt;Load User&lt;/button&gt;
+&lt;div id="card"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+async function fetchUser() {
+  const id = document.getElementById('uid').value;
+  const card = document.getElementById('card');
+  card.innerHTML = 'Loading...';
+  // TODO: fetch /users/{id}, build card HTML
+}
+&lt;/script&gt;</textarea>
+      <iframe id="s2-frame"></iframe>
+    </div>
+  </div>
+  <button class="toggle-btn" onclick="toggle('sol2')">✅ Show Solution</button>
+  <div class="collapsible" id="sol2">
+    <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px;border-radius:6px;font-size:12px;overflow-x:auto">async function fetchUser() {
+  const id = document.getElementById('uid').value;
+  const card = document.getElementById('card');
+  card.innerHTML = 'Loading...';
+  try {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+    if (!res.ok) throw new Error('User not found');
+    const u = await res.json();
+    card.innerHTML = `
+      &lt;div class="card"&gt;
+        &lt;h3&gt;${u.name}&lt;/h3&gt;
+        &lt;p&gt;📧 ${u.email}&lt;/p&gt;
+        &lt;p&gt;📍 ${u.address.city}&lt;/p&gt;
+        &lt;p&gt;🏢 ${u.company.name}&lt;/p&gt;
+      &lt;/div&gt;`;
+  } catch(err) { card.innerHTML = '&lt;p style="color:red"&gt;' + err.message + '&lt;/p&gt;'; }
+}</pre>
+  </div>
+</section>
+
+<!-- ── EX3 ── -->
+<section class="topic" id="ex3">
+  <div class="topic-hdr">
+    <div class="num" style="background:var(--lime)">E3</div>
+    <h2>Exercise 3 — Fetch + DOM List</h2>
+    <span class="badge badge-med">Intermediate</span>
+  </div>
+  <div class="theory">
+    <p><strong>Goal:</strong> Fetch 5 posts from JSONPlaceholder and render them as a list with title and body. Add a "Load More" button that fetches the next 5.</p>
+  </div>
+  <div class="alert alert-info"><strong>API:</strong> <code>https://jsonplaceholder.typicode.com/posts?_start=0&_limit=5</code></div>
+  <div class="sandbox">
+    <div class="sandbox-toolbar"><span>Live Editor</span><button class="run-btn" onclick="runSandbox('s3')">Run</button></div>
+    <div class="sandbox-body">
+      <textarea id="s3" spellcheck="false">&lt;style&gt;
+body{font-family:system-ui;padding:10px}
+.post{border:1px solid #ddd;border-radius:8px;padding:12px;margin-bottom:8px}
+.post h4{margin:0 0 4px;font-size:14px}.post p{margin:0;color:#666;font-size:12px}
+&lt;/style&gt;
+&lt;div id="list"&gt;&lt;/div&gt;
+&lt;button id="more-btn" onclick="loadMore()"&gt;Load More&lt;/button&gt;
+
+&lt;script&gt;
+let start = 0;
+
+async function loadMore() {
+  // TODO: fetch posts with _start=start and _limit=5
+  // Append them to #list
+  // Increment start by 5
+}
+
+loadMore(); // initial load
+&lt;/script&gt;</textarea>
+      <iframe id="s3-frame" style="min-height:240px"></iframe>
+    </div>
+  </div>
+  <button class="toggle-btn" onclick="toggle('sol3')">✅ Show Solution</button>
+  <div class="collapsible" id="sol3">
+    <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px;border-radius:6px;font-size:12px;overflow-x:auto">let start = 0;
+async function loadMore() {
+  const list = document.getElementById('list');
+  const btn = document.getElementById('more-btn');
+  btn.textContent = 'Loading...'; btn.disabled = true;
+  try {
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/posts?_start=${start}&_limit=5`
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const posts = await res.json();
+    posts.forEach(p => {
+      list.innerHTML += `&lt;div class="post"&gt;&lt;h4&gt;${p.title}&lt;/h4&gt;&lt;p&gt;${p.body.slice(0,80)}...&lt;/p&gt;&lt;/div&gt;`;
+    });
+    start += 5;
+  } catch(err) { list.innerHTML += `&lt;p style="color:red"&gt;${err.message}&lt;/p&gt;`; }
+  finally { btn.textContent = 'Load More'; btn.disabled = false; }
+}</pre>
+  </div>
+</section>
+
+<!-- ── EX4 ── -->
+<section class="topic" id="ex4">
+  <div class="topic-hdr">
+    <div class="num" style="background:var(--lime)">E4</div>
+    <h2>Exercise 4 — POST Request</h2>
+    <span class="badge badge-hard">Advanced</span>
+  </div>
+  <div class="theory">
+    <p><strong>Goal:</strong> Build a form that collects a title and body, then POSTs to JSONPlaceholder. Show the server's response (the new post with its assigned ID).</p>
+  </div>
+  <div class="alert alert-info"><strong>API:</strong> POST to <code>https://jsonplaceholder.typicode.com/posts</code> — Body: <code>{"title":"...", "body":"...", "userId":1}</code> — Returns: the new post with id</div>
+  <div class="sandbox">
+    <div class="sandbox-toolbar"><span>Live Editor</span><button class="run-btn" onclick="runSandbox('s4')">Run</button></div>
+    <div class="sandbox-body">
+      <textarea id="s4" spellcheck="false">&lt;style&gt;body{font-family:system-ui;padding:10px}
+input,textarea{display:block;width:100%;margin-bottom:8px;padding:6px;border:1px solid #ccc;border-radius:5px;font-size:13px}
+button{background:#1a56db;color:#fff;border:none;padding:7px 16px;border-radius:5px;cursor:pointer}
+pre{background:#f0f4ff;padding:10px;border-radius:6px;font-size:11px;margin-top:8px}
+&lt;/style&gt;
+Title: &lt;input id="title" placeholder="Post title"&gt;
+Body:  &lt;textarea id="body" rows="3" placeholder="Post body"&gt;&lt;/textarea&gt;
+&lt;button onclick="submitPost()"&gt;Submit Post&lt;/button&gt;
+&lt;pre id="result"&gt;Response will appear here&lt;/pre&gt;
+
+&lt;script&gt;
+async function submitPost() {
+  const title = document.getElementById('title').value;
+  const body  = document.getElementById('body').value;
+  // TODO: POST to jsonplaceholder.typicode.com/posts
+  // TODO: show JSON.stringify(result, null, 2) in #result
+}
+&lt;/script&gt;</textarea>
+      <iframe id="s4-frame"></iframe>
+    </div>
+  </div>
+  <button class="toggle-btn" onclick="toggle('sol4')">✅ Show Solution</button>
+  <div class="collapsible" id="sol4">
+    <pre style="background:var(--code-bg);color:var(--code-tx);padding:12px;border-radius:6px;font-size:12px;overflow-x:auto">async function submitPost() {
+  const title = document.getElementById('title').value;
+  const body  = document.getElementById('body').value;
+  const result = document.getElementById('result');
+  result.textContent = 'Submitting...';
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, body, userId: 1 }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const post = await res.json();
+    result.textContent = JSON.stringify(post, null, 2);
+  } catch(err) { result.textContent = 'Error: ' + err.message; }
+}</pre>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ── theme toggle ──
+function toggleTheme() {
+  const cur = document.documentElement.dataset.theme;
+  document.documentElement.dataset.theme = cur === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('theme', document.documentElement.dataset.theme); } catch(e){}
+}
+try { const t = localStorage.getItem('theme'); if(t) document.documentElement.dataset.theme = t; } catch(e){}
+
+// ── progress bar ──
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+  document.getElementById('prog-bar').style.width = pct + '%';
+});
+
+// ── sidebar active ──
+const topics = document.querySelectorAll('.topic');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-52px 0px -60% 0px' });
+topics.forEach(t => observer.observe(t));
+
+// ── collapsible ──
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ── copy ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  }).catch(() => {});
+}
+
+// ── sandbox ──
+function runSandbox(id) {
+  const code = document.getElementById(id).value;
+  const frame = document.getElementById(id + '-frame');
+  frame.srcdoc = code;
+}
+</script>
+</body>
+</html>

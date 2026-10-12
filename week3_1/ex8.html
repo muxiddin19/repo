@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {
+                color:#1e293b;
+            } /* All text inherits this */
+            .brown {color: brown;} /* named color */
+            .green {color: #15803d;} /* hex color */
+            .blue {columns: rgb(29, 78, 216);} /* rgb() */
+            .purple {columns: hsl(262, 83%, 58%);} /* hsl() */
+            .muted {color: #94a3b8;} /* muted gray */
+            /* color on ehading - children inherit it */
+            h2 {color: #10b981;}
+
+        </style>
+
+    </head>
+    <body>
+        <h2> All these pararaphs use color :</h2>
+        <p class="brown">Named colour: brown</p>
+        <p class="green">Hex colour: #15803d</p>
+        <p class="blue">RGB colour: rgb(29, 78, 216)</p>
+        <p class="purple">HSL colour: hsl(262, 83%, 58%)</p>
+        <p class="muted">Muted grey text: #94a3b8;</p>
+    </body>
+</html>
+

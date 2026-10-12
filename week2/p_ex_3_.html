@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Figures</title></head>
+<body>
+  <figure>
+    <img src="https://picsum.photos/400/250?random=10"
+         alt="Students working at computer desks in a university lab"
+         width="400" height="250">
+    <figcaption>Figure 1: Gachon University computer lab session.</figcaption>
+  </figure>
+
+  <p>This guide was last updated on
+     <time datetime="2026-09-05">September 5, 2026</time>.
+  </p>
+
+  <figure>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <figcaption>Listing 1: The HTML5 skeleton template.</figcaption>
+  </figure>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Programming Portfolio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f4ff;
+            color: #1a1a2e;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a56db, #7c3aed);
+            color: white;
+            padding: 32px 24px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+        }
+        header h1 { font-size: 2rem; margin-bottom: 6px; }
+        header p  { opacity: 0.8; font-size: 1rem; }
+
+        .week-section { margin-bottom: 28px; }
+        .week-section h2 {
+            font-size: 1.2rem;
+            color: #1a56db;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #c8d4f0;
+            padding-bottom: 4px;
+        }
+
+        .tasks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            
+        }
+        .task-card {
+            background: white;
+            border: 1.5px solid #c8d4f0;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #1a1a2e;
+            width: 200px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .task-card:hover {
+            box-shadow: 0 4px 16px rgba(26, 86, 219, 0.15);
+            transform: translateY(-2px);
+        }
+        .task-card .tag {
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #1a56db;
+            margin-bottom: 6px;
+        }
+        .task-card h3 { font-size: 15px; }
+        .task-card p  { font-size: 12px; color: #666; margin-top: 4px; }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Web Programming Portfolio</h1>
+        <p>Welcome to my web programming portfolio!</p>
+    </header>
+
+    <section class="week-section">
+        <h2>Week 1: HTML Fundamentals</h2>
+        <div class="tasks">
+            <a href="week1/html-basics.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>HTML basics</h3>
+                <p>Tags, headings, links, images.</p>
+            </a>
+            <a href="week1/forms.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>HTML Forms</h3>
+                <p>Input, select, submit.</p>
+            </a>
+            <a href="week1/loops.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>Tables, lists</h3>
+                <p>Demonstrates tables and lists in HTML.</p>
+            </a>
+        </div>
+    </section>
+
+        <section class="week-section">
+        <h2>Week 2: HTML Advanced</h2>
+        <div class="tasks">
+            <a href="week2/html-basics.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>HTML Advanced</h3>
+                <p>Tags, headings, links, images.</p>
+            </a>
+            <a href="week2/forms.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>HTML Forms</h3>
+                <p>Input, select, submit.</p>
+            </a>
+            <a href="week2/loops.html" class="task-card">
+                <div class="tag">HTML</div>
+                <h3>Tables, lists</h3>
+                <p>Demonstrates tables and lists in HTML.</p>
+            </a>
+        </div>
+    </section>
+
+    <section class="week-section">
+        <h2>Week 3: CSS Fundamentals</h2>
+        <div class="tasks">
+            <a href="week3/css-basics.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>CSS Basics</h3>
+                <p>Selectors, properties, colors, fonts.</p>
+            </a>
+            <a href="week3/layouts.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>CSS Layouts</h3>
+                <p>Flexbox, grid, positioning.</p>
+            </a>
+            <a href="week3/responsive.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>Responsive Design</h3>
+                <p>Media queries, mobile-first design.</p>
+            </a>
+        </div>
+    </section>
+
+    <section class="week-section">
+        <h2>Week 4: CSS Advanced</h2>
+        <div class="tasks">
+            <a href="week4/variables.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>CSS Variables</h3>
+                <p>Using CSS variables and custom properties.</p>
+            </a>
+            <a href="week4/functions.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>CSS Functions</h3>
+                <p>Using CSS functions for dynamic styling.</p>
+            </a>
+            <a href="week4/events.html" class="task-card">
+                <div class="tag">CSS</div>
+                <h3>CSS Events</h3>
+                <p>Handling user interactions with events.</p>  
+            </a>
+        </div>
+    </section>
+    <section class="week-section">
+        <h2>Week 5: JavaScript Fundamentals</h2>
+        <div class="tasks">
+            <a href="week5/js-basics.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>JavaScript Basics</h3>
+                <p>Variables, data types, operators.</p>
+            </a>
+            <a href="week5/functions.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>JavaScript Functions</h3>
+                <p>Defining and calling functions.</p>
+            </a>
+            <a href="week5/events.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>JavaScript Events</h3>
+                <p>Handling user interactions with events.</p>
+            </a>
+        </div>
+        <section class="week-section">
+        <h2>Week 6: JavaScript Advanced</h2>
+        <div class="tasks">
+            <a href="week6/arrays.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>JavaScript Arrays</h3>
+                <p>Working with arrays and array methods.</p>
+            </a>
+            <a href="week6/objects.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>JavaScript Objects</h3>
+                <p>Creating and manipulating objects.</p>
+            </a>
+            <a href="week6/dom.html" class="task-card">
+                <div class="tag">JS</div>
+                <h3>DOM Manipulation</h3>
+                <p>Interacting with the Document Object Model.</p>
+            </a>
+        </div>
+    </section>
+<address>
+    <footer>
+        &copy; 2024 My Web Programming Portfolio. All rights reserved.
+    </footer>
+    <address>
+        Contact us at: <a href="mailto:contact@example.com">contact@example.com</a>
+    </address>
+</address>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<body>
+  <input id='inp' placeholder='New task...'/>
+  <button id='addBtn'>Add</button>
+  <ul id='list'></ul>
+
+  <script>
+    const btn  = document.querySelector('#addBtn');
+    const inp  = document.querySelector('#inp');
+    const list = document.querySelector('#list');
+
+    btn.addEventListener('click', () => {
+      if (!inp.value.trim()) return;     // guard empty
+      const li = document.createElement('li');
+      li.textContent = inp.value;
+      li.addEventListener('click', () => li.remove()); // click to delete
+      list.appendChild(li);
+      inp.value = '';                    // clear input
+    });
+  </script>
+</body>

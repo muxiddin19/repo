@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>textContent - Reading &amp; Writing Text - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">04</span><h1>textContent - Reading &amp; Writing Text</h1></div>
+<div class="theory"><p><code>textContent</code> reads or sets the <strong>plain text</strong> of an element. HTML tags in the string are shown literally, never parsed, so it is the <strong>safe</strong> way to insert user input.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>const msg = document.getElementById(&#x27;msg&#x27;);
+console.log(msg.textContent);          // READ
+msg.textContent = &#x27;Welcome!&#x27;;          // WRITE
+msg.textContent = &#x27;&lt;b&gt;Not bold&lt;/b&gt;&#x27;;   // shown as plain text</code></pre></div>
+<div class="demo-box"><h4>Live demo - type text and apply it</h4>
+<h2 id="msg">Original Text</h2>
+<div class="row"><input type="text" id="inp" placeholder="Type new text, e.g. &lt;b&gt;hi&lt;/b&gt;"><button class="demo-btn" id="set">Change Text</button><button class="demo-btn outline" id="read">Read it</button></div>
+<pre class="out" id="out">Result appears here</pre>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>element.textContent</code> reads the text inside an element.</li><li>Setting it replaces all content of the element.</li><li>Tags in the string are shown as text, not parsed as HTML.</li><li>Use it whenever you insert user input.</li></ul></div>
+<nav class="pager"><span><a href="queryselector.html">&larr; querySelector &amp; querySelectorAll</a></span><span><a href="innerhtml.html">innerHTML - Power &amp; Danger &rarr;</a></span></nav>
+</main>
+<script>
+const msg=document.getElementById('msg'),inp=document.getElementById('inp'),out=document.getElementById('out');
+document.getElementById('set').addEventListener('click',()=>{msg.textContent=inp.value});
+document.getElementById('read').addEventListener('click',()=>{out.textContent='msg.textContent = "'+msg.textContent+'"'});
+</script>
+</body>
+</html>

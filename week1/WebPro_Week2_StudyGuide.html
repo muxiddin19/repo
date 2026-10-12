@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Fundamentals — Week 2 Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f9fa;--surf:#fff;--surf2:#f0f4f8;--brd:#dee2e6;
+  --tx:#212529;--mu:#6c757d;--ac:#0a7a65;--acl:#e6f7f4;
+  --am:#b8860b;--cb:#1e2d3d;--ct:#d8eaf0;
+  --lime:#1a7a50;--cor:#c0392b;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#060D14;--surf:#0D1F2D;--surf2:#13263B;--brd:#1e3048;
+  --tx:#d8eaf0;--mu:#5f8ba4;--ac:#00C9A7;--acl:#0a2a24;
+  --am:#FFD166;--cb:#060D14;--ct:#d8eaf0;--lime:#38D996;--cor:#FF6B6B;
+}}
+:root[data-theme=dark]{
+  --bg:#060D14;--surf:#0D1F2D;--surf2:#13263B;--brd:#1e3048;
+  --tx:#d8eaf0;--mu:#5f8ba4;--ac:#00C9A7;--acl:#0a2a24;
+  --am:#FFD166;--cb:#060D14;--ct:#d8eaf0;--lime:#38D996;--cor:#FF6B6B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+/* Header */
+#site-header{position:sticky;top:0;z-index:100;background:var(--surf);
+  border-bottom:1px solid var(--brd);border-left:4px solid var(--ac);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-course{font-size:11px;color:var(--mu);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:var(--ac)}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 12px;border-radius:20px;cursor:pointer;font-size:13px;white-space:nowrap}
+.theme-btn:hover{background:var(--acl)}
+/* Layout */
+#layout{display:flex;min-height:calc(100vh - 53px)}
+/* Sidebar */
+#sidebar{width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);
+  position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto;padding:12px 0}
+#sidebar nav a{display:flex;align-items:center;gap:8px;padding:5px 16px;
+  font-size:13px;color:var(--mu);border-left:3px solid transparent;transition:all .15s}
+#sidebar nav a:hover{color:var(--tx);background:var(--surf2);text-decoration:none}
+#sidebar nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl);font-weight:600}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);min-width:24px}
+.nav-section-label{padding:12px 16px 4px;font-size:10px;font-weight:700;color:var(--mu);
+  letter-spacing:.08em;text-transform:uppercase}
+/* Main */
+#main{flex:1;padding:36px 44px;max-width:900px}
+/* Section */
+.topic-section{margin-bottom:52px;padding-bottom:40px;border-bottom:1px solid var(--brd)}
+.topic-section:last-child{border-bottom:none}
+.topic-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ac);
+  background:var(--acl);padding:2px 8px;border-radius:4px;font-weight:700}
+.topic-header h2{font-size:22px;font-weight:700;color:var(--tx)}
+.quiz-badge{font-size:11px;background:var(--am);color:#000;
+  padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.topic-theory{margin-bottom:18px}
+.topic-theory p{margin-bottom:10px;color:var(--tx)}
+/* Code block */
+.code-wrap{position:relative;margin:16px 0;border-radius:8px;overflow:hidden;
+  border:1px solid var(--brd)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);padding:6px 12px;border-bottom:1px solid var(--brd)}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);font-weight:600}
+.code-btns{display:flex;gap:6px}
+.code-btns button{background:transparent;border:1px solid var(--brd);color:var(--mu);
+  padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.code-btns button:hover{color:var(--ac);border-color:var(--ac);background:var(--acl)}
+.code-block{background:var(--cb);padding:18px 20px;overflow-x:auto;margin:0}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:13.5px;
+  line-height:1.7;color:var(--ct);white-space:pre}
+/* Syntax colours */
+.ht{color:#00C9A7}.ha{color:#FFD166}.hv{color:#38D996}.hc{color:#5f8ba4}.hn{color:#A88BFF}
+/* Keypoints */
+.keypoints{background:var(--acl);border-left:4px solid var(--ac);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin-top:16px}
+.keypoints h4{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:8px}
+.keypoints ul{padding-left:18px}
+.keypoints li{font-size:14px;color:var(--tx);margin-bottom:4px}
+/* Exercises */
+#exercises{margin-top:60px}
+#exercises>h2{font-size:28px;font-weight:800;color:var(--tx);margin-bottom:8px}
+#exercises>.intro{color:var(--mu);margin-bottom:32px;font-size:15px}
+.exercise{background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  margin-bottom:32px;overflow:hidden}
+.ex-header{display:flex;align-items:center;gap:12px;padding:16px 20px;
+  background:var(--surf2);border-bottom:1px solid var(--brd)}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--ac)}
+.ex-header h3{font-size:17px;font-weight:700;flex:1}
+.diff{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.diff.beginner{background:#e6f7f4;color:#0a7a65}
+.diff.intermediate{background:#fff3cd;color:#856404}
+.diff.advanced{background:#f8d7da;color:#842029}
+:root[data-theme=dark] .diff.beginner,:root:not([data-theme=light]) .diff.beginner{background:#0a2a24;color:#00C9A7}
+:root[data-theme=dark] .diff.intermediate,:root:not([data-theme=light]) .diff.intermediate{background:#2a200a;color:#FFD166}
+:root[data-theme=dark] .diff.advanced,:root:not([data-theme=light]) .diff.advanced{background:#2a0a0a;color:#FF6B6B}
+.ex-body{padding:20px}
+.ex-section-label{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--mu);margin-bottom:8px}
+.task-box{background:var(--surf2);border:1px solid var(--brd);border-radius:6px;
+  padding:14px 16px;margin-bottom:16px;font-size:15px}
+.editor-area{margin-top:16px}
+textarea.code-editor{width:100%;min-height:180px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px;
+  border:1px solid var(--brd);border-radius:6px;resize:vertical;line-height:1.6}
+.ex-btns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ex-btns button{padding:7px 16px;border-radius:6px;font-size:13px;
+  font-weight:600;cursor:pointer;border:1px solid var(--brd);transition:all .15s}
+.btn-preview{background:var(--ac);color:#060D14;border-color:var(--ac)}
+.btn-preview:hover{opacity:.88}
+.btn-hint{background:var(--surf2);color:var(--tx)}
+.btn-hint:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sol{background:var(--surf2);color:var(--tx)}
+.btn-sol:hover{border-color:var(--lime);color:var(--lime)}
+.hint-box,.solution-box{margin-top:12px;padding:14px 16px;border-radius:6px;font-size:14px}
+.hint-box{background:var(--acl);border-left:3px solid var(--ac);color:var(--tx)}
+.solution-box .code-block{border-radius:6px;overflow:hidden;margin:0}
+.preview-frame{width:100%;height:320px;border:1px solid var(--brd);
+  border-radius:6px;margin-top:10px;background:#fff;display:none}
+/* Footer */
+#site-footer{text-align:center;padding:24px;color:var(--mu);font-size:13px;
+  border-top:1px solid var(--brd);margin-top:40px}
+/* Responsive */
+@media(max-width:768px){
+  #sidebar{display:none;position:fixed;top:53px;left:0;height:calc(100vh - 53px);
+    z-index:90;box-shadow:4px 0 20px rgba(0,0,0,.3)}
+  #sidebar.open{display:block}
+  #main{padding:20px 16px}
+  .mobile-menu-btn{display:block!important}
+}
+.mobile-menu-btn{display:none;background:var(--surf2);border:1px solid var(--brd);
+  color:var(--tx);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:18px}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="hdr-left">
+      <span class="hdr-course">K0126002 · Web Programming · Gachon University</span>
+      <span class="hdr-title">Week 2 · HTML Fundamentals — Study Guide</span>
+    </div>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
+</header>
+
+<div id="layout">
+  <aside id="sidebar"><nav><div class="nav-section-label">Topics 1–8: Foundations</div>
+<a href="#topic-01"><span class="nav-num">01</span>What is HTML?</a>
+<a href="#topic-02"><span class="nav-num">02</span>DOCTYPE Declaration</a>
+<a href="#topic-03"><span class="nav-num">03</span>The &lt;body&gt; Element</a>
+<a href="#topic-04"><span class="nav-num">04</span>Headings h1–h6</a>
+<a href="#topic-05"><span class="nav-num">05</span>The &lt;head&gt; Section</a>
+<a href="#topic-06"><span class="nav-num">06</span>meta charset UTF-8</a>
+<a href="#topic-07"><span class="nav-num">07</span>The &lt;title&gt; Element</a>
+<a href="#topic-08"><span class="nav-num">08</span>The lang Attribute</a>
+<div class="nav-section-label">Topics 9–16: Text &amp; Links</div>
+<a href="#topic-09"><span class="nav-num">09</span>Paragraphs &amp; Block Elements</a>
+<a href="#topic-10"><span class="nav-num">10</span>Inline Elements &amp; &lt;span&gt;</a>
+<a href="#topic-11"><span class="nav-num">11</span>&lt;strong&gt; — Bold &amp; Important</a>
+<a href="#topic-12"><span class="nav-num">12</span>&lt;em&gt; — Italic &amp; Emphasis</a>
+<a href="#topic-13"><span class="nav-num">13</span>Void Elements &amp; &lt;br&gt;</a>
+<a href="#topic-14"><span class="nav-num">14</span>Links: the &lt;a&gt; Tag &amp; href</a>
+<a href="#topic-15"><span class="nav-num">15</span>target=&quot;_blank&quot;</a>
+<a href="#topic-16"><span class="nav-num">16</span>Unordered Lists &lt;ul&gt;</a>
+<div class="nav-section-label">Topics 17–25: Lists, Images &amp; More</div>
+<a href="#topic-17"><span class="nav-num">17</span>Ordered Lists &lt;ol&gt;</a>
+<a href="#topic-18"><span class="nav-num">18</span>List Items &lt;li&gt;</a>
+<a href="#topic-19"><span class="nav-num">19</span>Images: &lt;img src&gt;</a>
+<a href="#topic-20"><span class="nav-num">20</span>The alt Attribute</a>
+<a href="#topic-21"><span class="nav-num">21</span>The id Attribute</a>
+<a href="#topic-22"><span class="nav-num">22</span>The class Attribute</a>
+<a href="#topic-23"><span class="nav-num">23</span>HTML Comments</a>
+<a href="#topic-24"><span class="nav-num">24</span>Block vs Inline Summary</a>
+<a href="#topic-25"><span class="nav-num">25</span>Complete Page — Putting It All Together</a>
+<div class="nav-section-label">Practice</div>
+<a href="#exercise-1"><span class="nav-num" style="color:var(--am)">E1</span>The HTML Skeleton</a>
+<a href="#exercise-2"><span class="nav-num" style="color:var(--am)">E2</span>Headings, Paragraphs and Emphasis</a>
+<a href="#exercise-3"><span class="nav-num" style="color:var(--am)">E3</span>Navigation List with Links</a>
+<a href="#exercise-4"><span class="nav-num" style="color:var(--am)">E4</span>Image with Meaningful alt Text</a>
+<a href="#exercise-5"><span class="nav-num" style="color:var(--am)">E5</span>Complete Profile Page</a>
+<a href="#exercise-6"><span class="nav-num" style="color:var(--am)">E6</span>Fix the Broken HTML</a>
+<a href="#exercise-7"><span class="nav-num" style="color:var(--am)">E7</span>Ordered Steps with Nested List</a>
+<a href="#exercise-8"><span class="nav-num" style="color:var(--am)">E8</span>My Favourites Gallery</a>
+</nav></aside>
+  <main id="main">
+
+    <section style="margin-bottom:40px">
+      <h1 style="font-size:32px;font-weight:800;margin-bottom:8px">HTML Fundamentals</h1>
+      <p style="color:var(--mu);font-size:15px">25 topics · 8 interactive exercises · covers all quiz questions</p>
+      <p style="margin-top:12px;font-size:15px">This guide covers every topic tested in the Week 2 quiz.
+      Each topic includes theory, a code example you can preview, and key points.
+      After the 25 topics, practice your skills in the <a href="#exercises">exercises section</a>
+      — you write HTML in the editor and see the result instantly.</p>
+    </section>
+
+    <section id="topic-01">
+  <div class="topic-header">
+    <span class="topic-num">01</span>
+    <h2>What is HTML?</h2>
+    <span class="quiz-badge">Q1</span>
+  </div>
+  <div class="topic-theory"><p>HTML stands for <strong>HyperText Markup Language</strong>. Each word tells you something: <em>HyperText</em> means text with links that connect to other documents; <em>Markup</em> means the text is annotated with tags that describe its structure; <em>Language</em> means it follows defined rules a browser can interpret.</p>
+<p>HTML is <strong>not a programming language</strong> — it cannot perform calculations or make decisions. It is a <em>markup language</em> that describes structure: "this is a heading," "this is a paragraph," "this is a link." CSS handles visual design and JavaScript handles behaviour. In this course you learn all three, but HTML must come first — nothing else can exist without it.</p>
+<p>Every website you have ever visited began as an HTML file. You can see any page's HTML by pressing <kbd>Ctrl+U</kbd> in Chrome.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- HTML describes structure, not appearance --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, world!&lt;/h1&gt;
+  &lt;p&gt;This paragraph is written in HTML.&lt;/p&gt;
+  &lt;p&gt;CSS would style it. JavaScript would animate it.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>HTML = HyperText Markup Language — structure only.</li>
+<li>Not a programming language — it cannot calculate or decide.</li>
+<li>Every web page starts as an HTML file.</li>
+<li>HTML5 is the current standard (since 2014).</li></ul>
+</div>
+</section>
+<section id="topic-02">
+  <div class="topic-header">
+    <span class="topic-num">02</span>
+    <h2>DOCTYPE Declaration</h2>
+    <span class="quiz-badge">Q2</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;!DOCTYPE html&gt;</code> declaration must be the <strong>very first line</strong> of every HTML file — even before the <code>&lt;html&gt;</code> tag. It is not an HTML tag; it is an instruction to the browser's parser that tells it which version of HTML the file uses.</p>
+<p>Without a DOCTYPE, browsers enter <strong>"quirks mode"</strong> — an old compatibility mode that renders pages differently across browsers, making consistent design nearly impossible. The HTML5 DOCTYPE (<code>&lt;!DOCTYPE html&gt;</code>) triggers <em>standards mode</em>, where all modern browsers behave consistently. Notice it is much shorter than the old HTML4 doctype (which was over 70 characters).</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- HTML5 DOCTYPE — always use this exact string --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;title&gt;Correct DOCTYPE&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p&gt;This page renders in standards mode.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+&lt;!-- Old HTML4 DOCTYPE (for reference only — never use this) --&gt;
+&lt;!-- &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot;
+  &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt; --&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Must be the very first line — before even &lt;html&gt;.</li>
+<li>NOT a tag — it is a parser instruction, no closing version.</li>
+<li>Triggers standards mode for consistent cross-browser rendering.</li>
+<li>HTML5 DOCTYPE is just &lt;!DOCTYPE html&gt; — simple and short.</li></ul>
+</div>
+</section>
+<section id="topic-03">
+  <div class="topic-header">
+    <span class="topic-num">03</span>
+    <h2>The &lt;body&gt; Element</h2>
+    <span class="quiz-badge">Q3</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;body&gt;</code> element is the container for <strong>everything the user sees on the page</strong>. All text, images, headings, links, forms, and media must be placed inside the body. There is exactly one body element per HTML document.</p>
+<p>The <code>&lt;head&gt;</code> section (its sibling) holds invisible metadata — the browser reads it but the user never sees it directly. A common beginner mistake is placing visible text in the head or forgetting to close the body properly. The browser is forgiving about missing closing tags, but always close them explicitly for clean, valid HTML.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;!-- INVISIBLE — user never sees this section --&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Browser Tab Text&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- VISIBLE — everything the user sees goes here --&gt;
+  &lt;h1&gt;This heading is visible&lt;/h1&gt;
+  &lt;p&gt;This paragraph is visible.&lt;/p&gt;
+  &lt;img src=&quot;photo.jpg&quot; alt=&quot;A photo&quot;&gt;
+  &lt;a href=&quot;about.html&quot;&gt;This link is visible&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>body = everything visible to the user.</li>
+<li>head = invisible metadata (title, charset, CSS links).</li>
+<li>One body element per page.</li>
+<li>Never place text content inside &lt;head&gt;.</li></ul>
+</div>
+</section>
+<section id="topic-04">
+  <div class="topic-header">
+    <span class="topic-num">04</span>
+    <h2>Headings h1–h6</h2>
+    <span class="quiz-badge">Q4, Q11</span>
+  </div>
+  <div class="topic-theory"><p>HTML provides six heading levels, <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>. <code>h1</code> is the largest and most important; <code>h6</code> is the smallest. Headings serve both visual and <strong>semantic</strong> purposes — they communicate the structure of your content to browsers, search engines, and screen readers.</p>
+<p><strong>Two critical rules:</strong> First, use exactly <em>one</em> <code>&lt;h1&gt;</code> per page — it signals the main topic to search engines and affects your Google ranking. Second, never skip heading levels (do not jump from h1 to h3) — screen readers allow users to navigate by heading, and a broken hierarchy confuses them. Change visual size with CSS, not by choosing a lower heading level.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Recipe&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Korean Kimchi Recipe&lt;/h1&gt;          &lt;!-- ONE per page --&gt;
+  &lt;h2&gt;Ingredients&lt;/h2&gt;
+    &lt;h3&gt;Vegetables&lt;/h3&gt;
+    &lt;h3&gt;Seasoning&lt;/h3&gt;
+  &lt;h2&gt;Instructions&lt;/h2&gt;
+    &lt;h3&gt;Step 1: Prepare the cabbage&lt;/h3&gt;
+    &lt;h3&gt;Step 2: Make the paste&lt;/h3&gt;
+  &lt;h2&gt;Storage Tips&lt;/h2&gt;
+
+  &lt;!-- Wrong — skipping h2 goes directly to h3: --&gt;
+  &lt;!-- &lt;h1&gt;Title&lt;/h1&gt;&lt;h3&gt;Section&lt;/h3&gt; ← BAD! --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>h1 = once per page (the main topic — affects SEO).</li>
+<li>Never skip levels: h1 → h2 → h3 in order.</li>
+<li>Headings communicate semantic hierarchy, not just size.</li>
+<li>Use CSS to change visual size — never choose headings for their size.</li></ul>
+</div>
+</section>
+<section id="topic-05">
+  <div class="topic-header">
+    <span class="topic-num">05</span>
+    <h2>The &lt;head&gt; Section</h2>
+    <span class="quiz-badge">Q8</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;head&gt;</code> element is invisible to users but essential for browsers and search engines. It holds <strong>metadata</strong> — information about the page rather than content for the page. The four most important things you put in the head are: the character encoding (<code>meta charset</code>), the viewport setting for mobile, the page title, and links to CSS stylesheets.</p>
+<p>Nothing inside <code>&lt;head&gt;</code> is rendered on the page. If you accidentally place text or images inside head, they will not appear (or will cause broken rendering). Think of head as the "settings panel" for the page.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;head&gt;
+  &lt;!-- 1. Character encoding — always first --&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+
+  &lt;!-- 2. Viewport — makes the page work on phones --&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+
+  &lt;!-- 3. Page title — browser tab + Google search result --&gt;
+  &lt;title&gt;Kim Jisoo — Web Portfolio&lt;/title&gt;
+
+  &lt;!-- 4. Connect CSS stylesheet --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+
+  &lt;!-- 5. Optional: description for Google snippet --&gt;
+  &lt;meta name=&quot;description&quot; content=&quot;Portfolio of Kim Jisoo, Web Programming student.&quot;&gt;
+&lt;/head&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>head = invisible metadata — nothing in it appears on the page.</li>
+<li>Always include: charset, viewport, title.</li>
+<li>The browser reads head; the user reads body.</li>
+<li>CSS links go in head so styles load before the page renders.</li></ul>
+</div>
+</section>
+<section id="topic-06">
+  <div class="topic-header">
+    <span class="topic-num">06</span>
+    <h2>meta charset UTF-8</h2>
+    <span class="quiz-badge">Q18</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;meta charset="UTF-8"&gt;</code> tag tells the browser how to decode the bytes in your HTML file. UTF-8 is a character encoding that supports <strong>over 1 million characters</strong>, including every human language: Korean (한글), Japanese, Chinese, Arabic, Greek, and emoji.</p>
+<p>Without this tag, Korean text displays as garbage symbols (e.g., <code>Ã©â€˜Œ Ã©ˆ®</code> instead of 학번). It should be the <strong>first tag inside &lt;head&gt;</strong> so the browser decodes all subsequent content correctly. UTF-8 is the universal standard — there is no reason to use any other encoding for new web pages.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;head&gt;
+  &lt;!-- Always the FIRST tag in head --&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Page with Korean text&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Korean displays correctly with UTF-8 --&gt;
+  &lt;p&gt;학번: 202438037&lt;/p&gt;
+  &lt;p&gt;이름: 김지수&lt;/p&gt;
+  &lt;p&gt;과목: 웹프로그래밍&lt;/p&gt;
+
+  &lt;!-- Without charset, Korean becomes garbage: --&gt;
+  &lt;!-- Ã©â€˜Œ ÃˆÂ£ 202438037 --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>UTF-8 supports ALL human languages including Korean (한글).</li>
+<li>Must be the first tag inside &lt;head&gt;.</li>
+<li>Without it: Korean and special characters display as garbage.</li>
+<li>Always use charset=&#x27;UTF-8&#x27; — no exceptions.</li></ul>
+</div>
+</section>
+<section id="topic-07">
+  <div class="topic-header">
+    <span class="topic-num">07</span>
+    <h2>The &lt;title&gt; Element</h2>
+    <span class="quiz-badge">Q20</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;title&gt;</code> element inside <code>&lt;head&gt;</code> sets the text shown in the <strong>browser tab</strong>. It is also the headline Google shows in search results — the clickable blue link. A good title is descriptive (50–60 characters), unique per page, and tells the user exactly what the page contains.</p>
+<p>The title does <strong>NOT appear on the page itself</strong> — do not confuse it with an <code>&lt;h1&gt;</code> heading. Bad titles: "Home", "Page 1", "Untitled". Good titles: "Kim Jisoo — Web Programming Portfolio · Gachon University". Every page on a website should have a different title.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+
+  &lt;!-- Bad titles — avoid these --&gt;
+  &lt;!-- &lt;title&gt;Home&lt;/title&gt;           too generic --&gt;
+  &lt;!-- &lt;title&gt;Page&lt;/title&gt;           meaningless --&gt;
+
+  &lt;!-- Good title: descriptive + unique --&gt;
+  &lt;title&gt;Kim Jisoo — Web Programming Portfolio&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;!-- The title ONLY shows in:
+     1. The browser tab
+     2. Google search results (the blue link)
+     3. Bookmarks / favourites
+     It does NOT appear anywhere on the page body. --&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Title appears in browser tab and Google search results — NOT on the page.</li>
+<li>50–60 characters ideal for Google.</li>
+<li>Each page on a site should have a unique title.</li>
+<li>Missing or generic title hurts SEO significantly.</li></ul>
+</div>
+</section>
+<section id="topic-08">
+  <div class="topic-header">
+    <span class="topic-num">08</span>
+    <h2>The lang Attribute</h2>
+    <span class="quiz-badge">Q23</span>
+  </div>
+  <div class="topic-theory"><p>The <code>lang</code> attribute on the <code>&lt;html&gt;</code> element declares the page's primary language. Use <code>"en"</code> for English, <code>"ko"</code> for Korean, <code>"zh"</code> for Chinese, etc. Screen readers use <code>lang</code> to select the correct pronunciation voice; spell-checkers use it to apply the right dictionary; translation tools use it to offer "Translate this page."</p>
+<p>A missing <code>lang</code> attribute is a <strong>WCAG Level A accessibility failure</strong> — the most serious type of accessibility violation. Always set it. You can also add <code>lang</code> to individual elements to mark text in a different language within an otherwise English page.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- English page --&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;!-- Korean page --&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+
+&lt;!-- Page is English but has Korean student ID --&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;body&gt;
+  &lt;p&gt;Your student ID is:
+    &lt;span lang=&quot;ko&quot;&gt;학번 202438037&lt;/span&gt;
+  &lt;/p&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>lang on &lt;html&gt; declares the page&#x27;s primary language.</li>
+<li>&#x27;en&#x27;=English, &#x27;ko&#x27;=Korean. Always include it.</li>
+<li>Used by screen readers, spell-checkers, and translation tools.</li>
+<li>Missing lang is a WCAG accessibility violation.</li></ul>
+</div>
+</section>
+<section id="topic-09">
+  <div class="topic-header">
+    <span class="topic-num">09</span>
+    <h2>Paragraphs &amp; Block Elements</h2>
+    <span class="quiz-badge">Q7</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;p&gt;</code> element represents a paragraph of text. It is a <strong>block-level element</strong> — it always starts on a new line and the browser adds a small margin above and below it automatically. You do not need <code>&lt;br&gt;</code> tags to create spacing between paragraphs; the browser handles that.</p>
+<p>An important rule: <strong>whitespace in HTML source code is collapsed</strong>. If you write 10 blank lines or 20 spaces in a row, the browser renders it as a single space. Line breaks in your code are ignored — a paragraph only ends when you write the closing <code>&lt;/p&gt;</code> tag. A <code>&lt;p&gt;</code> can contain inline elements (<code>strong</code>, <code>em</code>, <code>a</code>, <code>span</code>) but never another block element like <code>&lt;div&gt;</code> or another <code>&lt;p&gt;</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;p&gt;This is the first paragraph.
+     Extra spaces    and line breaks
+     in the source are all collapsed to one space.&lt;/p&gt;
+
+  &lt;p&gt;This is the second paragraph — the browser adds
+     margin between paragraphs automatically.&lt;/p&gt;
+
+  &lt;p&gt;Inline elements are fine inside a paragraph:
+     &lt;strong&gt;bold text&lt;/strong&gt;, &lt;em&gt;italic text&lt;/em&gt;,
+     and &lt;a href=&quot;#&quot;&gt;links&lt;/a&gt; all work here.&lt;/p&gt;
+
+  &lt;!-- Wrong — block element inside p --&gt;
+  &lt;!-- &lt;p&gt;Text &lt;div&gt;oops&lt;/div&gt; more text&lt;/p&gt; ← BAD! --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>p is block-level — always starts a new line.</li>
+<li>Whitespace in HTML source collapses to a single space.</li>
+<li>Browser adds margin between paragraphs automatically.</li>
+<li>p can contain inline elements but NOT block elements.</li></ul>
+</div>
+</section>
+<section id="topic-10">
+  <div class="topic-header">
+    <span class="topic-num">10</span>
+    <h2>Inline Elements &amp; &lt;span&gt;</h2>
+    <span class="quiz-badge">Q19</span>
+  </div>
+  <div class="topic-theory"><p>Inline elements flow <strong>within the text</strong> — they do not start a new line and only occupy as much width as their content needs. <code>&lt;span&gt;</code> is the generic inline container: it has no visual effect by default but can be targeted by CSS (with a <code>class</code> or <code>id</code>) to apply colour, font, or any other style.</p>
+<p>Other common inline elements: <code>&lt;a&gt;</code> (links), <code>&lt;strong&gt;</code> (bold), <code>&lt;em&gt;</code> (italic), <code>&lt;img&gt;</code> (images), <code>&lt;code&gt;</code> (code snippets). The rule: <strong>inline elements should contain only text or other inline elements</strong> — never block elements like <code>&lt;p&gt;</code> or <code>&lt;div&gt;</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Inline elements flow on the same line --&gt;
+  &lt;p&gt;
+    Normal text,
+    &lt;strong&gt;bold text&lt;/strong&gt;,
+    &lt;em&gt;italic text&lt;/em&gt;,
+    &lt;a href=&quot;#&quot;&gt;a link&lt;/a&gt;,
+    and &lt;span class=&quot;highlight&quot;&gt;highlighted text&lt;/span&gt;
+    all sit on ONE line.
+  &lt;/p&gt;
+
+  &lt;!-- span is invisible by default — CSS gives it style --&gt;
+  &lt;style&gt;
+    .highlight { background: yellow; color: black; padding: 2px 4px; }
+  &lt;/style&gt;
+
+  &lt;!-- Wrong: block element inside inline --&gt;
+  &lt;!-- &lt;span&gt;&lt;p&gt;text&lt;/p&gt;&lt;/span&gt; ← BAD! --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Inline elements flow with text — no new line, width = content width.</li>
+<li>span = generic inline container (no default style).</li>
+<li>Inline elements contain only text or other inline elements.</li>
+<li>CSS + class/id gives span its styling power.</li></ul>
+</div>
+</section>
+<section id="topic-11">
+  <div class="topic-header">
+    <span class="topic-num">11</span>
+    <h2>&lt;strong&gt; — Bold &amp; Important</h2>
+    <span class="quiz-badge">Q15</span>
+  </div>
+  <div class="topic-theory"><p><code>&lt;strong&gt;</code> makes text bold AND signals that the content is <strong>semantically important</strong>. Screen readers may read <code>strong</code> text with added emphasis, and search engines may treat it as significant. Use <code>strong</code> for warnings, key terms, and critical information.</p>
+<p><code>&lt;b&gt;</code> also renders bold but has <strong>no semantic meaning</strong> — it is purely presentational. Prefer <code>strong</code> in almost every case. If you just want bold text for stylistic reasons with no implied importance, use <code>&lt;b&gt;</code> or CSS <code>font-weight: bold</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- strong = bold + semantically important --&gt;
+  &lt;p&gt;Quiz deadline: &lt;strong&gt;Friday 09:00&lt;/strong&gt;.
+     Submissions after this time receive zero marks.&lt;/p&gt;
+
+  &lt;p&gt;Warning: &lt;strong&gt;never submit without the DOCTYPE.&lt;/strong&gt;&lt;/p&gt;
+
+  &lt;!-- b = bold only, no semantic weight --&gt;
+  &lt;p&gt;The &lt;b&gt;h1&lt;/b&gt; element is discussed in topic 4.&lt;/p&gt;
+  &lt;!-- (here b is used for a visual style, not importance) --&gt;
+
+  &lt;!-- both render identically in most browsers --&gt;
+  &lt;!-- difference is MEANING, not appearance --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>strong = bold + semantically important (preferred).</li>
+<li>b = bold only, no semantic meaning.</li>
+<li>Screen readers may stress-read &lt;strong&gt; text.</li>
+<li>Use strong for warnings, key terms, critical information.</li></ul>
+</div>
+</section>
+<section id="topic-12">
+  <div class="topic-header">
+    <span class="topic-num">12</span>
+    <h2>&lt;em&gt; — Italic &amp; Emphasis</h2>
+    <span class="quiz-badge">Q16</span>
+  </div>
+  <div class="topic-theory"><p><code>&lt;em&gt;</code> (emphasis) renders text in italic and indicates that the text should be spoken with stress. The stressed word changes the meaning of the sentence: "I <em>never</em> said she stole it" vs "I never said <em>she</em> stole it." Screen readers adjust their intonation for <code>em</code>.</p>
+<p><code>&lt;i&gt;</code> also renders italic but carries no semantic meaning. Use <code>&lt;i&gt;</code> for technical terms, foreign words, or purely stylistic italic. Use <code>&lt;em&gt;</code> when the emphasis actually changes or strengthens the meaning. For code variable names or technical identifiers, use the <code>&lt;code&gt;</code> element instead.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- em changes meaning based on which word is stressed --&gt;
+  &lt;p&gt;You &lt;em&gt;must&lt;/em&gt; submit by Friday.&lt;/p&gt;
+  &lt;p&gt;&lt;em&gt;You&lt;/em&gt; must submit by Friday. (not someone else)&lt;/p&gt;
+
+  &lt;!-- i for terms/titles, no semantic emphasis --&gt;
+  &lt;p&gt;The element &lt;i&gt;em&lt;/i&gt; stands for emphasis.&lt;/p&gt;
+  &lt;p&gt;In Korean, &lt;i&gt;학번&lt;/i&gt; means student ID number.&lt;/p&gt;
+
+  &lt;!-- code for technical/code terms --&gt;
+  &lt;p&gt;Use the &lt;code&gt;font-size&lt;/code&gt; property to change text size.&lt;/p&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>em = italic + semantically emphasised (meaning changes).</li>
+<li>i = italic only, no semantic weight.</li>
+<li>Screen readers adjust intonation for &lt;em&gt;.</li>
+<li>For code/technical terms: use &lt;code&gt;, not &lt;em&gt;.</li></ul>
+</div>
+</section>
+<section id="topic-13">
+  <div class="topic-header">
+    <span class="topic-num">13</span>
+    <h2>Void Elements &amp; &lt;br&gt;</h2>
+    <span class="quiz-badge">Q9, Q17</span>
+  </div>
+  <div class="topic-theory"><p>Most HTML elements have both an opening and closing tag. <strong>Void elements</strong> are the exceptions — they have no content and no closing tag. Examples: <code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;hr&gt;</code>. In HTML5, the self-closing slash is optional: <code>&lt;br&gt;</code> and <code>&lt;br/&gt;</code> are both valid; <code>&lt;/br&gt;</code> is wrong.</p>
+<p><code>&lt;br&gt;</code> creates a line break <em>within</em> a block of text. Its legitimate use cases are narrow: poetry, postal addresses, song lyrics — situations where the line breaks are part of the content. Do <strong>not</strong> use <code>&lt;br&gt;&lt;br&gt;</code> to create spacing between sections — use CSS <code>margin</code> instead.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Legitimate use of br: a mailing address --&gt;
+  &lt;address&gt;
+    Prof. Kim Jisoo&lt;br&gt;
+    Department of Computer Science&lt;br&gt;
+    Gachon University, Seongnam&lt;br&gt;
+    Gyeonggi-do, South Korea
+  &lt;/address&gt;
+
+  &lt;!-- Void elements — no closing tag needed --&gt;
+  &lt;img src=&quot;photo.jpg&quot; alt=&quot;Profile photo&quot;&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;input type=&quot;text&quot; placeholder=&quot;Name&quot;&gt;
+  &lt;hr&gt;  &lt;!-- horizontal rule --&gt;
+
+  &lt;!-- Wrong uses --&gt;
+  &lt;!-- &lt;/br&gt;  ← invalid closing tag for void element --&gt;
+  &lt;!-- &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt; to create space ← use CSS margin instead --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Void elements have no closing tag: &lt;img&gt;, &lt;br&gt;, &lt;input&gt;, &lt;meta&gt;, &lt;hr&gt;.</li>
+<li>&lt;br&gt; = line break within text (poetry/addresses).</li>
+<li>Don&#x27;t use &lt;br&gt;&lt;br&gt; for spacing — use CSS margin.</li>
+<li>&lt;br&gt; and &lt;br/&gt; both valid in HTML5; &lt;/br&gt; is wrong.</li></ul>
+</div>
+</section>
+<section id="topic-14">
+  <div class="topic-header">
+    <span class="topic-num">14</span>
+    <h2>Links: the &lt;a&gt; Tag &amp; href</h2>
+    <span class="quiz-badge">Q5</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;a&gt;</code> (anchor) element creates hyperlinks — Tim Berners-Lee's invention that defines the World Wide Web. The <code>href</code> (HyperText REFerence) attribute specifies the destination. Without <code>href</code>, the element renders but has no link behaviour.</p>
+<p>There are five types of <code>href</code> values: (1) <strong>absolute URLs</strong> (<code>https://...</code>) for external sites; (2) <strong>relative URLs</strong> (<code>about.html</code>) for pages on the same server; (3) <strong>fragment links</strong> (<code>#section-id</code>) to jump within the same page; (4) <strong>mailto:</strong> to open an email client; (5) <strong>tel:</strong> for phone links on mobile. Always write descriptive link text — "Learn more about HTML" not just "Click here."</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- 1. External link (absolute URL) --&gt;
+  &lt;a href=&quot;https://www.w3schools.com&quot;&gt;W3Schools HTML Tutorial&lt;/a&gt;
+
+  &lt;!-- 2. Internal link (relative path) --&gt;
+  &lt;a href=&quot;about.html&quot;&gt;About Me&lt;/a&gt;
+  &lt;a href=&quot;projects/portfolio.html&quot;&gt;My Projects&lt;/a&gt;
+
+  &lt;!-- 3. Fragment link — jumps to id=&quot;contact&quot; on this page --&gt;
+  &lt;a href=&quot;#contact&quot;&gt;Jump to Contact Section&lt;/a&gt;
+  ...
+  &lt;section id=&quot;contact&quot;&gt;
+    &lt;h2&gt;Contact&lt;/h2&gt;
+  &lt;/section&gt;
+
+  &lt;!-- 4. Email link --&gt;
+  &lt;a href=&quot;mailto:student@gachon.ac.kr&quot;&gt;Email me&lt;/a&gt;
+
+  &lt;!-- 5. Phone link (tappable on mobile) --&gt;
+  &lt;a href=&quot;tel:+821012345678&quot;&gt;Call: +82 10-1234-5678&lt;/a&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>href is required for the link to work.</li>
+<li>Absolute URL (https://): for external sites.</li>
+<li>Relative URL (page.html): for your own pages.</li>
+<li>Descriptive link text helps accessibility and SEO.</li></ul>
+</div>
+</section>
+<section id="topic-15">
+  <div class="topic-header">
+    <span class="topic-num">15</span>
+    <h2>target=&quot;_blank&quot;</h2>
+    <span class="quiz-badge">Q10</span>
+  </div>
+  <div class="topic-theory"><p>The <code>target</code> attribute controls where the linked page opens. <code>target="_blank"</code> opens the link in a <strong>new browser tab</strong> (or window, depending on browser/user settings). Use it for external links so users do not leave your site.</p>
+<p><strong>Security note:</strong> always add <code>rel="noopener noreferrer"</code> when using <code>target="_blank"</code>. Without it, the opened page can access your page through <code>window.opener</code> — a security vulnerability. Modern browsers auto-add this protection, but explicitly writing it is best practice and shows code quality awareness.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Internal links: same tab (no target) --&gt;
+  &lt;a href=&quot;about.html&quot;&gt;About Me&lt;/a&gt;
+  &lt;a href=&quot;projects.html&quot;&gt;My Projects&lt;/a&gt;
+
+  &lt;!-- External links: new tab + security attribute --&gt;
+  &lt;a href=&quot;https://github.com&quot;
+     target=&quot;_blank&quot;
+     rel=&quot;noopener noreferrer&quot;&gt;
+    My GitHub Profile
+  &lt;/a&gt;
+
+  &lt;a href=&quot;https://www.gachon.ac.kr&quot;
+     target=&quot;_blank&quot;
+     rel=&quot;noopener noreferrer&quot;&gt;
+    Gachon University
+  &lt;/a&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>target=&#x27;_blank&#x27; opens the link in a new tab.</li>
+<li>Always pair with rel=&#x27;noopener noreferrer&#x27; for security.</li>
+<li>Use for external links — keep internal links in the same tab.</li>
+<li>Users can always right-click → open in new tab if preferred.</li></ul>
+</div>
+</section>
+<section id="topic-16">
+  <div class="topic-header">
+    <span class="topic-num">16</span>
+    <h2>Unordered Lists &lt;ul&gt;</h2>
+    <span class="quiz-badge">Q12</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;ul&gt;</code> element creates an <strong>unordered (bulleted) list</strong>. Each item inside a <code>ul</code> must be an <code>&lt;li&gt;</code> element. Browsers render bullet points by default; CSS can change or remove them (<code>list-style: none</code>). The <code>ul</code> element is block-level and adds indentation.</p>
+<p>Use <code>ul</code> when the items have <strong>no meaningful order</strong> — a shopping list, a list of features, navigation links. Navigation menus are almost always built as <code>ul</code> lists (with CSS removing the bullets and making them horizontal). Only direct children of <code>ul</code> should be <code>li</code> elements — never place <code>&lt;p&gt;</code> or <code>&lt;div&gt;</code> directly inside <code>ul</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Basic unordered list --&gt;
+  &lt;h2&gt;My Skills&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML — page structure&lt;/li&gt;
+    &lt;li&gt;CSS — visual design&lt;/li&gt;
+    &lt;li&gt;JavaScript — interactive behaviour&lt;/li&gt;
+    &lt;li&gt;PHP — server-side logic&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;!-- Navigation (common pattern) --&gt;
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+  &lt;!-- CSS would remove bullets and make items horizontal --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>ul = unordered list — items have no meaningful order.</li>
+<li>Direct children must be &lt;li&gt; elements only.</li>
+<li>Browser renders bullet points by default (CSS can remove them).</li>
+<li>Navigation menus are typically &lt;nav&gt;&lt;ul&gt;&lt;li&gt;&lt;a&gt; structures.</li></ul>
+</div>
+</section>
+<section id="topic-17">
+  <div class="topic-header">
+    <span class="topic-num">17</span>
+    <h2>Ordered Lists &lt;ol&gt;</h2>
+    <span class="quiz-badge">Q24</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;ol&gt;</code> element creates an <strong>ordered (numbered) list</strong>. The browser automatically generates the numbers — you do not write them in the HTML. By default, items are numbered 1, 2, 3… You can customise with attributes: <code>type="A"</code> (A, B, C), <code>type="a"</code> (a, b, c), <code>type="I"</code> (Roman numerals), and <code>start="5"</code> to begin at a different number.</p>
+<p>Use <code>ol</code> when the <strong>sequence matters</strong>: installation steps, recipe instructions, top-10 rankings, legal clauses. If the order does not matter, use <code>ul</code>. Like <code>ul</code>, only <code>&lt;li&gt;</code> elements should be direct children of <code>ol</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Numbered steps where ORDER matters --&gt;
+  &lt;h2&gt;How to Create an HTML File&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Open VS Code&lt;/li&gt;
+    &lt;li&gt;Create a new file: &lt;code&gt;index.html&lt;/code&gt;&lt;/li&gt;
+    &lt;li&gt;Type the HTML skeleton&lt;/li&gt;
+    &lt;li&gt;Save the file (&lt;kbd&gt;Ctrl+S&lt;/kbd&gt;)&lt;/li&gt;
+    &lt;li&gt;Open in Chrome (double-click the file)&lt;/li&gt;
+  &lt;/ol&gt;
+
+  &lt;!-- Custom numbering --&gt;
+  &lt;ol type=&quot;A&quot;&gt;
+    &lt;li&gt;Section A: HTML Basics&lt;/li&gt;
+    &lt;li&gt;Section B: CSS Styling&lt;/li&gt;
+    &lt;li&gt;Section C: JavaScript&lt;/li&gt;
+  &lt;/ol&gt;
+
+  &lt;!-- Start at a specific number --&gt;
+  &lt;ol start=&quot;3&quot;&gt;
+    &lt;li&gt;This is item 3&lt;/li&gt;
+    &lt;li&gt;This is item 4&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>ol = ordered list — sequence matters.</li>
+<li>Browser auto-numbers — don&#x27;t write numbers yourself.</li>
+<li>type=&#x27;A/a/I/i&#x27; for letters or Roman numerals.</li>
+<li>start=&#x27;N&#x27; begins numbering at N.</li></ul>
+</div>
+</section>
+<section id="topic-18">
+  <div class="topic-header">
+    <span class="topic-num">18</span>
+    <h2>List Items &lt;li&gt;</h2>
+    <span class="quiz-badge">Q13</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;li&gt;</code> element represents a single item in a list. It <strong>must be a direct child</strong> of either <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code> — it is invalid to use <code>li</code> outside a list. The <code>li</code> element is block-level and can contain any flow content: text, links, images, even nested <code>ul</code> or <code>ol</code> lists for sub-menus or outlines.</p>
+<p>A common mistake is placing multiple items inside one <code>li</code> instead of using separate <code>li</code> elements, or placing non-<code>li</code> elements (like <code>&lt;p&gt;</code>) directly inside <code>ul</code>/<code>ol</code>. Both break valid HTML structure.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Each item = one li --&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;
+    &lt;li&gt;JavaScript&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;!-- li can contain links, images, even nested lists --&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;a href=&quot;/html&quot;&gt;HTML Guide&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;/html/tags&quot;&gt;Core Tags&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;/html/forms&quot;&gt;Forms&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/css&quot;&gt;CSS Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;!-- Wrong — non-li elements directly in ul --&gt;
+  &lt;!-- &lt;ul&gt;&lt;p&gt;Item 1&lt;/p&gt;&lt;/ul&gt; ← INVALID! --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>li = list item — must be inside ul or ol.</li>
+<li>li can contain text, links, images, or nested lists.</li>
+<li>One idea per li — don&#x27;t put multiple items in one li.</li>
+<li>Only li elements should be direct children of ul/ol.</li></ul>
+</div>
+</section>
+<section id="topic-19">
+  <div class="topic-header">
+    <span class="topic-num">19</span>
+    <h2>Images: &lt;img src&gt;</h2>
+    <span class="quiz-badge">Q14</span>
+  </div>
+  <div class="topic-theory"><p>The <code>&lt;img&gt;</code> element embeds images. It is a <strong>void element</strong> — no closing tag. The <code>src</code> (source) attribute is required and specifies the image location: either a <strong>relative path</strong> to a local file (<code>photo.jpg</code>, <code>images/banner.png</code>) or an <strong>absolute URL</strong> (<code>https://example.com/logo.png</code>).</p>
+<p>File names are <strong>case-sensitive on web servers</strong> (Linux): <code>Photo.jpg</code> ≠ <code>photo.jpg</code>. Always use lowercase filenames without spaces (use hyphens: <code>profile-photo.jpg</code>). Setting <code>width</code> and <code>height</code> prevents layout shift while the image loads — the browser reserves the correct space before the image arrives.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Local file — relative path --&gt;
+  &lt;img src=&quot;photo.jpg&quot; alt=&quot;Profile photo&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+
+  &lt;!-- File in a subdirectory --&gt;
+  &lt;img src=&quot;images/banner.png&quot; alt=&quot;Course banner&quot; width=&quot;800&quot; height=&quot;200&quot;&gt;
+
+  &lt;!-- Image from the internet (absolute URL) --&gt;
+  &lt;img src=&quot;https://picsum.photos/400/300&quot; alt=&quot;Random placeholder&quot; width=&quot;400&quot; height=&quot;300&quot;&gt;
+
+  &lt;!-- figure + figcaption for labelled images --&gt;
+  &lt;figure&gt;
+    &lt;img src=&quot;diagram.png&quot; alt=&quot;Block vs Inline diagram&quot; width=&quot;600&quot;&gt;
+    &lt;figcaption&gt;Figure 1: Block vs Inline element layout&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>src = image file path or URL (required).</li>
+<li>Case-sensitive on servers: photo.jpg ≠ Photo.jpg.</li>
+<li>No spaces in filenames — use hyphens.</li>
+<li>Set width + height to prevent layout shift during load.</li></ul>
+</div>
+</section>
+<section id="topic-20">
+  <div class="topic-header">
+    <span class="topic-num">20</span>
+    <h2>The alt Attribute</h2>
+    <span class="quiz-badge">Q6, Q25</span>
+  </div>
+  <div class="topic-theory"><p>The <code>alt</code> attribute on <code>&lt;img&gt;</code> provides <strong>alternative text</strong> that: (1) displays if the image fails to load; (2) is read aloud by <strong>screen readers</strong> for visually impaired users; (3) is indexed by search engines (image SEO). A missing <code>alt</code> attribute is a <strong>WCAG Level A accessibility violation</strong> — the most serious level.</p>
+<p>Write alt text that describes what the image <em>shows</em>, not what it is ("Photo of" and "Image of" are redundant — screen readers already announce "image"). For purely decorative images, use an <strong>empty alt</strong> (<code>alt=""</code>) so screen readers skip them. For charts, describe the data trend, not just the chart type.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- Good: describes what the image shows --&gt;
+  &lt;img src=&quot;profile.jpg&quot; alt=&quot;Kim Jisoo smiling in front of Gachon University main building&quot;&gt;
+
+  &lt;!-- Decorative image: empty alt, screen reader skips it --&gt;
+  &lt;img src=&quot;decorative-divider.png&quot; alt=&quot;&quot;&gt;
+
+  &lt;!-- Chart: describe the DATA, not the chart type --&gt;
+  &lt;img src=&quot;grades-chart.png&quot;
+       alt=&quot;Bar chart showing quiz scores: Week 1: 82, Week 2: 88, Week 3: 91&quot;&gt;
+
+  &lt;!-- BAD examples — avoid these --&gt;
+  &lt;!-- &lt;img src=&quot;photo.jpg&quot;&gt;                        missing alt --&gt;
+  &lt;!-- &lt;img src=&quot;photo.jpg&quot; alt=&quot;photo&quot;&gt;           not descriptive --&gt;
+  &lt;!-- &lt;img src=&quot;photo.jpg&quot; alt=&quot;image of photo&quot;&gt;  redundant --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>alt is required on every &lt;img&gt; — missing = accessibility violation.</li>
+<li>Empty alt=&#x27;&#x27; for decorative images only.</li>
+<li>Describe WHAT the image shows — not &#x27;photo of&#x27; or &#x27;image of&#x27;.</li>
+<li>Screen readers read alt text to visually impaired users.</li></ul>
+</div>
+</section>
+<section id="topic-21">
+  <div class="topic-header">
+    <span class="topic-num">21</span>
+    <h2>The id Attribute</h2>
+    <span class="quiz-badge">Q21 (part 1)</span>
+  </div>
+  <div class="topic-theory"><p>The <code>id</code> attribute gives an element a <strong>unique identifier</strong>. "Unique" is strict — no two elements on the same page can share the same <code>id</code>. It has three uses: (1) <strong>CSS targeting</strong> with the <code>#id</code> selector; (2) <strong>JavaScript access</strong> via <code>document.getElementById('name')</code>; (3) <strong>fragment links</strong> — <code>&lt;a href="#contact"&gt;</code> scrolls the page to the element with <code>id="contact"</code>.</p>
+<p>ID naming rules: start with a letter (not a number), no spaces, case-sensitive. By convention use kebab-case: <code>main-header</code>, <code>contact-form</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;ID Example&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Navigation using fragment links (# + id) --&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;#about&quot;&gt;About&lt;/a&gt;
+    &lt;a href=&quot;#skills&quot;&gt;Skills&lt;/a&gt;
+    &lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;section id=&quot;about&quot;&gt;
+    &lt;h2&gt;About Me&lt;/h2&gt;
+    &lt;p&gt;Web programming student at Gachon.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;skills&quot;&gt;
+    &lt;h2&gt;Skills&lt;/h2&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;contact&quot;&gt;
+    &lt;h2&gt;Contact&lt;/h2&gt;
+  &lt;/section&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>id must be unique — once per page.</li>
+<li>CSS: #idName selector. JS: getElementById(&#x27;idName&#x27;).</li>
+<li>Fragment links: &lt;a href=&#x27;#idName&#x27;&gt; scrolls to that element.</li>
+<li>Use kebab-case: main-header, contact-form.</li></ul>
+</div>
+</section>
+<section id="topic-22">
+  <div class="topic-header">
+    <span class="topic-num">22</span>
+    <h2>The class Attribute</h2>
+    <span class="quiz-badge">Q21 (part 2)</span>
+  </div>
+  <div class="topic-theory"><p>The <code>class</code> attribute assigns one or more <strong>reusable labels</strong> to an element. Unlike <code>id</code>, the same class can be applied to many elements, and one element can have multiple classes separated by spaces: <code>class="card featured large"</code>. CSS targets classes with the dot selector (<code>.className</code>).</p>
+<p>Classes are the <strong>primary tool for CSS styling</strong>: write a CSS rule for a class, then apply that class wherever you want the style. This creates consistent, maintainable design. In JavaScript, classes can be targeted with <code>document.querySelectorAll('.className')</code> and toggled dynamically with <code>classList.add/remove/toggle</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!-- All four cards share .card, one also has .featured --&gt;
+&lt;style&gt;
+  .card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  .featured {
+    border-color: teal;
+    background: #e6f7f4;
+  }
+  .large { font-size: 1.2em; }
+&lt;/style&gt;
+
+&lt;div class=&quot;card&quot;&gt;HTML Basics&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;CSS Styling&lt;/div&gt;
+&lt;div class=&quot;card featured&quot;&gt;JavaScript&lt;/div&gt;
+&lt;div class=&quot;card featured large&quot;&gt;Advanced Project&lt;/div&gt;
+
+&lt;!-- Multiple classes on one element --&gt;
+&lt;button class=&quot;btn btn-primary btn-large&quot;&gt;Submit&lt;/button&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>class is reusable — many elements can share a class.</li>
+<li>Multiple classes: class=&#x27;a b c&#x27; (space-separated).</li>
+<li>CSS: .className. JS: querySelectorAll(&#x27;.className&#x27;).</li>
+<li>Use class for styling; use id for unique JS targeting.</li></ul>
+</div>
+</section>
+<section id="topic-23">
+  <div class="topic-header">
+    <span class="topic-num">23</span>
+    <h2>HTML Comments</h2>
+    <span class="quiz-badge">Q22</span>
+  </div>
+  <div class="topic-theory"><p>HTML comments are written with <code>&lt;!-- comment text --&gt;</code>. Browsers <strong>completely ignore</strong> comments — they are never rendered on the page. Comments serve as: (1) notes explaining complex or non-obvious code; (2) section dividers in long HTML files; (3) temporary code disabling without deleting.</p>
+<p><strong>Warning:</strong> Comments ARE visible in the page source — anyone who presses <kbd>Ctrl+U</kbd> in Chrome can read them. <em>Never</em> put passwords, API keys, private business logic, or any sensitive data in HTML comments. Comments can span multiple lines.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Comments Example&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- ═══ HEADER SECTION ═══════════════════════ --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;My Portfolio&lt;/h1&gt;
+    &lt;!-- TODO: add logo image here later --&gt;
+  &lt;/header&gt;
+
+  &lt;!-- ═══ MAIN CONTENT ═════════════════════════ --&gt;
+  &lt;main&gt;
+    &lt;p&gt;Welcome to my page.&lt;/p&gt;
+
+    &lt;!-- Temporarily disabled — will re-enable in Week 4 --&gt;
+    &lt;!--
+    &lt;section id=&quot;projects&quot;&gt;
+      &lt;h2&gt;My Projects&lt;/h2&gt;
+    &lt;/section&gt;
+    --&gt;
+  &lt;/main&gt;
+
+  &lt;!-- Never do this — visible in page source! --&gt;
+  &lt;!-- password: mySecretPassword123 ← DANGEROUS! --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>&lt;!-- comment --&gt; — browser ignores completely.</li>
+<li>Visible in page source (Ctrl+U) — no secrets in comments.</li>
+<li>Good for: section markers, explanations, disabling code.</li>
+<li>Can span multiple lines inside &lt;!-- ... --&gt;.</li></ul>
+</div>
+</section>
+<section id="topic-24">
+  <div class="topic-header">
+    <span class="topic-num">24</span>
+    <h2>Block vs Inline Summary</h2>
+    <span class="quiz-badge">Q7, Q19</span>
+  </div>
+  <div class="topic-theory"><p>Every HTML element has a default <strong>display type</strong> — either block or inline. <strong>Block elements</strong> start on a new line, stretch to fill the full available width, and stack vertically. They can contain both block and inline elements. Examples: <code>div</code>, <code>p</code>, <code>h1–h6</code>, <code>ul</code>, <code>ol</code>, <code>li</code>, <code>header</code>, <code>main</code>, <code>footer</code>.</p>
+<p><strong>Inline elements</strong> flow within text, do not start a new line, and only take as much width as their content. They should only contain text or other inline elements. Examples: <code>span</code>, <code>a</code>, <code>strong</code>, <code>em</code>, <code>img</code>, <code>input</code>, <code>label</code>. The fundamental rule: you can nest inline elements inside block elements, but <strong>not block elements inside inline elements</strong>. CSS <code>display</code> property can override any element's default display type.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;body&gt;
+  &lt;!-- BLOCK elements — each starts a new line --&gt;
+  &lt;h2&gt;Heading (block)&lt;/h2&gt;
+  &lt;p&gt;Paragraph (block)&lt;/p&gt;
+  &lt;div&gt;Div (block)&lt;/div&gt;
+
+  &lt;!-- INLINE elements — flow on one line --&gt;
+  &lt;p&gt;
+    This paragraph contains
+    &lt;strong&gt;bold (inline)&lt;/strong&gt;,
+    &lt;em&gt;italic (inline)&lt;/em&gt;,
+    &lt;a href=&quot;#&quot;&gt;a link (inline)&lt;/a&gt;, and
+    &lt;span style=&quot;color:teal&quot;&gt;coloured text (inline)&lt;/span&gt;
+    — all on the same line.
+  &lt;/p&gt;
+
+  &lt;!-- CORRECT: inline inside block --&gt;
+  &lt;p&gt;&lt;strong&gt;Good&lt;/strong&gt; — span inside p&lt;/p&gt;
+
+  &lt;!-- WRONG: block inside inline --&gt;
+  &lt;!-- &lt;span&gt;&lt;p&gt;Bad&lt;/p&gt;&lt;/span&gt; ← INVALID! --&gt;
+&lt;/body&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>Block: new line, full width, stacks vertically (div, p, h1).</li>
+<li>Inline: flows with text, content-width only (span, a, strong).</li>
+<li>Correct: inline inside block.</li>
+<li>Wrong: block inside inline.</li>
+<li>CSS display property can change any element&#x27;s display type.</li></ul>
+</div>
+</section>
+<section id="topic-25">
+  <div class="topic-header">
+    <span class="topic-num">25</span>
+    <h2>Complete Page — Putting It All Together</h2>
+    <span class="quiz-badge">Q2, Q3, Q8, Q23</span>
+  </div>
+  <div class="topic-theory"><p>This final topic combines everything from Topics 1–24 into one complete, valid HTML5 page you can use as your template for every project. Read through every line — each one is there for a reason. After this week you should be able to write this entire page from memory.</p>
+<p>After writing any HTML file, always validate it at <strong>validator.w3.org</strong> — paste your code and fix any errors shown. Zero errors means clean, standards-compliant HTML that will work across all browsers and assistive technologies. Aim for zero errors on everything you submit.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;!-- 1. Character set — always first --&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;!-- 2. Mobile viewport --&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;!-- 3. Page title (browser tab + Google) --&gt;
+  &lt;title&gt;Kim Jisoo — Web Programming Portfolio&lt;/title&gt;
+  &lt;!-- 4. Google search description --&gt;
+  &lt;meta name=&quot;description&quot; content=&quot;Portfolio of Kim Jisoo, Gachon University.&quot;&gt;
+  &lt;!-- 5. CSS stylesheet --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- ═══ HEADER ════════════════════════════ --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Kim Jisoo&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;#about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#skills&quot;&gt;Skills&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;!-- ═══ MAIN CONTENT ══════════════════════ --&gt;
+  &lt;main&gt;
+    &lt;section id=&quot;about&quot;&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;img src=&quot;profile.jpg&quot; alt=&quot;Kim Jisoo at Gachon University&quot; width=&quot;200&quot;&gt;
+      &lt;p&gt;I am a &lt;strong&gt;Computer Science student&lt;/strong&gt; at
+         &lt;em&gt;Gachon University&lt;/em&gt;, learning web development.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;skills&quot;&gt;
+      &lt;h2&gt;Skills&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;HTML5&lt;/li&gt;
+        &lt;li&gt;CSS3&lt;/li&gt;
+        &lt;li&gt;JavaScript&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;contact&quot;&gt;
+      &lt;h2&gt;Contact&lt;/h2&gt;
+      &lt;p&gt;&lt;a href=&quot;mailto:jisoo@gachon.ac.kr&quot;&gt;jisoo@gachon.ac.kr&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;
+        &lt;a href=&quot;https://github.com/jisoo&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;
+          GitHub Profile
+        &lt;/a&gt;
+      &lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;!-- ═══ FOOTER ════════════════════════════ --&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Kim Jisoo · Web Programming K0126002&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+</div>
+  <div class="keypoints">
+  <h4>Key Points</h4>
+  <ul><li>DOCTYPE → html lang → head (charset, viewport, title) → body.</li>
+<li>Validate at validator.w3.org after every session.</li>
+<li>Use this page as your starting template for every project.</li>
+<li>Semantic structure (header/main/footer) even before learning CSS.</li></ul>
+</div>
+</section>
+
+    <section id="exercises" style="margin-top:60px">
+      <h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Practice Exercises</h2>
+      <p class="intro" style="color:var(--mu);margin-bottom:32px;font-size:15px">
+        Study the example, read the task, then write your HTML in the editor.
+        Click <strong>▶ Preview</strong> to see your result instantly in the browser.
+        Click <strong>💡 Hint</strong> if you're stuck.
+        Click <strong>✓ Show Solution</strong> only after you've tried yourself.
+      </p>
+      <article class="exercise" id="exercise-1">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 1</span>
+    <h3>The HTML Skeleton</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Example Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello!&lt;/h1&gt;
+  &lt;p&gt;This is the minimal HTML skeleton.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a valid HTML page with: DOCTYPE, <code>&lt;html lang="en"&gt;</code>, a head with charset + viewport + title <em>"My First Page"</em>, and a body with the text <strong>"Hello, Gachon!"</strong> in an h1 heading.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex1-editor">&lt;!-- Write your HTML here --&gt;
+</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex1-editor','ex1-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex1-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex1-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex1-hint" hidden>You need exactly: DOCTYPE on line 1, html open, head (with 3 meta/title tags), body (with one h1), head close, body close, html close.</div>
+      <div class="solution-box" id="ex1-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, Gachon!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex1-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-2">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 2</span>
+    <h3>Headings, Paragraphs and Emphasis</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;h1&gt;My Favourite Sport&lt;/h1&gt;
+&lt;h2&gt;Why I Love It&lt;/h2&gt;
+&lt;p&gt;I have played &lt;strong&gt;football&lt;/strong&gt; since I was seven years old.
+   It teaches me &lt;em&gt;teamwork&lt;/em&gt; and discipline.&lt;/p&gt;
+&lt;h2&gt;How to Start&lt;/h2&gt;
+&lt;p&gt;You only need a ball and some open space to begin.&lt;/p&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a page about YOUR favourite hobby. Include: one <code>&lt;h1&gt;</code> (hobby name), two <code>&lt;h2&gt;</code> headings (<em>"Why I Love It"</em> and <em>"How to Start"</em>), one <code>&lt;p&gt;</code> under each h2 (at least 2 sentences). Bold the most important word using <code>&lt;strong&gt;</code>. Italicise one foreign or technical term using <code>&lt;em&gt;</code>.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex2-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Hobby&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Write your content here --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex2-editor','ex2-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex2-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex2-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex2-hint" hidden>Structure: h1 → h2 → p → h2 → p. strong and em go INSIDE the p tags, not outside.</div>
+      <div class="solution-box" id="ex2-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Hobby&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Photography&lt;/h1&gt;
+  &lt;h2&gt;Why I Love It&lt;/h2&gt;
+  &lt;p&gt;Photography lets me capture &lt;strong&gt;unforgettable moments&lt;/strong&gt;.
+     Every photo tells a story that words cannot express.&lt;/p&gt;
+  &lt;h2&gt;How to Start&lt;/h2&gt;
+  &lt;p&gt;You can begin with just a smartphone. The &lt;em&gt;golden hour&lt;/em&gt;
+     (just after sunrise or before sunset) gives the best light.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex2-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-3">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 3</span>
+    <h3>Navigation List with Links</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;nav&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a navigation bar as an unordered list with <strong>5 items</strong>: Home, About Me, My Projects, Skills, Contact. Each item should be a link — use <code>href="#"</code> as placeholder. Wrap everything in a <code>&lt;nav&gt;</code> element.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex3-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Navigation&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Build your nav here --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex3-editor','ex3-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex3-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex3-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex3-hint" hidden>Structure: nav → ul → li (×5) → a. The href=&quot;#&quot; means the link goes nowhere yet — that is fine for now.</div>
+      <div class="solution-box" id="ex3-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Navigation&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;About Me&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;My Projects&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Skills&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex3-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-4">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 4</span>
+    <h3>Image with Meaningful alt Text</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- Image with meaningful alt --&gt;
+&lt;img src=&quot;https://picsum.photos/400/300&quot;
+     alt=&quot;A scenic mountain landscape with a blue lake&quot;
+     width=&quot;400&quot; height=&quot;300&quot;&gt;
+
+&lt;!-- Broken image shows alt text --&gt;
+&lt;img src=&quot;broken-link.jpg&quot;
+     alt=&quot;This text appears when image fails to load&quot;
+     width=&quot;300&quot; height=&quot;200&quot;&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Add an image to a page using the URL <code>https://picsum.photos/400/300</code>. Write a <em>meaningful alt text</em> describing a hypothetical image: <strong>"University students collaborating on laptops in a bright study room"</strong>. Set width to 400 and height to 300.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex4-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Image Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Campus Photo&lt;/h1&gt;
+  &lt;!-- Add your image here --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex4-editor','ex4-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex4-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex4-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex4-hint" hidden>The src is a free placeholder image service. Put the full URL in src=&quot;...&quot;. Alt text describes what the image SHOWS — not &#x27;photo of&#x27; or &#x27;image of&#x27;.</div>
+      <div class="solution-box" id="ex4-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Image Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Campus Photo&lt;/h1&gt;
+  &lt;img src=&quot;https://picsum.photos/400/300&quot;
+       alt=&quot;University students collaborating on laptops in a bright study room&quot;
+       width=&quot;400&quot;
+       height=&quot;300&quot;&gt;
+  &lt;p&gt;A busy study session at Gachon University.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex4-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-5">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 5</span>
+    <h3>Complete Profile Page</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Profile Template&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Name Here&lt;/h1&gt;
+  &lt;img src=&quot;https://picsum.photos/200/200&quot; alt=&quot;Profile photo&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
+  &lt;p&gt;One sentence about me with &lt;strong&gt;key fact&lt;/strong&gt; and &lt;em&gt;emphasis&lt;/em&gt;.&lt;/p&gt;
+  &lt;h2&gt;My Skills&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Skill 1&lt;/li&gt;
+    &lt;li&gt;Skill 2&lt;/li&gt;
+    &lt;li&gt;Skill 3&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;a href=&quot;https://gachon.ac.kr&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;
+    Visit my university
+  &lt;/a&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Name Here&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Build YOUR profile page. Must include: <code>&lt;h1&gt;</code> with your name, one paragraph introducing yourself (<code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> inside), an image (<code>https://picsum.photos/200/200</code>, write a realistic alt text), a <code>&lt;ul&gt;</code> of 3 skills, one external link (<code>target="_blank"</code>), and a footer with <em>© 2026 [your name]</em>.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex5-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Profile&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- h1, img, p (with strong + em), h2, ul, a, footer --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex5-editor','ex5-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex5-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex5-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex5-hint" hidden>Build section by section. Start: h1 → img → p → h2 (Skills) → ul → a → footer. Test in Preview after each addition.</div>
+      <div class="solution-box" id="ex5-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Kim Jisoo — Profile&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Kim Jisoo&lt;/h1&gt;
+  &lt;img src=&quot;https://picsum.photos/200/200&quot;
+       alt=&quot;Kim Jisoo, Computer Science student at Gachon University&quot;
+       width=&quot;200&quot; height=&quot;200&quot;&gt;
+  &lt;p&gt;I am a &lt;strong&gt;second-year Computer Science student&lt;/strong&gt; at
+     Gachon University, passionate about &lt;em&gt;web development&lt;/em&gt;
+     and building useful applications.&lt;/p&gt;
+  &lt;h2&gt;My Skills&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML — page structure&lt;/li&gt;
+    &lt;li&gt;Python — data analysis&lt;/li&gt;
+    &lt;li&gt;Problem-solving&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;a href=&quot;https://www.gachon.ac.kr&quot;
+     target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;
+    Gachon University
+  &lt;/a&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Kim Jisoo&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex5-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-6">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 6</span>
+    <h3>Fix the Broken HTML</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- Well-formed HTML looks like this --&gt;
+&lt;h1&gt;Title&lt;/h1&gt;
+&lt;p&gt;A paragraph with &lt;strong&gt;bold&lt;/strong&gt; and &lt;em&gt;italic&lt;/em&gt;.&lt;/p&gt;
+&lt;img src=&quot;photo.jpg&quot; alt=&quot;Meaningful description&quot;&gt;
+&lt;a href=&quot;https://example.com&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Link&lt;/a&gt;
+&lt;ul&gt;
+  &lt;li&gt;Item 1&lt;/li&gt;
+  &lt;li&gt;Item 2&lt;/li&gt;
+&lt;/ul&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Find and fix ALL <strong>5 bugs</strong> in the HTML below. Paste it into the editor, fix the bugs, and click Preview to confirm it renders correctly.<br><br>
+<code style="display:block;background:var(--cb);color:var(--ct);padding:12px;border-radius:6px;white-space:pre;font-size:12px">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Broken Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Blog&lt;h1&gt;
+  &lt;p&gt;Welcome! I write about &lt;b&gt;web development.
+  &lt;p&gt;See my &lt;a src="https://github.com"&gt;GitHub&lt;/p&gt;&lt;/a&gt;
+  &lt;img href="photo.jpg" alt=""&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS
+    &lt;li&gt;JavaScript&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;</code></div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex6-editor">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Broken Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Blog&lt;h1&gt;
+  &lt;p&gt;Welcome! I write about &lt;b&gt;web development.
+  &lt;p&gt;See my &lt;a src=&quot;https://github.com&quot;&gt;GitHub&lt;/p&gt;&lt;/a&gt;
+  &lt;img href=&quot;photo.jpg&quot; alt=&quot;&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS
+    &lt;li&gt;JavaScript&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex6-editor','ex6-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex6-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex6-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex6-hint" hidden>Bugs: (1) h1 closing tag wrong, (2) &amp;lt;b&amp;gt; not closed, (3) link uses wrong attribute, (4) &amp;lt;/p&amp;gt;&amp;lt;/a&amp;gt; in wrong order, (5) img uses wrong attribute + empty alt on a meaningful image.</div>
+      <div class="solution-box" id="ex6-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Fixed Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Blog&lt;/h1&gt;              &lt;!-- fix 1: &lt;/h1&gt; not &lt;h1&gt; --&gt;
+  &lt;p&gt;Welcome! I write about &lt;b&gt;web development&lt;/b&gt;.&lt;/p&gt;  &lt;!-- fix 2: close &lt;/b&gt; + close &lt;/p&gt; --&gt;
+  &lt;p&gt;See my &lt;a href=&quot;https://github.com&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;  &lt;!-- fix 3: href not src; fix 4: &lt;/a&gt; before &lt;/p&gt; --&gt;
+  &lt;img src=&quot;photo.jpg&quot; alt=&quot;My profile photo&quot;&gt;           &lt;!-- fix 5: src not href; write real alt text --&gt;
+  &lt;ul&gt;
+    &lt;li&gt;HTML&lt;/li&gt;
+    &lt;li&gt;CSS&lt;/li&gt;                &lt;!-- fix 6: close &lt;/li&gt; --&gt;
+    &lt;li&gt;JavaScript&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex6-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-7">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 7</span>
+    <h3>Ordered Steps with Nested List</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;h1&gt;How to Make Ramen&lt;/h1&gt;
+&lt;h2&gt;Ingredients&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;1 ramen packet&lt;/li&gt;
+  &lt;li&gt;500ml water&lt;/li&gt;
+  &lt;li&gt;1 egg (optional)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Steps&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Boil the water in a pot.&lt;/li&gt;
+  &lt;li&gt;Add the noodles — cook for &lt;strong&gt;3 minutes&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Add the seasoning packet and stir &lt;em&gt;vigorously&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;Optionally crack in an egg and wait 30 seconds.&lt;/li&gt;
+  &lt;li&gt;Serve immediately.&lt;/li&gt;
+&lt;/ol&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a page for a recipe OR tutorial with: <code>&lt;h1&gt;</code> (recipe/tutorial name), <code>&lt;h2&gt;</code> "What You Need" + <code>&lt;ul&gt;</code> of at least 5 items, <code>&lt;h2&gt;</code> "Steps" + <code>&lt;ol&gt;</code> of at least 5 steps. Use <code>&lt;strong&gt;</code> in one step for a warning and <code>&lt;em&gt;</code> in another for emphasis.</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex7-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Recipe&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;&lt;!-- recipe name --&gt;&lt;/h1&gt;
+  &lt;h2&gt;What You Need&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;!-- 5+ ingredients --&gt;
+  &lt;/ul&gt;
+  &lt;h2&gt;Steps&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;!-- 5+ steps with strong and em --&gt;
+  &lt;/ol&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex7-editor','ex7-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex7-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex7-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex7-hint" hidden>ol auto-numbers — don&#x27;t type &#x27;1. 2. 3.&#x27; yourself. Put each step in its own li. strong for warnings (e.g. &#x27;Warning: hot!&#x27;), em for emphasis or foreign terms.</div>
+      <div class="solution-box" id="ex7-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Korean Bibimbap Recipe&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Korean Bibimbap Recipe&lt;/h1&gt;
+  &lt;h2&gt;What You Need&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;2 cups cooked rice&lt;/li&gt;
+    &lt;li&gt;Spinach, bean sprouts, carrots&lt;/li&gt;
+    &lt;li&gt;1 egg&lt;/li&gt;
+    &lt;li&gt;Sesame oil&lt;/li&gt;
+    &lt;li&gt;Gochujang (Korean red pepper paste)&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;h2&gt;Steps&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Cook the rice and let it cool slightly.&lt;/li&gt;
+    &lt;li&gt;Blanch and season the vegetables separately.&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Warning: use medium heat&lt;/strong&gt; when frying the egg.&lt;/li&gt;
+    &lt;li&gt;Place rice in a bowl; arrange vegetables and egg on top.&lt;/li&gt;
+    &lt;li&gt;Add &lt;em&gt;gochujang&lt;/em&gt; and sesame oil, then mix everything together.&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex7-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+<article class="exercise" id="exercise-8">
+  <div class="ex-header">
+    <span class="ex-num">Exercise 8</span>
+    <h3>My Favourites Gallery</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <p class="ex-section-label">Study this example</p>
+    <div class="code-wrap raw-code">
+      <div class="code-bar">
+        <span class="code-lang">Example</span>
+        <div class="code-btns">
+          <button onclick="previewCode(this)">Preview</button>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+      <div class="code-block"><code>&lt;!-- A linked image opens a page when clicked --&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Parasite_(film)&quot;
+   target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;
+  &lt;img src=&quot;https://picsum.photos/300/200?random=10&quot;
+       alt=&quot;Movie poster for Parasite (2019)&quot;
+       width=&quot;300&quot; height=&quot;200&quot;&gt;
+&lt;/a&gt;</code></div>
+    </div>
+    <p class="ex-section-label" style="margin-top:16px">Your task</p>
+    <div class="task-box">Create a 'My Favourites' page with <strong>3 sections</strong> — one each for a favourite book, film/show, and website. Each section needs: <code>&lt;div class="card"&gt;</code> wrapper, <code>&lt;h2&gt;</code> (the name), <code>&lt;img&gt;</code> (use <code>https://picsum.photos/300/200?random=1</code>, <code>?random=2</code>, <code>?random=3</code> for 3 different images), a <code>&lt;p&gt;</code> (2 sentences with <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code>), an <code>&lt;a&gt;</code> link to learn more (opens in new tab).</div>
+    <div class="editor-area">
+      <p class="ex-section-label">Write your code here</p>
+      <textarea class="code-editor" id="ex8-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Favourites&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Favourites&lt;/h1&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;h2&gt;Favourite Book: ...&lt;/h2&gt;
+    &lt;img src=&quot;https://picsum.photos/300/200?random=1&quot; alt=&quot;...&quot; width=&quot;300&quot; height=&quot;200&quot;&gt;
+    &lt;p&gt;...&lt;/p&gt;
+    &lt;a href=&quot;...&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Learn more&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Add 2 more cards for Film and Website --&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="runPreview('ex8-editor','ex8-preview')">▶ Preview</button>
+        <button class="btn-hint" onclick="toggleEl('ex8-hint')">💡 Hint</button>
+        <button class="btn-sol" onclick="toggleEl('ex8-sol')">✓ Show Solution</button>
+      </div>
+      <div class="hint-box" id="ex8-hint" hidden>Three div.card blocks in sequence. For images: the ?random=N part makes each image different. Link each card to a real website (Wikipedia, IMDB, etc.).</div>
+      <div class="solution-box" id="ex8-sol" hidden>
+        <div class="code-wrap raw-code" style="margin-top:8px">
+          <div class="code-bar"><span class="code-lang">Solution</span>
+            <div class="code-btns"><button onclick="copyCode(this)">Copy</button></div>
+          </div>
+          <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;My Favourites&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Favourites&lt;/h1&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;h2&gt;Favourite Book: The Alchemist&lt;/h2&gt;
+    &lt;img src=&quot;https://picsum.photos/300/200?random=1&quot;
+         alt=&quot;A desert landscape — cover art for The Alchemist by Paulo Coelho&quot;
+         width=&quot;300&quot; height=&quot;200&quot;&gt;
+    &lt;p&gt;Paulo Coelho&#x27;s &lt;em&gt;The Alchemist&lt;/em&gt; changed how I think about goals.
+       It teaches that &lt;strong&gt;the journey is more valuable than the destination&lt;/strong&gt;.&lt;/p&gt;
+    &lt;a href=&quot;https://en.wikipedia.org/wiki/The_Alchemist_(novel)&quot;
+       target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Read more on Wikipedia&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;h2&gt;Favourite Film: Parasite (2019)&lt;/h2&gt;
+    &lt;img src=&quot;https://picsum.photos/300/200?random=2&quot;
+         alt=&quot;A suburban Korean house — setting of the film Parasite&quot;
+         width=&quot;300&quot; height=&quot;200&quot;&gt;
+    &lt;p&gt;Bong Joon-ho&#x27;s &lt;em&gt;Parasite&lt;/em&gt; is a masterpiece of social commentary.
+       It is the &lt;strong&gt;first Korean film to win the Academy Award for Best Picture&lt;/strong&gt;.&lt;/p&gt;
+    &lt;a href=&quot;https://en.wikipedia.org/wiki/Parasite_(2019_film)&quot;
+       target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Read more on Wikipedia&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;h2&gt;Favourite Website: MDN Web Docs&lt;/h2&gt;
+    &lt;img src=&quot;https://picsum.photos/300/200?random=3&quot;
+         alt=&quot;A developer reading documentation on a computer screen&quot;
+         width=&quot;300&quot; height=&quot;200&quot;&gt;
+    &lt;p&gt;MDN Web Docs is the most &lt;em&gt;authoritative&lt;/em&gt; reference for web technologies.
+       It covers &lt;strong&gt;HTML, CSS, and JavaScript&lt;/strong&gt; with examples for every topic.&lt;/p&gt;
+    &lt;a href=&quot;https://developer.mozilla.org&quot;
+       target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Visit MDN Web Docs&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+        </div>
+      </div>
+    </div>
+    <iframe id="ex8-preview" class="preview-frame"></iframe>
+  </div>
+</article>
+    </section>
+
+  </main>
+</div>
+
+<footer id="site-footer">K0126002 Web Programming · Gachon University · Week 2 · HTML Fundamentals</footer>
+
+<script>
+// ── Syntax highlighter (single-pass — never re-matches injected spans) ──
+function highlight(raw){
+  const e=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return raw.split('\n').map(line=>{
+    const esc=e(line);
+    // comment lines
+    if(/^\s*&lt;!--/.test(esc)) return '<span class="hc">'+esc+'</span>';
+    // single regex captures the entire tag in one shot so we never
+    // run a second regex over the <span> tags we already injected
+    return esc.replace(
+      /(&lt;\/?)([ a-zA-Z!][a-zA-Z0-9]*)((?:\s+[a-zA-Z][a-zA-Z0-9-]*(?:="[^"]*")?)*\s*)(\/?)(&gt;)/g,
+      function(_,lt,tag,attrs,sc,gt){
+        // colour attribute names and quoted values inside attrs
+        var ca=attrs.replace(/(\s+)([a-zA-Z][a-zA-Z0-9-]*)(?:="([^"]*)")?/g,
+          function(_,sp,nm,v){
+            return v!=null
+              ? sp+'<span class="ha">'+nm+'</span>=<span class="hv">"'+e(v)+'"</span>'
+              : sp+'<span class="ha">'+nm+'</span>';
+          });
+        // DOCTYPE / special: don't colour the keyword, just the angle brackets
+        if(tag[0]==='!' || tag==='DOCTYPE') return lt+tag+ca+sc+gt;
+        return lt+'<span class="ht">'+tag+'</span>'+ca+sc+gt;
+      });
+  }).join('\n');
+}
+// Apply highlighting and stash raw text before innerHTML is replaced
+document.querySelectorAll('.raw-code').forEach(function(el){
+  var code=el.querySelector('code');
+  if(code){
+    code.dataset.raw=code.textContent;
+    code.innerHTML=highlight(code.textContent);
+  }
+});
+
+// ── Copy code ─────────────────────────────────────────────
+function copyCode(btn){
+  const wrap=btn.closest('.code-wrap');
+  const raw=wrap.querySelector('code');
+  const text=raw.dataset.raw||raw.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent; btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent=orig,1500);
+  });
+}
+
+// ── Preview code block inline ─────────────────────────────
+function previewCode(btn){
+  const wrap=btn.closest('.code-wrap');
+  const raw=wrap.querySelector('code');
+  const text=raw.dataset.raw||raw.textContent;
+  // find or create preview iframe directly after this .code-wrap
+  let frame=wrap.nextElementSibling;
+  if(!frame||!frame.classList.contains('inline-preview')){
+    frame=document.createElement('iframe');
+    frame.className='inline-preview';
+    frame.style.cssText='width:100%;height:320px;border:1px solid var(--brd);'+
+      'border-radius:0 0 8px 8px;margin-top:-4px;display:none;background:#fff';
+    wrap.parentNode.insertBefore(frame,wrap.nextSibling);
+  }
+  if(frame.style.display==='none'){
+    const blob=new Blob([text],{type:'text/html'});
+    frame.src=URL.createObjectURL(blob);
+    frame.style.display='block';
+    btn.textContent='Hide Preview';
+  }else{
+    frame.style.display='none';
+    btn.textContent='Preview';
+  }
+}
+
+// ── Exercise live preview ─────────────────────────────────
+function runPreview(edId,frameId){
+  const code=document.getElementById(edId).value;
+  const frame=document.getElementById(frameId);
+  const blob=new Blob([code],{type:'text/html'});
+  frame.src=URL.createObjectURL(blob);
+  frame.style.display='block';
+}
+function toggleEl(id){
+  const el=document.getElementById(id);
+  el.hidden=!el.hidden;
+}
+
+// ── Theme toggle ──────────────────────────────────────────
+(function(){
+  const stored=localStorage.getItem('theme');
+  if(stored) document.documentElement.setAttribute('data-theme',stored);
+})();
+function toggleTheme(){
+  const r=document.documentElement;
+  const cur=r.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  document.querySelector('.theme-btn').textContent=next==='dark'?'☀ Light':'🌙 Dark';
+}
+
+// ── Sidebar active on scroll ──────────────────────────────
+const sections=document.querySelectorAll('section[id],article[id]');
+const navLinks=document.querySelectorAll('#sidebar nav a');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('active'));
+      const active=document.querySelector('#sidebar nav a[href="#'+e.target.id+'"]');
+      if(active) active.classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>obs.observe(s));
+
+// ── Mobile sidebar ────────────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+</script>
+</body>
+</html>

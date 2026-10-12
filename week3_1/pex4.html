@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; padding: 40px; }
+    .margin-box {
+      background-color: #fde68a;
+      padding: 30px;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .border-box {
+      background-color: #6b7280;
+      padding: 24px;
+      color: white;
+    }
+    .padding-box {
+      background-color: #bfdbfe;
+      padding: 24px;
+      color: #1e3a5f;
+    }
+    .content-box {
+      background-color: #ddd6fe;
+      padding: 24px;
+      color: #3730a3;
+    }
+    .layer-label {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="margin-box">
+    <span class="layer-label">🟡 Margin — outside the border</span>
+    <div class="border-box">
+      <span class="layer-label">⬛ Border — the visible edge</span>
+      <div class="padding-box">
+        <span class="layer-label">🔵 Padding — inside the border</span>
+        <div class="content-box">
+          <span class="layer-label">🟣 Content — your actual text/image</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

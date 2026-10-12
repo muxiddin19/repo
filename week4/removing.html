@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Removing Elements - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">12</span><h1>Removing Elements</h1></div>
+<div class="theory"><p><code>element.remove()</code> deletes an element from the DOM. Combined with delegation and <code>e.target.closest('li')</code>, one listener can remove any item.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>list.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+  if (e.target.matches(&#x27;.rm-btn&#x27;)) {
+    e.target.closest(&#x27;li&#x27;).remove();
+  }
+});</code></pre></div>
+<div class="demo-box"><h4>Demo - click Remove to delete items</h4>
+<ul class="items" id="rm-list"></ul>
+<div class="row"><button class="demo-btn outline sm" id="restore">&#8634; Restore items</button></div>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>element.remove()</code> removes it from the DOM.</li><li><code>closest('li')</code> finds the nearest matching ancestor.</li><li>Delegation lets one listener serve every item, even restored ones.</li></ul></div>
+<nav class="pager"><span><a href="createelement.html">&larr; createElement &amp; appendChild</a></span><span></span></nav>
+</main>
+<script>
+const list=document.getElementById('rm-list');
+const names=['Item One','Item Two','Item Three'];
+function fill(){list.innerHTML='';names.forEach(n=>{const li=document.createElement('li');li.className='rm-item';
+  li.innerHTML='<span></span><button class="demo-btn red sm rm-btn">\u2715 Remove</button>';li.firstChild.textContent=n;list.appendChild(li)})}
+list.addEventListener('click',e=>{const b=e.target.closest('.rm-btn');if(!b)return;
+  const li=b.closest('li');li.classList.add('removing');
+  setTimeout(()=>{li.remove();if(!list.children.length){list.innerHTML='<li class="empty-msg">No items left. Click "Restore items".</li>'}},250)});
+document.getElementById('restore').addEventListener('click',fill);
+fill();
+</script>
+</body>
+</html>

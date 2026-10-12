@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selecting Elements - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">02</span><h1>Selecting Elements</h1></div>
+<div class="theory"><p><code>getElementById()</code> finds one element by its <code>id</code> and returns the element object, or <code>null</code> if nothing matches. IDs must be unique on the page.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>const heading = document.getElementById(&#x27;greeting&#x27;);
+heading.textContent = &#x27;Hello, class!&#x27;;
+heading.style.color = &#x27;blue&#x27;;</code></pre></div>
+<div class="demo-box"><h4>Try it - getElementById</h4>
+<p id="target" class="box" style="font-size:20px">I am the element with id="target"</p>
+<div class="row"><button class="demo-btn yellow" id="b1">Change Text</button><button class="demo-btn" id="b2">Change Color</button><button class="demo-btn outline" id="b3">Reset</button></div>
+<pre class="out" id="code">// Click a button to see the code that ran</pre>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>getElementById('id')</code> returns one element or <code>null</code>.</li><li>The element has properties such as <code>.textContent</code>, <code>.style</code>, <code>.classList</code>.</li><li>IDs must be unique on the page.</li></ul></div>
+<nav class="pager"><span><a href="dom.html">&larr; What is the DOM?</a></span><span><a href="queryselector.html">querySelector &amp; querySelectorAll &rarr;</a></span></nav>
+</main>
+<script>
+const el=document.getElementById('target'),code=document.getElementById('code'),orig=el.textContent;
+document.getElementById('b1').addEventListener('click',()=>{el.textContent='Text changed by JavaScript!';code.textContent="document.getElementById('target').textContent = '...';"});
+document.getElementById('b2').addEventListener('click',()=>{el.style.color='#1a56db';el.style.background='#e0eaff';code.textContent="el.style.color = '#1a56db';\nel.style.background = '#e0eaff';"});
+document.getElementById('b3').addEventListener('click',()=>{el.textContent=orig;el.style.color='';el.style.background='';code.textContent='// reset'});
+</script>
+</body>
+</html>

@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Introduction — Week 3 Monday Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f9fa;--surf:#fff;--surf2:#f0f4f8;--brd:#dee2e6;
+  --tx:#212529;--mu:#6c757d;--ac:#15803d;--acl:#dcfce7;
+  --am:#b8860b;--cb:#0d1117;--ct:#e6edf3;
+  --lime:#166534;--cor:#c0392b;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#051a0a;--surf:#0b2017;--surf2:#102b1a;--brd:#1a3d28;
+  --tx:#d4edda;--mu:#4a9060;--ac:#10B981;--acl:#052e16;
+  --am:#FFD166;--cb:#051a0a;--ct:#d4edda;--lime:#34d399;--cor:#FF6B6B;
+}}
+:root[data-theme=dark]{
+  --bg:#051a0a;--surf:#0b2017;--surf2:#102b1a;--brd:#1a3d28;
+  --tx:#d4edda;--mu:#4a9060;--ac:#10B981;--acl:#052e16;
+  --am:#FFD166;--cb:#051a0a;--ct:#d4edda;--lime:#34d399;--cor:#FF6B6B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+#site-header{position:sticky;top:0;z-index:100;background:var(--surf);
+  border-bottom:1px solid var(--brd);border-left:4px solid var(--ac);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-course{font-size:11px;color:var(--mu);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:var(--ac)}
+.theme-btn{background:var(--surf2);border:1px solid var(--brd);color:var(--tx);
+  padding:5px 12px;border-radius:20px;cursor:pointer;font-size:13px;white-space:nowrap}
+.theme-btn:hover{background:var(--acl)}
+#layout{display:flex;min-height:calc(100vh - 53px)}
+#sidebar{width:240px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--brd);
+  position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto;padding:12px 0}
+#sidebar nav a{display:flex;align-items:center;gap:8px;padding:5px 16px;
+  font-size:13px;color:var(--mu);border-left:3px solid transparent;transition:all .15s}
+#sidebar nav a:hover{color:var(--tx);background:var(--surf2);text-decoration:none}
+#sidebar nav a.active{color:var(--ac);border-left-color:var(--ac);background:var(--acl);font-weight:600}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);min-width:24px}
+.nav-section-label{padding:12px 16px 4px;font-size:10px;font-weight:700;color:var(--mu);
+  letter-spacing:.08em;text-transform:uppercase}
+#main{flex:1;padding:36px 44px;max-width:900px}
+.topic-section{margin-bottom:52px;padding-bottom:40px;border-bottom:1px solid var(--brd)}
+.topic-section:last-child{border-bottom:none}
+.topic-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ac);
+  background:var(--acl);padding:2px 8px;border-radius:4px;font-weight:700}
+.topic-header h2{font-size:22px;font-weight:700;color:var(--tx)}
+.quiz-badge{font-size:11px;background:var(--am);color:#000;
+  padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.topic-theory{margin-bottom:18px}
+.topic-theory p{margin-bottom:10px;color:var(--tx)}
+.code-wrap{position:relative;margin:16px 0;border-radius:8px;overflow:hidden;border:1px solid var(--brd)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);padding:6px 12px;border-bottom:1px solid var(--brd)}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ac);font-weight:600}
+.code-btns{display:flex;gap:6px}
+.code-btns button{background:transparent;border:1px solid var(--brd);color:var(--mu);
+  padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.code-btns button:hover{color:var(--ac);border-color:var(--ac);background:var(--acl)}
+.code-block{background:var(--cb);padding:18px 20px;overflow-x:auto;margin:0}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--ct);white-space:pre}
+.keypoints{background:var(--acl);border-left:4px solid var(--ac);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin-top:16px}
+.keypoints h4{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:8px}
+.keypoints ul{padding-left:18px}
+.keypoints li{font-size:14px;color:var(--tx);margin-bottom:4px}
+#exercises{margin-top:60px}
+#exercises>h2{font-size:28px;font-weight:800;color:var(--tx);margin-bottom:8px}
+#exercises>.intro{color:var(--mu);margin-bottom:32px;font-size:15px}
+.exercise{background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  margin-bottom:32px;overflow:hidden}
+.ex-header{display:flex;align-items:center;gap:12px;padding:16px 20px;
+  background:var(--surf2);border-bottom:1px solid var(--brd)}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--ac)}
+.ex-header h3{font-size:17px;font-weight:700;flex:1}
+.diff{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.diff.beginner{background:#e6f7f4;color:#0a7a65}
+.diff.intermediate{background:#fff3cd;color:#856404}
+.diff.advanced{background:#f8d7da;color:#842029}
+:root[data-theme=dark] .diff.beginner,:root:not([data-theme=light]) .diff.beginner{background:#052e16;color:#10B981}
+:root[data-theme=dark] .diff.intermediate,:root:not([data-theme=light]) .diff.intermediate{background:#2a200a;color:#FFD166}
+:root[data-theme=dark] .diff.advanced,:root:not([data-theme=light]) .diff.advanced{background:#2a0a0a;color:#FF6B6B}
+.ex-body{padding:20px}
+.ex-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:8px}
+.task-box{background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:14px 16px;margin-bottom:16px;font-size:15px}
+.editor-area{margin-top:16px}
+textarea.code-editor{width:100%;min-height:200px;background:var(--cb);color:var(--ct);
+  font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px;
+  border:1px solid var(--brd);border-radius:6px;resize:vertical;line-height:1.6}
+.ex-btns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ex-btns button{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--brd);transition:all .15s}
+.btn-preview{background:var(--ac);color:#f0fdf4;border-color:var(--ac)}
+.btn-preview:hover{opacity:.88}
+.btn-hint{background:var(--surf2);color:var(--tx)}
+.btn-hint:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sol{background:var(--surf2);color:var(--tx)}
+.btn-sol:hover{border-color:var(--lime);color:var(--lime)}
+.hint-box,.solution-box{margin-top:12px;padding:14px 16px;border-radius:6px;font-size:14px}
+.hint-box{background:var(--acl);border-left:3px solid var(--ac);color:var(--tx)}
+.solution-box .code-block{border-radius:6px;overflow:hidden;margin:0}
+.preview-frame{width:100%;height:340px;border:1px solid var(--brd);
+  border-radius:6px;margin-top:10px;background:#fff;display:none}
+#site-footer{text-align:center;padding:24px;color:var(--mu);font-size:13px;
+  border-top:1px solid var(--brd);margin-top:40px}
+@media(max-width:768px){
+  #sidebar{display:none;position:fixed;top:53px;left:0;height:calc(100vh - 53px);
+    z-index:90;box-shadow:4px 0 20px rgba(0,0,0,.3)}
+  #sidebar.open{display:block}
+  #main{padding:20px 16px}
+  .mobile-menu-btn{display:block!important}
+}
+.mobile-menu-btn{display:none;background:var(--surf2);border:1px solid var(--brd);
+  color:var(--tx);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:18px}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
+    <div class="hdr-left">
+      <span class="hdr-course">K0126002 &middot; Web Programming &middot; Gachon University</span>
+      <span class="hdr-title">Week 3 Monday &middot; CSS Introduction &mdash; Study Guide</span>
+    </div>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">&#127769; Dark</button>
+</header>
+
+<div id="layout">
+  <aside id="sidebar"><nav><div class="nav-section-label">Topics 1–7: Selectors & Syntax</div><a href="#topic-01"><span class="nav-num">01</span>What is CSS?</a><a href="#topic-02"><span class="nav-num">02</span>Three Ways to Add CSS</a><a href="#topic-03"><span class="nav-num">03</span>CSS Syntax</a><a href="#topic-04"><span class="nav-num">04</span>Universal Selector (*)</a><a href="#topic-05"><span class="nav-num">05</span>ID Selector (#id)</a><a href="#topic-06"><span class="nav-num">06</span>Class Selector (.class)</a><a href="#topic-07"><span class="nav-num">07</span>Type / Element Selector</a><div class="nav-section-label">Topics 8–12: Colours</div><a href="#topic-08"><span class="nav-num">08</span>color Property</a><a href="#topic-09"><span class="nav-num">09</span>background-color Property</a><a href="#topic-10"><span class="nav-num">10</span>Hex Color Codes</a><a href="#topic-11"><span class="nav-num">11</span>RGB Color Values</a><a href="#topic-12"><span class="nav-num">12</span>font-size Property</a><div class="nav-section-label">Topics 13–18: Text & Box Model</div><a href="#topic-13"><span class="nav-num">13</span>font-weight Property</a><a href="#topic-14"><span class="nav-num">14</span>font-style Property</a><a href="#topic-15"><span class="nav-num">15</span>text-align Property</a><a href="#topic-16"><span class="nav-num">16</span>Box Model: Padding</a><a href="#topic-17"><span class="nav-num">17</span>Box Model: Margin</a><a href="#topic-18"><span class="nav-num">18</span>Box Model Width Calc.</a><div class="nav-section-label">Topics 19–25: Display & Cascade</div><a href="#topic-19"><span class="nav-num">19</span>display: block</a><a href="#topic-20"><span class="nav-num">20</span>display: none</a><a href="#topic-21"><span class="nav-num">21</span>display: flex</a><a href="#topic-22"><span class="nav-num">22</span>CSS Specificity</a><a href="#topic-23"><span class="nav-num">23</span>Which Selector Wins?</a><a href="#topic-24"><span class="nav-num">24</span>CSS Comments</a><a href="#topic-25"><span class="nav-num">25</span>Putting It All Together</a><div class="nav-section-label">Practice</div><a href="#exercise-1"><span class="nav-num" style="color:var(--am)">E1</span>Style Your First Heading</a><a href="#exercise-2"><span class="nav-num" style="color:var(--am)">E2</span>Three Ways — Spot the Difference</a><a href="#exercise-3"><span class="nav-num" style="color:var(--am)">E3</span>Color Palette Card</a><a href="#exercise-4"><span class="nav-num" style="color:var(--am)">E4</span>Box Model Explorer</a><a href="#exercise-5"><span class="nav-num" style="color:var(--am)">E5</span>Fix the Broken CSS</a><a href="#exercise-6"><span class="nav-num" style="color:var(--am)">E6</span>Flexbox Navigation Bar</a><a href="#exercise-7"><span class="nav-num" style="color:var(--am)">E7</span>Profile Card with CSS</a><a href="#exercise-8"><span class="nav-num" style="color:var(--am)">E8</span>Full Style Sheet</a></nav></aside>
+  <main id="main">
+
+    <section style="margin-bottom:40px">
+      <h1 style="font-size:32px;font-weight:800;margin-bottom:8px">CSS Introduction</h1>
+      <p style="color:var(--mu);font-size:15px">25 topics &middot; 8 interactive exercises &middot; covers all Week 3 Monday quiz questions</p>
+      <p style="margin-top:12px;font-size:15px">This guide covers every topic tested in the Week 3 Monday quiz.
+      Each topic includes theory, a live code example you can preview, and key points.
+      After the 25 topics, practise your skills in the <a href="#exercises">exercises section</a>
+      &mdash; write CSS in the editor and see the result instantly.</p>
+    </section>
+
+
+<section class="topic-section" id="topic-01">
+  <div class="topic-header">
+    <span class="topic-num">01</span>
+    <h2>What is CSS?</h2>
+    <span class="quiz-badge">Q1</span>
+  </div>
+  <div class="topic-theory"><p>CSS stands for <strong>Cascading Style Sheets</strong>. While HTML describes the <em>structure</em> of a page (headings, paragraphs, lists), CSS controls its <em>visual appearance</em>: colours, fonts, spacing, layout, and animation. Without CSS every web page would look like a plain text document — black text on white, no styling at all.</p><p>The word <strong>Cascading</strong> is the most important part of the name. When multiple CSS rules target the same element, a set of rules called the <em>cascade</em> determines which one wins based on specificity and order. You will learn the cascade rules in topic 22–23. CSS is the second language you learn in this course; HTML must come first because CSS has nothing to style without it.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;CSS Demo&lt;/title&gt;
+  &lt;style&gt;
+    /* Without this CSS block the page looks plain */
+    body  { font-family: sans-serif; background: #f0f9ff; color: #1e293b; }
+    h1    { color: #15803d; font-size: 2rem; }
+    p     { max-width: 60ch; line-height: 1.7; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, CSS!&lt;/h1&gt;
+  &lt;p&gt;This heading is green and the background is light blue —
+     all controlled by CSS, not HTML.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>CSS = Cascading Style Sheets — controls appearance, not structure.</li><li>HTML is structure; CSS is style; JavaScript is behaviour.</li><li>'Cascading' = rules with higher specificity or later position win.</li><li>CSS3 is the current standard, split into separate modules.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-02">
+  <div class="topic-header">
+    <span class="topic-num">02</span>
+    <h2>Three Ways to Add CSS</h2>
+    <span class="quiz-badge">Q2</span> <span class="quiz-badge">Q3</span>
+  </div>
+  <div class="topic-theory"><p>There are exactly three ways to connect CSS to HTML. <strong>External stylesheet</strong>: write CSS in a separate <code>.css</code> file and link it with <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> inside <code>&lt;head&gt;</code>. <strong>Internal (embedded)</strong>: write CSS inside a <code>&lt;style&gt;</code> block in <code>&lt;head&gt;</code>. <strong>Inline</strong>: write CSS directly on an element with the <code>style</code> attribute.</p><p>For any website larger than one page, <strong>external stylesheets are always best</strong>: one CSS file styles every page — change the file and every page updates instantly. Internal styles are useful for quick demos or email HTML. Inline styles should only be used as a last resort (e.g., dynamically set by JavaScript) because they are almost impossible to override and mix structure with style.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+
+  &lt;!-- METHOD 1: External stylesheet (BEST for real projects) --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+
+  &lt;!-- METHOD 2: Internal &lt;style&gt; block (good for single pages / demos) --&gt;
+  &lt;style&gt;
+    h2 { color: #15803d; }
+    p  { font-family: Georgia, serif; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- METHOD 3: Inline style attribute (avoid — hard to maintain) --&gt;
+  &lt;p style=&quot;color: red; font-size: 20px;&quot;&gt;Inline styled paragraph.&lt;/p&gt;
+
+  &lt;h2&gt;Internal style heading&lt;/h2&gt;
+  &lt;p&gt;Internal style paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>External .css file — best: reuse across pages, change once to update all.</li><li>Internal &lt;style&gt; block — acceptable for demos and single pages.</li><li>Inline style='' — last resort; mixes structure with presentation.</li><li>All three can co-exist but external is the professional standard.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-03">
+  <div class="topic-header">
+    <span class="topic-num">03</span>
+    <h2>CSS Syntax</h2>
+    <span class="quiz-badge">Q4</span>
+  </div>
+  <div class="topic-theory"><p>Every CSS rule follows the same structure: <code>selector { property: value; }</code>. The <strong>selector</strong> targets which HTML element(s) to style. The <strong>property</strong> names what to change (e.g. <code>color</code>, <code>font-size</code>). The <strong>value</strong> sets how much or what (e.g. <code>red</code>, <code>18px</code>). The property and value are separated by a <strong>colon</strong> and the declaration ends with a <strong>semicolon</strong>.</p><p>A rule block can contain many property-value pairs, each on its own line for readability. Forgetting the <strong>colon</strong> (not an equals sign!) or the semicolon between rules are the two most common CSS syntax errors. CSS is case-insensitive for property names and most values, but it is good practice to write them in lowercase.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>/* Basic CSS rule anatomy */
+selector {
+  property: value;       /* one declaration */
+  property: value;       /* another declaration */
+}
+
+/* Real examples */
+h1 {
+  color: #15803d;        /* text colour */
+  font-size: 2rem;       /* size */
+  font-weight: bold;     /* weight */
+  text-align: center;    /* alignment */
+}
+
+p {
+  line-height: 1.7;      /* space between lines */
+  max-width: 65ch;       /* column width */
+}
+
+/* Common mistakes */
+/* h1 { color = red }    ← = instead of : → WRONG */
+/* h1 { color: red }     ← missing semicolon → risky */</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Syntax: selector { property: value; }</li><li>Colon (:) between property and value — NOT equals sign (=).</li><li>Semicolon (;) after every declaration.</li><li>One block can hold many declarations — one per line for readability.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-04">
+  <div class="topic-header">
+    <span class="topic-num">04</span>
+    <h2>The Universal Selector (*)</h2>
+    <span class="quiz-badge">Q5</span>
+  </div>
+  <div class="topic-theory"><p>The <strong>universal selector</strong> <code>*</code> matches <em>every single element</em> on the page. It is most commonly used in a CSS reset at the top of a stylesheet to remove browser default margins and set <code>box-sizing: border-box</code> — a setting that makes layout calculations much more predictable.</p><p>Using <code>*</code> for general styling (e.g. <code>* { color: red; }</code>) is a bad practice because it overrides every element indiscriminately and can harm performance. In the box-model reset below, it is an accepted professional pattern and appears in virtually every modern CSS framework.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>/* ── The classic CSS reset using * ── */
+*, *::before, *::after {
+  box-sizing: border-box; /* padding/border included in width — very useful */
+  margin: 0;
+  padding: 0;
+}
+
+/* Now you add styles on top cleanly */
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* Avoid this — affects every element */
+/* * { color: blue; } ← too aggressive! */</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>* = universal selector — targets every element on the page.</li><li>Most useful in a CSS reset: *, *::before, *::after { box-sizing: border-box; }</li><li>box-sizing: border-box makes padding included in the element's width.</li><li>Avoid using * for general styling — it overrides everything.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-05">
+  <div class="topic-header">
+    <span class="topic-num">05</span>
+    <h2>ID Selector (#id)</h2>
+    <span class="quiz-badge">Q6</span>
+  </div>
+  <div class="topic-theory"><p>An ID selector begins with a <strong>#</strong> (hash). It matches the one element on the page with a matching <code>id</code> attribute. Because IDs must be unique per page (<em>only one element can have a given id</em>), ID selectors apply to exactly one element.</p><p>ID selectors have <strong>very high specificity</strong> — they beat class and type selectors in a specificity conflict. This makes them hard to override later, which is why many developers prefer class selectors for styling and reserve IDs for JavaScript targeting and in-page anchor links.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* ID selector — targets the ONE element with id=&quot;main-title&quot; */
+    #main-title {
+      color: #15803d;
+      font-size: 2.5rem;
+      border-left: 5px solid #10B981;
+      padding-left: 12px;
+    }
+
+    #hero-banner {
+      background: #ecfdf5;
+      padding: 40px;
+      border-radius: 12px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;hero-banner&quot;&gt;
+    &lt;h1 id=&quot;main-title&quot;&gt;CSS Introduction&lt;/h1&gt;
+    &lt;p&gt;This heading is styled via its unique id.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li># prefix: #idName targets the element with id='idName'.</li><li>ID must be unique — only ONE element per page can have a given id.</li><li>High specificity — harder to override than class or type selectors.</li><li>Prefer classes for styling; reserve IDs for JS and anchor links.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-06">
+  <div class="topic-header">
+    <span class="topic-num">06</span>
+    <h2>Class Selector (.class)</h2>
+    <span class="quiz-badge">Q7</span>
+  </div>
+  <div class="topic-theory"><p>A class selector begins with a <strong>.</strong> (dot/period). It matches all elements that have the matching <code>class</code> attribute. The same class can be applied to many elements, and one element can have multiple classes: <code>class="card featured large"</code>.</p><p>Classes are the <strong>primary tool for CSS styling</strong> in professional development. Write a CSS class once, reuse it on any element. This is the basis of CSS frameworks like Bootstrap and Tailwind. Naming conventions: use lowercase kebab-case (<code>.main-nav</code>, <code>.product-card</code>).</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px;
+    }
+
+    .featured {          /* extra class layered on top */
+      border-color: #10B981;
+      background: #ecfdf5;
+    }
+
+    .large { font-size: 1.25rem; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;Plain card&lt;/div&gt;
+  &lt;div class=&quot;card featured&quot;&gt;Featured card (two classes)&lt;/div&gt;
+  &lt;div class=&quot;card featured large&quot;&gt;Featured + large (three classes)&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>. prefix: .className targets all elements with that class.</li><li>Reusable — same class can be applied to many elements.</li><li>One element can carry multiple classes (space-separated).</li><li>Classes are the primary styling tool in professional CSS.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-07">
+  <div class="topic-header">
+    <span class="topic-num">07</span>
+    <h2>Type / Element Selector</h2>
+    <span class="quiz-badge">Q8</span>
+  </div>
+  <div class="topic-theory"><p>A <strong>type selector</strong> (also called element selector) matches every HTML element of that tag name. Writing <code>p { color: navy; }</code> applies to <em>every</em> <code>&lt;p&gt;</code> on the page. These selectors set baseline styles for the whole site.</p><p>Type selectors have the <strong>lowest specificity</strong> of the three basic selector types (lower than class and ID). This is intentional: you set a sensible default with a type selector, then refine it for specific elements using classes or IDs. Combining selectors is also common: <code>p.intro</code> targets only paragraphs with class <code>intro</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Type selectors — apply to every element of that type */
+    h1 { color: #15803d; }
+    h2 { color: #1d4ed8; font-size: 1.4rem; }
+    p  { font-size: 1rem; line-height: 1.7; color: #334155; }
+    a  { color: #10B981; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Combination: only &lt;p&gt; with class=&quot;lead&quot; */
+    p.lead { font-size: 1.2rem; font-weight: 500; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Main Heading — green&lt;/h1&gt;
+  &lt;h2&gt;Sub Heading — blue&lt;/h2&gt;
+  &lt;p class=&quot;lead&quot;&gt;Lead paragraph (larger).&lt;/p&gt;
+  &lt;p&gt;Normal paragraph. &lt;a href=&quot;#&quot;&gt;A link.&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Type selector: just the tag name — p, h1, a, div.</li><li>Targets EVERY element of that tag on the page.</li><li>Lowest specificity — easily overridden by classes and IDs.</li><li>Combine: p.intro targets only &lt;p class='intro'&gt; elements.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-08">
+  <div class="topic-header">
+    <span class="topic-num">08</span>
+    <h2>The color Property</h2>
+    <span class="quiz-badge">Q9</span>
+  </div>
+  <div class="topic-theory"><p>The CSS <code>color</code> property sets the <strong>foreground (text) colour</strong> of an element. It accepts named colours (<code>red</code>, <code>navy</code>, <code>tomato</code>), hex codes (<code>#15803d</code>), RGB values (<code>rgb(21,128,61)</code>), and HSL values (<code>hsl(142,72%,29%)</code>). The property is inherited — setting <code>color</code> on <code>body</code> applies to all text on the page unless overridden.</p><p>Note: <code>color</code> only affects text and the currentColor of borders/outlines — it does <em>not</em> change the background. For background colour, use <code>background-color</code> (topic 9). Korean students often confuse these two. Remember: <code>color</code> = text; <code>background-color</code> = fill behind text.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body    { color: #1e293b; }          /* all text inherits this */
+
+    .red    { color: red; }              /* named colour */
+    .green  { color: #15803d; }          /* hex colour */
+    .blue   { color: rgb(29, 78, 216); } /* rgb() */
+    .purple { color: hsl(262, 83%, 58%); }/* hsl() */
+    .muted  { color: #94a3b8; }          /* muted/grey */
+
+    /* color on a heading — children inherit it */
+    h2 { color: #10B981; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;All these paragraphs use color:&lt;/h2&gt;
+  &lt;p class=&quot;red&quot;&gt;Named colour: red&lt;/p&gt;
+  &lt;p class=&quot;green&quot;&gt;Hex colour: #15803d&lt;/p&gt;
+  &lt;p class=&quot;blue&quot;&gt;RGB colour: rgb(29, 78, 216)&lt;/p&gt;
+  &lt;p class=&quot;purple&quot;&gt;HSL colour: hsl(262, 83%, 58%)&lt;/p&gt;
+  &lt;p class=&quot;muted&quot;&gt;Muted grey text&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>color = foreground (TEXT) colour — not background.</li><li>Accepts: named (red), hex (#ff0000), rgb(), hsl().</li><li>color is inherited — set on body to apply to all text.</li><li>To change background: use background-color (different property).</li></ul></div>
+</section>
+<section class="topic-section" id="topic-09">
+  <div class="topic-header">
+    <span class="topic-num">09</span>
+    <h2>background-color Property</h2>
+    <span class="quiz-badge">Q10</span>
+  </div>
+  <div class="topic-theory"><p>The <code>background-color</code> property fills the area behind an element's content with a colour. It accepts the same colour formats as the <code>color</code> property: named colours, hex codes, <code>rgb()</code>, and <code>hsl()</code>. The default value is <code>transparent</code>, which lets the parent's background show through.</p><p>Pairing <code>color</code> and <code>background-color</code> correctly is crucial for accessibility. The <strong>contrast ratio</strong> between text and background must be at least 4.5:1 (WCAG AA standard). Very light text on white or very dark text on black always fails. Tools like the WebAIM Contrast Checker help verify this.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .banner {
+      background-color: #15803d;
+      color: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+    }
+
+    .warning {
+      background-color: #fef3c7;   /* amber-50 */
+      color: #92400e;              /* amber-800 */
+      padding: 12px 16px;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .dark-card {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;banner&quot;&gt;Green banner — white text (high contrast)&lt;/div&gt;
+  &lt;br&gt;
+  &lt;div class=&quot;warning&quot;&gt;⚠ Warning box — amber background&lt;/div&gt;
+  &lt;br&gt;
+  &lt;div class=&quot;dark-card&quot;&gt;Dark card — light text&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>background-color fills the area behind an element's content.</li><li>Default is transparent — parent background shows through.</li><li>Same colour formats as color: named, hex, rgb(), hsl().</li><li>Ensure contrast ratio ≥ 4.5:1 for readable text (WCAG AA).</li></ul></div>
+</section>
+<section class="topic-section" id="topic-10">
+  <div class="topic-header">
+    <span class="topic-num">10</span>
+    <h2>Hex Color Codes</h2>
+    <span class="quiz-badge">Q11</span>
+  </div>
+  <div class="topic-theory"><p>A hex colour code starts with <code>#</code> followed by six hexadecimal digits (0–9, A–F): <code>#RRGGBB</code>. The first two digits set the Red channel, the next two Green, and the last two Blue. Each channel ranges from <code>00</code> (none) to <code>FF</code> (maximum). So <code>#FF0000</code> = pure red, <code>#00FF00</code> = pure green, <code>#0000FF</code> = pure blue.</p><p>A 3-digit shorthand exists when each pair repeats: <code>#RGB</code>. So <code>#F00</code> = <code>#FF0000</code> (red), <code>#0F0</code> = <code>#00FF00</code> (green), <code>#FFF</code> = <code>#FFFFFF</code> (white). Hex codes are the most widely used CSS colour format — every design tool (Figma, Photoshop, Canva) exports colours as hex.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* #RRGGBB — Red / Green / Blue, each 00–FF */
+    .red    { background-color: #FF0000; }   /* pure red   (FF,00,00) */
+    .green  { background-color: #00FF00; }   /* pure green (00,FF,00) */
+    .blue   { background-color: #0000FF; color: white; }  /* pure blue */
+    .white  { background-color: #FFFFFF; border: 1px solid #ccc; }
+    .black  { background-color: #000000; color: white; }
+    .custom { background-color: #10B981; color: white; } /* emerald */
+
+    /* Shorthand — only when each pair repeats */
+    .short-red { background-color: #F00; }   /* same as #FF0000 */
+
+    div { padding: 8px 16px; margin: 4px; display: inline-block; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;red&quot;&gt;#FF0000 Red&lt;/div&gt;
+  &lt;div class=&quot;green&quot;&gt;#00FF00 Green&lt;/div&gt;
+  &lt;div class=&quot;blue&quot;&gt;#0000FF Blue&lt;/div&gt;
+  &lt;div class=&quot;white&quot;&gt;#FFFFFF White&lt;/div&gt;
+  &lt;div class=&quot;black&quot;&gt;#000000 Black&lt;/div&gt;
+  &lt;div class=&quot;custom&quot;&gt;#10B981 Emerald&lt;/div&gt;
+  &lt;div class=&quot;short-red&quot;&gt;#F00 (shorthand)&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>#RRGGBB — 6 hex digits for Red, Green, Blue (each 00–FF).</li><li>#FF0000 = red, #00FF00 = green, #0000FF = blue, #FFFFFF = white.</li><li>Shorthand #RGB when each pair repeats: #F00 = #FF0000.</li><li>Most common format — all design tools export hex codes.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-11">
+  <div class="topic-header">
+    <span class="topic-num">11</span>
+    <h2>RGB Color Values</h2>
+    <span class="quiz-badge">Q12</span>
+  </div>
+  <div class="topic-theory"><p>The <code>rgb()</code> function takes three numbers (0–255) for Red, Green, and Blue: <code>rgb(255, 0, 0)</code> is pure red. It produces the same colours as hex codes but is easier to read and adjust: incrementing the red value slightly is more intuitive than guessing hex digits.</p><p>The <code>rgba()</code> function adds a fourth parameter — <strong>alpha</strong> (transparency) from 0 (fully transparent) to 1 (fully opaque). Modern CSS also supports a one-function form: <code>rgb(255 0 0 / 50%)</code> without commas. Use <code>rgba()</code> to create translucent overlays, subtle shadows, and glassmorphism effects.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* rgb(Red 0-255, Green 0-255, Blue 0-255) */
+    .ex1 { background-color: rgb(255, 0, 0); color: white; }   /* red  */
+    .ex2 { background-color: rgb(21, 128, 61); color: white; } /* green*/
+    .ex3 { background-color: rgb(29, 78, 216); color: white; } /* blue */
+    .ex4 { background-color: rgb(100, 100, 100); color: white; }/* grey*/
+
+    /* rgba — 4th value = alpha (opacity 0.0–1.0) */
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black */
+      color: white;
+      padding: 20px;
+    }
+    .glass {
+      background-color: rgba(21, 128, 61, 0.15); /* translucent green */
+      border: 1px solid rgba(21, 128, 61, 0.4);
+      padding: 12px;
+    }
+    div { padding: 8px 16px; margin: 6px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;ex1&quot;&gt;rgb(255, 0, 0) — Red&lt;/div&gt;
+  &lt;div class=&quot;ex2&quot;&gt;rgb(21, 128, 61) — Green&lt;/div&gt;
+  &lt;div class=&quot;ex3&quot;&gt;rgb(29, 78, 216) — Blue&lt;/div&gt;
+  &lt;div class=&quot;ex4&quot;&gt;rgb(100, 100, 100) — Grey&lt;/div&gt;
+  &lt;div class=&quot;overlay&quot;&gt;rgba(0,0,0,0.5) — 50% black overlay&lt;/div&gt;
+  &lt;div class=&quot;glass&quot;&gt;rgba green 15% — glassmorphism card&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>rgb(R, G, B) — three values 0–255 for Red, Green, Blue.</li><li>rgb(255,0,0) = red; rgb(0,0,0) = black; rgb(255,255,255) = white.</li><li>rgba() adds alpha (opacity): 0 = invisible, 1 = fully opaque.</li><li>Use rgba() for overlays, shadows, and translucent effects.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-12">
+  <div class="topic-header">
+    <span class="topic-num">12</span>
+    <h2>font-size Property</h2>
+    <span class="quiz-badge">Q13</span>
+  </div>
+  <div class="topic-theory"><p>The <code>font-size</code> property sets how large text appears. Units: <strong>px</strong> (pixels, fixed), <strong>rem</strong> (relative to root &lt;html&gt; font-size, typically 16px — so <code>1rem = 16px</code>), <strong>em</strong> (relative to parent element's font-size), and <strong>%</strong> (percent of parent). Rem is the preferred unit for font sizes in modern development because it respects the user's browser font-size preference.</p><p>Avoid setting <code>font-size</code> in px on the root <code>html</code> element — this breaks user font-size preferences (an accessibility concern). Instead set <code>html { font-size: 100%; }</code> (keeping the browser default) and use <code>rem</code> units throughout. A standard type scale: body = 1rem, h3 = 1.25rem, h2 = 1.5rem, h1 = 2rem.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    html { font-size: 100%; } /* keep browser default (usually 16px) */
+
+    /* px — fixed, does not scale with user preferences */
+    .px-example { font-size: 18px; }
+
+    /* rem — relative to root html (1rem = 16px by default) */
+    .rem-example { font-size: 1.5rem; }  /* 24px */
+
+    /* em — relative to PARENT element */
+    .parent { font-size: 20px; }
+    .child-em { font-size: 1.5em; } /* 30px (1.5 × 20px parent) */
+
+    /* Type scale using rem */
+    .scale-sm  { font-size: 0.875rem; } /* 14px */
+    .scale-base{ font-size: 1rem; }     /* 16px */
+    .scale-lg  { font-size: 1.25rem; }  /* 20px */
+    .scale-xl  { font-size: 1.5rem; }   /* 24px */
+    .scale-2xl { font-size: 2rem; }     /* 32px */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p class=&quot;scale-sm&quot;&gt;0.875rem — small text&lt;/p&gt;
+  &lt;p class=&quot;scale-base&quot;&gt;1rem — base body text&lt;/p&gt;
+  &lt;p class=&quot;scale-lg&quot;&gt;1.25rem — large text&lt;/p&gt;
+  &lt;p class=&quot;scale-xl&quot;&gt;1.5rem — extra large&lt;/p&gt;
+  &lt;p class=&quot;scale-2xl&quot;&gt;2rem — heading size&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>font-size sets text size. Units: px, rem, em, %.</li><li>rem = relative to root html (1rem ≈ 16px). Preferred unit.</li><li>em = relative to parent element font-size (can compound).</li><li>Never lock html { font-size: 12px } — breaks accessibility.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-13">
+  <div class="topic-header">
+    <span class="topic-num">13</span>
+    <h2>font-weight Property</h2>
+    <span class="quiz-badge">Q14</span>
+  </div>
+  <div class="topic-theory"><p>The <code>font-weight</code> property sets how <strong>thick or thin</strong> text appears. Named values: <code>normal</code> (400) and <code>bold</code> (700). Numeric values 100–900 in steps of 100 give finer control when the font provides multiple weights: 300 (light), 400 (normal), 500 (medium), 600 (semibold), 700 (bold), 800 (extrabold), 900 (black).</p><p>The numeric weight only works if the loaded font actually includes that weight. Google Fonts requires you to specify which weights to load in the URL: <code>family=Inter:wght@400;500;600;700</code>. Requesting a weight the font does not have causes the browser to <em>synthesise</em> it by stretching or thickening the nearest available weight, which looks worse than the real weight.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+  &lt;style&gt;
+    body { font-family: 'Inter', sans-serif; font-size: 1.1rem; }
+
+    /* Named values */
+    .normal { font-weight: normal; }  /* = 400 */
+    .bold   { font-weight: bold; }    /* = 700 */
+
+    /* Numeric values */
+    .w300 { font-weight: 300; }  /* Light */
+    .w400 { font-weight: 400; }  /* Regular */
+    .w500 { font-weight: 500; }  /* Medium */
+    .w600 { font-weight: 600; }  /* SemiBold */
+    .w700 { font-weight: 700; }  /* Bold */
+    .w900 { font-weight: 900; }  /* Black */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p class=&quot;w300&quot;&gt;300 — Light&lt;/p&gt;
+  &lt;p class=&quot;w400&quot;&gt;400 — Regular (normal)&lt;/p&gt;
+  &lt;p class=&quot;w500&quot;&gt;500 — Medium&lt;/p&gt;
+  &lt;p class=&quot;w600&quot;&gt;600 — SemiBold&lt;/p&gt;
+  &lt;p class=&quot;w700&quot;&gt;700 — Bold&lt;/p&gt;
+  &lt;p class=&quot;w900&quot;&gt;900 — Black&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>font-weight: normal (400) or bold (700) — or numeric 100–900.</li><li>100 = Thin, 300 = Light, 400 = Regular, 700 = Bold, 900 = Black.</li><li>Numeric weights only work if the font includes that weight.</li><li>Google Fonts: request weights in URL — family=Inter:wght@400;700.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-14">
+  <div class="topic-header">
+    <span class="topic-num">14</span>
+    <h2>font-style Property</h2>
+    <span class="quiz-badge">Q15</span>
+  </div>
+  <div class="topic-theory"><p>The <code>font-style</code> property controls whether text is displayed in <strong>italic</strong> or <strong>oblique</strong> (slanted) style. Values: <code>normal</code> (default upright), <code>italic</code> (the font's true italic variant, redrawn at a slight angle with different letterforms), and <code>oblique</code> (the browser slants the normal font artificially).</p><p>Use the CSS <code>font-style: italic</code> in preference to the HTML <code>&lt;i&gt;</code> element when the italic is purely visual with no semantic meaning. Reserve the HTML <code>&lt;em&gt;</code> element (which also renders italic by default) for text with <em>actual</em> semantic emphasis that changes the meaning of a sentence.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .normal  { font-style: normal; }
+    .italic  { font-style: italic; }
+    .oblique { font-style: oblique; } /* artificial slant */
+
+    /* Practical use: labels, captions, quotes */
+    blockquote {
+      font-style: italic;
+      color: #64748b;
+      border-left: 3px solid #10B981;
+      padding-left: 16px;
+    }
+
+    .caption {
+      font-style: italic;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p class=&quot;normal&quot;&gt;Normal — upright text&lt;/p&gt;
+  &lt;p class=&quot;italic&quot;&gt;Italic — true italic letterforms&lt;/p&gt;
+  &lt;p class=&quot;oblique&quot;&gt;Oblique — artificially slanted&lt;/p&gt;
+  &lt;br&gt;
+  &lt;blockquote&gt;&quot;CSS is the language of the web's visual layer.&quot;&lt;/blockquote&gt;
+  &lt;p class=&quot;caption&quot;&gt;Figure 1: Example of a styled blockquote&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>font-style: normal (default) | italic | oblique.</li><li>italic uses the font's true italic variant (different letterforms).</li><li>oblique artificially slants the normal font.</li><li>Use CSS font-style for visual italics; &lt;em&gt; for semantic emphasis.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-15">
+  <div class="topic-header">
+    <span class="topic-num">15</span>
+    <h2>text-align Property</h2>
+    <span class="quiz-badge">Q16</span>
+  </div>
+  <div class="topic-theory"><p>The <code>text-align</code> property controls the <strong>horizontal alignment</strong> of text inside its container. Values: <code>left</code> (default for LTR languages), <code>right</code>, <code>center</code>, and <code>justify</code> (stretches text to fill the full width, like a newspaper column).</p><p>A common beginner mistake is trying to center a whole element (e.g., a <code>&lt;div&gt;</code>) using <code>text-align: center</code>. This only centers the text <em>inside</em> the element. To center a block element itself, use <code>margin: 0 auto</code> with a defined <code>width</code>, or use Flexbox on the parent.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .left    { text-align: left; }     /* default */
+    .center  { text-align: center; }
+    .right   { text-align: right; }
+    .justify { text-align: justify; }
+
+    div {
+      border: 1px dashed #cbd5e1;
+      padding: 12px;
+      margin: 8px 0;
+      max-width: 500px;
+    }
+
+    /* Center the DIV itself (not its text) using margin: auto */
+    .centered-box {
+      width: 300px;
+      margin: 0 auto;
+      background: #ecfdf5;
+      padding: 20px;
+      text-align: center;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;left&quot;&gt;text-align: left — default&lt;/div&gt;
+  &lt;div class=&quot;center&quot;&gt;text-align: center — centered text&lt;/div&gt;
+  &lt;div class=&quot;right&quot;&gt;text-align: right — right-aligned&lt;/div&gt;
+  &lt;div class=&quot;justify&quot;&gt;text-align: justify — The text in this paragraph is stretched to reach both edges of the box, just like a newspaper column layout.&lt;/div&gt;
+  &lt;div class=&quot;centered-box&quot;&gt;This box is centered on the page using margin: 0 auto&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>text-align: left | center | right | justify.</li><li>Centers text INSIDE an element — not the element itself.</li><li>To center a block element: use margin: 0 auto with a fixed width.</li><li>justify stretches text to fill the line (newspaper style).</li></ul></div>
+</section>
+<section class="topic-section" id="topic-16">
+  <div class="topic-header">
+    <span class="topic-num">16</span>
+    <h2>Box Model: Padding</h2>
+    <span class="quiz-badge">Q17</span>
+  </div>
+  <div class="topic-theory"><p>Every HTML element is treated as a <strong>rectangular box</strong> with four layers. From inside out: <em>content</em> → <em>padding</em> → <em>border</em> → <em>margin</em>. <strong>Padding</strong> is the space <em>inside</em> the element, between the content and the border. It is part of the element's background and is <em>clickable</em>.</p><p>You can set padding on all four sides at once with shorthand: <code>padding: 10px</code> (all four sides equal); <code>padding: 10px 20px</code> (top+bottom 10px, left+right 20px); <code>padding: 5px 10px 15px 20px</code> (top, right, bottom, left — clockwise from top). Individual sides: <code>padding-top</code>, <code>padding-right</code>, <code>padding-bottom</code>, <code>padding-left</code>.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .box {
+      background: #ecfdf5;
+      border: 2px solid #10B981;
+      width: 300px;
+      font-family: sans-serif;
+    }
+
+    /* Different padding examples */
+    .p-none   { padding: 0; }
+    .p-all    { padding: 20px; }
+    .p-tb-lr  { padding: 10px 40px; }     /* top+bottom / left+right */
+    .p-sides  { padding-left: 32px; padding-right: 32px; }
+
+    .label {
+      font-size: 11px;
+      color: #059669;
+      margin-bottom: 6px;
+    }
+    div { margin-bottom: 10px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;box p-none&quot;&gt;
+    &lt;span class=&quot;label&quot;&gt;padding: 0 — content touches the border&lt;/span&gt;
+    Content here
+  &lt;/div&gt;
+  &lt;div class=&quot;box p-all&quot;&gt;
+    &lt;span class=&quot;label&quot;&gt;padding: 20px — all four sides&lt;/span&gt;
+    Content here
+  &lt;/div&gt;
+  &lt;div class=&quot;box p-tb-lr&quot;&gt;
+    &lt;span class=&quot;label&quot;&gt;padding: 10px 40px — top/bottom + left/right&lt;/span&gt;
+    Content here
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Padding = space INSIDE the border (between content and border).</li><li>Padding has the element's background colour — it is clickable.</li><li>Shorthand: 1 value (all) | 2 values (TB, LR) | 4 values (T R B L).</li><li>Individual: padding-top, padding-right, padding-bottom, padding-left.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-17">
+  <div class="topic-header">
+    <span class="topic-num">17</span>
+    <h2>Box Model: Margin</h2>
+    <span class="quiz-badge">Q18</span>
+  </div>
+  <div class="topic-theory"><p>The <strong>margin</strong> is the outermost layer of the box model — space <em>outside</em> the element's border, separating it from neighbouring elements. Margins are <em>transparent</em>; the page background shows through them. The same shorthand rules apply as for padding: 1, 2, or 4 values.</p><p>An important quirk: <strong>vertical margins collapse</strong>. When two block elements stack vertically, their top and bottom margins merge into one, equal to the larger margin. For example, a paragraph with <code>margin-bottom: 20px</code> above another with <code>margin-top: 30px</code> results in 30px of space between them — not 50px. Horizontal margins do <em>not</em> collapse.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .box {
+      background: #ecfdf5;
+      border: 2px solid #10B981;
+      padding: 12px;
+      width: 280px;
+    }
+
+    .m-none  { margin: 0; }
+    .m-all   { margin: 20px; }
+    .m-auto  { margin: 0 auto; }  /* centres the block */
+    .m-sides { margin-left: 40px; margin-right: 40px; }
+
+    /* Collapse demo */
+    .p1 { margin-bottom: 20px; background: #fef3c7; padding: 8px; }
+    .p2 { margin-top:    30px; background: #dbeafe; padding: 8px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;box m-none&quot;&gt;margin: 0&lt;/div&gt;
+  &lt;div class=&quot;box m-all&quot;&gt;margin: 20px — all sides&lt;/div&gt;
+  &lt;div class=&quot;box m-auto&quot;&gt;margin: 0 auto — centred!&lt;/div&gt;
+  &lt;hr&gt;
+  &lt;p class=&quot;p1&quot;&gt;margin-bottom: 20px (yellow)&lt;/p&gt;
+  &lt;p class=&quot;p2&quot;&gt;margin-top: 30px (blue) — gap = 30px, not 50px (collapsed)&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Margin = space OUTSIDE the border (between elements).</li><li>Transparent — the page background shows through margin areas.</li><li>margin: 0 auto centers a block element (needs a fixed width).</li><li>Vertical margins collapse — the LARGER margin wins, not their sum.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-18">
+  <div class="topic-header">
+    <span class="topic-num">18</span>
+    <h2>Box Model Width Calculation</h2>
+    <span class="quiz-badge">Q19</span>
+  </div>
+  <div class="topic-theory"><p>By default (<code>box-sizing: content-box</code>), the <code>width</code> property sets only the <strong>content area</strong> width. Total rendered width = <code>content width + left padding + right padding + left border + right border</code>. For example: <code>width: 200px; padding: 10px; border: 5px</code> → total = <code>200 + 10×2 + 5×2 = 230px</code>.</p><p>This is confusing and error-prone. That is why the CSS reset uses <code>box-sizing: border-box</code>: with this setting, <code>width</code> includes padding and border, so a 200px element stays 200px regardless of padding. Almost every professional project today uses <code>* { box-sizing: border-box; }</code> as a first line.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Default: content-box — width = content only */
+    .content-box {
+      box-sizing: content-box;  /* default */
+      width: 200px;
+      padding: 10px;
+      border: 5px solid #10B981;
+      background: #ecfdf5;
+      margin-bottom: 16px;
+    }
+    /* total = 200 + 10*2 + 5*2 = 230px */
+
+    /* Better: border-box — width includes padding+border */
+    .border-box {
+      box-sizing: border-box;
+      width: 200px;
+      padding: 10px;
+      border: 5px solid #7c3aed;
+      background: #f5f3ff;
+    }
+    /* total = exactly 200px — content shrinks to 170px */
+
+    p { font-size: 13px; color: #475569; margin-top: 4px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;content-box&quot;&gt;content-box&lt;/div&gt;
+  &lt;p&gt;→ Actual width = 200 + 10×2 + 5×2 = &lt;strong&gt;230px&lt;/strong&gt;&lt;/p&gt;
+
+  &lt;div class=&quot;border-box&quot;&gt;border-box&lt;/div&gt;
+  &lt;p&gt;→ Actual width = exactly &lt;strong&gt;200px&lt;/strong&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Default (content-box): total width = content + padding×2 + border×2.</li><li>Example: width:200 + padding:10 + border:5 → 200+20+10 = 230px.</li><li>box-sizing: border-box makes width include padding and border.</li><li>Always use * { box-sizing: border-box } at the top of your CSS.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-19">
+  <div class="topic-header">
+    <span class="topic-num">19</span>
+    <h2>display: block</h2>
+    <span class="quiz-badge">Q20</span>
+  </div>
+  <div class="topic-theory"><p>The <code>display</code> property is one of the most powerful in CSS. <code>display: block</code> makes an element behave as a block-level element: it starts on a <strong>new line</strong>, takes up the <strong>full available width</strong>, and respects width/height/margin settings. Block elements stack vertically.</p><p>Elements that are block by default: <code>div</code>, <code>p</code>, <code>h1</code>–<code>h6</code>, <code>ul</code>, <code>li</code>, <code>section</code>, <code>article</code>, <code>header</code>, <code>footer</code>. You can change any inline element to block with <code>display: block</code> — for example, making a link fill a whole row: <code>a { display: block; }</code> is common in navigation menus.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* span is inline by default — force it to block */
+    .forced-block {
+      display: block;
+      background: #ecfdf5;
+      border: 2px solid #10B981;
+      padding: 12px;
+      margin: 6px 0;
+      width: 300px; /* now works — block respects width */
+    }
+
+    /* block nav links — each fills its row */
+    nav a {
+      display: block;
+      padding: 10px 16px;
+      background: #1e293b;
+      color: white;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+    nav a:hover { background: #15803d; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;span class=&quot;forced-block&quot;&gt;I am a span — normally inline, forced to block&lt;/span&gt;
+  &lt;span class=&quot;forced-block&quot;&gt;Each span now starts on a new line&lt;/span&gt;
+
+  &lt;nav&gt;
+    &lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;Projects&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>display: block — starts new line, full width, stacks vertically.</li><li>Default block elements: div, p, h1-h6, ul, li, section, footer.</li><li>Block elements respect width, height, and all margin settings.</li><li>Can convert any element to block: a { display: block; }</li></ul></div>
+</section>
+<section class="topic-section" id="topic-20">
+  <div class="topic-header">
+    <span class="topic-num">20</span>
+    <h2>display: none</h2>
+    <span class="quiz-badge">Q21</span>
+  </div>
+  <div class="topic-theory"><p><code>display: none</code> <strong>completely removes</strong> an element from the page layout: it is invisible and takes up <em>no space</em>. It is commonly used with JavaScript to show/hide elements dynamically (toggle menus, modals, alerts). This is different from <code>visibility: hidden</code>, which hides the element but keeps its space.</p><p>Do not confuse <code>display: none</code> with <code>opacity: 0</code>. Opacity 0 makes an element transparent but it still occupies its space and responds to clicks. The right tool depends on your intent: use <code>display: none</code> for menus that collapse entirely, <code>visibility: hidden</code> to reserve space while hiding, and <code>opacity: 0</code> for fade transitions.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .box { padding: 16px; margin: 8px 0; border: 2px solid #10B981; }
+
+    .hidden-none       { display: none; }           /* gone — no space */
+    .hidden-visibility { visibility: hidden; }       /* hidden but space kept */
+    .hidden-opacity    { opacity: 0; }               /* transparent, space kept */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;Box 1 — visible&lt;/div&gt;
+  &lt;div class=&quot;box hidden-none&quot;&gt;Box 2 — display:none (you cannot see this)&lt;/div&gt;
+  &lt;div class=&quot;box&quot;&gt;Box 3 — visible (no gap above from box 2!)&lt;/div&gt;
+  &lt;div class=&quot;box hidden-visibility&quot;&gt;Box 4 — visibility:hidden (space kept)&lt;/div&gt;
+  &lt;div class=&quot;box&quot;&gt;Box 5 — there IS a gap above from box 4&lt;/div&gt;
+  &lt;hr&gt;
+  &lt;!-- Toggle with JavaScript --&gt;
+  &lt;button onclick=&quot;document.getElementById('msg').style.display = document.getElementById('msg').style.display === 'none' ? 'block' : 'none'&quot;&gt;
+    Toggle Message
+  &lt;/button&gt;
+  &lt;div id=&quot;msg&quot; class=&quot;box&quot; style=&quot;display:none&quot;&gt;Hello! I was hidden.&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>display: none removes element completely — takes up no space.</li><li>visibility: hidden hides but keeps the space (element still there).</li><li>opacity: 0 makes transparent — still occupies space and is clickable.</li><li>JavaScript toggles: element.style.display = 'none' or 'block'.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-21">
+  <div class="topic-header">
+    <span class="topic-num">21</span>
+    <h2>display: flex</h2>
+    <span class="quiz-badge">Q22</span>
+  </div>
+  <div class="topic-theory"><p><code>display: flex</code> activates the <strong>Flexbox layout model</strong> on a container element. Its children (flex items) automatically arrange in a row (horizontal, by default) and can be aligned, spaced, wrapped, and ordered with CSS properties. Flexbox solved layout problems that were extremely difficult in older CSS.</p><p>The most useful Flexbox properties on the <em>container</em>: <code>flex-direction</code> (row or column), <code>justify-content</code> (main-axis alignment: space-between, center, etc.), <code>align-items</code> (cross-axis alignment: center, stretch, etc.), and <code>gap</code> (space between items). On the <em>item</em>: <code>flex: 1</code> makes the item grow to fill remaining space.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Flexbox container */
+    .flex-row {
+      display: flex;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .flex-row.center      { justify-content: center; }
+    .flex-row.between     { justify-content: space-between; }
+    .flex-row.align-c     { align-items: center; }
+
+    .item {
+      background: #10B981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .item.tall { height: 60px; display: flex; align-items: center; }
+    .item.grow { flex: 1; } /* grows to fill remaining space */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;flex-row&quot;&gt;
+    &lt;div class=&quot;item&quot;&gt;A&lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;B&lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;C&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;flex-row between&quot;&gt;
+    &lt;div class=&quot;item&quot;&gt;Left&lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;Right&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;flex-row&quot;&gt;
+    &lt;div class=&quot;item tall&quot;&gt;Tall&lt;/div&gt;
+    &lt;div class=&quot;item grow&quot;&gt;flex:1 — fills remaining width&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>display: flex turns a container into a Flexbox — children line up in a row.</li><li>justify-content controls main-axis (horizontal): center, space-between.</li><li>align-items controls cross-axis (vertical): center, stretch, flex-start.</li><li>gap sets space between items; flex:1 on an item fills remaining space.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-22">
+  <div class="topic-header">
+    <span class="topic-num">22</span>
+    <h2>CSS Specificity</h2>
+    <span class="quiz-badge">Q23</span>
+  </div>
+  <div class="topic-theory"><p><strong>Specificity</strong> is a score the browser calculates for each CSS selector to decide which rule wins when two or more rules target the same element with the same property. Specificity is written as three numbers: <strong>(ID, Class, Type)</strong>. A higher number in the leftmost column always wins, regardless of the numbers in other columns.</p><p>Specificity scores: <code>!important</code> (override all — avoid), inline style (1,0,0,0), ID selector (0,1,0,0), class/attribute/pseudo-class (0,0,1,0), type selector/pseudo-element (0,0,0,1), universal selector (0,0,0,0). The <em>order</em> in the stylesheet breaks ties of equal specificity — the later rule wins.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>/* Specificity examples — higher number wins */
+
+p              { color: gray; }       /* (0,0,0,1) type = 1 */
+.intro         { color: blue; }       /* (0,0,1,0) class = 10 */
+#main          { color: green; }      /* (0,1,0,0) ID = 100 */
+p.intro        { color: purple; }     /* (0,0,1,1) = 11 */
+#main p        { color: orange; }     /* (0,1,0,1) = 101 */
+
+/* Example: which colour does this element get?
+   &lt;p class=&quot;intro&quot; id=&quot;main&quot;&gt; ... &lt;/p&gt;
+
+   Rules that match:  p (1), .intro (10), p.intro (11),
+                      #main (100), #main p (101)
+   Winner: #main p with score 101 → orange  */
+
+/* Bad practice — avoid! */
+p { color: red !important; }   /* overrides EVERYTHING — hard to debug */</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Specificity score: (ID, Class, Type) — leftmost column always wins.</li><li>ID=100, class=10, type=1 (metaphorically — they don't carry over).</li><li>Equal specificity? The LATER rule in the stylesheet wins.</li><li>Avoid !important — it breaks the cascade and is hard to debug.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-23">
+  <div class="topic-header">
+    <span class="topic-num">23</span>
+    <h2>Which Selector Wins?</h2>
+    <span class="quiz-badge">Q24</span>
+  </div>
+  <div class="topic-theory"><p>Combining selectors increases specificity. The selector <code>#hero .title</code> scores (1,1,0) — 1 ID + 1 class — and beats both <code>#hero</code> alone (1,0,0) would not beat an inline style, but beats any class-only selector. Understanding which rule wins is essential for debugging CSS.</p><p>Practical tip: <strong>keep specificity low</strong>. Use class selectors for most styling. Avoid ID selectors in CSS (use them for JS). Never rely on ordering to resolve conflicts. If you find yourself fighting the cascade with <code>!important</code>, it usually means your selector structure needs refactoring.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* Which wins? Match the selector and count the score */
+
+    p           { color: gray; }    /* score: 0,0,0,1 — type */
+    .highlight  { color: blue; }    /* score: 0,0,1,0 — class */
+    p.highlight { color: purple; }  /* score: 0,0,1,1 — type+class */
+    #note       { color: green; }   /* score: 0,1,0,0 — ID */
+
+    /* Combinators add up */
+    div p       { font-style: italic; }   /* 0,0,0,2 */
+    div .highlight { font-weight: bold; } /* 0,0,1,1 */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- gray: matched by p (0,0,0,1) only --&gt;
+  &lt;p&gt;Plain paragraph — gray&lt;/p&gt;
+
+  &lt;!-- purple: p.highlight (0,0,1,1) beats p (0,0,0,1) and .highlight (0,0,1,0) --&gt;
+  &lt;p class=&quot;highlight&quot;&gt;P with class — purple (p.highlight wins)&lt;/p&gt;
+
+  &lt;!-- green: #note (0,1,0,0) beats everything above --&gt;
+  &lt;p class=&quot;highlight&quot; id=&quot;note&quot;&gt;P with class AND id — green (#note wins)&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>Higher ID count always beats class count; class always beats type.</li><li>Inline style beats any stylesheet rule (unless !important).</li><li>Same specificity? Later rule in the file wins.</li><li>Best practice: keep specificity low — class selectors for styling.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-24">
+  <div class="topic-header">
+    <span class="topic-num">24</span>
+    <h2>CSS Comments</h2>
+    <span class="quiz-badge">Q25</span>
+  </div>
+  <div class="topic-theory"><p>CSS comments are written between <code>/* </code> and <code> */</code>. Everything between these markers is ignored by the browser. Comments are useful for: explaining complex selectors, marking sections of a large stylesheet, temporarily disabling a rule for debugging, and leaving notes for teammates.</p><p>Unlike HTML comments (<code>&lt;!-- --&gt;</code>), CSS comments can span multiple lines. There is no single-line comment syntax in CSS (<code>//</code> does <em>not</em> work in standard CSS). Inside a <code>&lt;style&gt;</code> block in HTML, use CSS comment syntax — not HTML comment syntax.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>/* ─────────────────────────────────────────────
+   TYPOGRAPHY STYLES
+   Used on all pages — last updated 2026-09-14
+───────────────────────────────────────────── */
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  /* color: red; */   /* temporarily disabled — was too harsh */
+  color: #1e293b;
+}
+
+/* Navigation */
+nav { display: flex; gap: 16px; } /* horizontal layout */
+
+/* TODO: add mobile breakpoint here */
+/* @media (max-width: 768px) { ... } */
+
+/* These do NOT work in CSS: */
+/* // This is NOT a CSS comment — JavaScript only */
+&lt;!-- This is NOT a CSS comment — HTML only --&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>CSS comment syntax: /* comment text */ — can span multiple lines.</li><li>// and <!-- --> do NOT work as CSS comments.</li><li>Use comments to mark sections, explain WHY, and disable code for debugging.</li><li>Comments are stripped before the file is sent to the browser.</li></ul></div>
+</section>
+<section class="topic-section" id="topic-25">
+  <div class="topic-header">
+    <span class="topic-num">25</span>
+    <h2>Putting It All Together</h2>
+    
+  </div>
+  <div class="topic-theory"><p>A complete CSS stylesheet combines everything you have learned: a reset at the top, type selectors for base styles, class selectors for components, and ID selectors for unique page elements. The cascade flows from general to specific, and the box model controls all spacing. Flexbox handles layout.</p><p>The example below is a minimal but production-quality personal profile page. Notice how the CSS is organised in sections with comments, how the box model reset comes first, and how colours are defined consistently. This is the pattern you will build on in every future web project.</p></div>
+  <div class="code-wrap raw-code">
+  <div class="code-bar">
+    <span class="code-lang">HTML / CSS</span>
+    <div class="code-btns">
+      <button onclick="previewCode(this)">Preview</button>
+      <button onclick="copyCode(this)">Copy</button>
+    </div>
+  </div>
+  <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;My CSS Profile — Week 3&lt;/title&gt;
+  &lt;style&gt;
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Base ── */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      background-color: #f0fdf4;
+      color: #1e293b;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+
+    /* ── Profile Card ── */
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 40px;
+    }
+
+    /* ── Header row ── */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #15803d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    h1 { font-size: 1.75rem; color: #15803d; }
+    .role { color: #64748b; font-size: 0.9rem; }
+
+    /* ── Skills list ── */
+    .skills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .skill-badge {
+      background-color: #dcfce7;
+      color: #15803d;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;profile-header&quot;&gt;
+        &lt;div class=&quot;avatar&quot;&gt;😊&lt;/div&gt;
+        &lt;div&gt;
+          &lt;h1&gt;Kim Jisoo&lt;/h1&gt;
+          &lt;p class=&quot;role&quot;&gt;Web Programming Student · Gachon University&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;p&gt;Hello! I am learning HTML and CSS in Week 3. Today I styled this
+         profile card using everything in the CSS Introduction guide.&lt;/p&gt;
+      &lt;div class=&quot;skills&quot;&gt;
+        &lt;span class=&quot;skill-badge&quot;&gt;HTML5&lt;/span&gt;
+        &lt;span class=&quot;skill-badge&quot;&gt;CSS3&lt;/span&gt;
+        &lt;span class=&quot;skill-badge&quot;&gt;Flexbox&lt;/span&gt;
+        &lt;span class=&quot;skill-badge&quot;&gt;Box Model&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+  </div>
+  <div class="keypoints"><h4>Key Points</h4><ul><li>CSS reset + base + components + layout = a complete stylesheet.</li><li>Organise with section comments: Reset, Base, Layout, Components.</li><li>Flexbox handles alignment; box model controls spacing.</li><li>Start simple, add complexity gradually — every pro started here.</li></ul></div>
+</section>
+
+    <section id="exercises">
+      <h2>Practice Exercises</h2>
+      <p class="intro">Write real CSS in each editor and click <strong>Preview</strong> to see your result instantly. Stuck? Use Hint. Check your work with Solution.</p>
+
+<div class="exercise" id="exercise-1">
+  <div class="ex-header">
+    <span class="ex-num">E1</span>
+    <h3>Style Your First Heading</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Write CSS to make the heading green (#15803d), centred, and 2.5rem in size. Then make the paragraph's text colour a muted grey (#64748b) and set its font size to 1.1rem.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* TODO: style h1 — green, centered, 2.5rem */
+    h1 {
+
+    }
+    /* TODO: style p — grey text, 1.1rem */
+    p {
+
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;CSS is Beautiful&lt;/h1&gt;
+  &lt;p&gt;With just a few lines of CSS, plain HTML transforms into a polished page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Set <code>color</code>, <code>text-align</code>, and <code>font-size</code> inside each rule block. Remember: colon (:) between property and value, semicolon (;) after each declaration.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    h1 {
+      color: #15803d;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    p {
+      color: #64748b;
+      font-size: 1.1rem;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;CSS is Beautiful&lt;/h1&gt;
+  &lt;p&gt;With just a few lines of CSS, plain HTML transforms into a polished page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-2">
+  <div class="ex-header">
+    <span class="ex-num">E2</span>
+    <h3>Three Ways — Spot the Difference</h3>
+    <span class="diff beginner">Beginner</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">The starter code uses all three methods of adding CSS. Notice how each method applies styling. Your task: change the inline style from red to <code>color: #7c3aed</code> (purple), change the internal style heading colour to <code>#0369a1</code> (blue), and add a new rule in the internal style that sets <code>body { font-family: sans-serif; }</code>.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;!-- Internal CSS --&gt;
+  &lt;style&gt;
+    h2 { color: #15803d; }   /* TODO: change to #0369a1 */
+    /* TODO: add body font-family rule here */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Internal Style (change me to blue)&lt;/h2&gt;
+  &lt;!-- Inline CSS — TODO: change red to purple #7c3aed --&gt;
+  &lt;p style=&quot;color: red;&quot;&gt;Inline styled paragraph (change me to purple)&lt;/p&gt;
+  &lt;p&gt;Normal paragraph — will inherit body font from internal CSS&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>For the inline change, edit the <code>style="..."</code> attribute directly on the &lt;p&gt; tag. For the internal changes, edit inside the &lt;style&gt; block.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; }
+    h2 { color: #0369a1; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Internal Style — now blue&lt;/h2&gt;
+  &lt;p style=&quot;color: #7c3aed;&quot;&gt;Inline styled — now purple&lt;/p&gt;
+  &lt;p&gt;Normal paragraph — inherits sans-serif from body&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-3">
+  <div class="ex-header">
+    <span class="ex-num">E3</span>
+    <h3>Color Palette Card</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a colour swatch card that shows 5 colours with their hex codes. Each swatch should be a div with a coloured background, white bold text showing the hex code, and rounded corners (8px). Arrange them in a row using Flexbox with a gap of 12px.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    .palette {
+      display: flex;
+      gap: 12px;
+      /* TODO: add padding and a light background */
+    }
+    .swatch {
+      /* TODO: set width: 100px, height: 100px, border-radius: 8px */
+      /* TODO: center the text using display:flex, align-items, justify-content */
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: monospace;
+    }
+    /* TODO: add 5 colour classes: .c1 through .c5 */
+    /* Use: #EF4444  #F59E0B  #10B981  #3B82F6  #8B5CF6 */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;palette&quot;&gt;
+    &lt;div class=&quot;swatch c1&quot;&gt;#EF4444&lt;/div&gt;
+    &lt;div class=&quot;swatch c2&quot;&gt;#F59E0B&lt;/div&gt;
+    &lt;div class=&quot;swatch c3&quot;&gt;#10B981&lt;/div&gt;
+    &lt;div class=&quot;swatch c4&quot;&gt;#3B82F6&lt;/div&gt;
+    &lt;div class=&quot;swatch c5&quot;&gt;#8B5CF6&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>For the swatch, use <code>display: flex; align-items: center; justify-content: center;</code> to centre the text. Each .c1–.c5 class only needs one line: <code>background-color: #...;</code></div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; padding: 20px; }
+    .palette {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+    .swatch {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+    .c1 { background-color: #EF4444; }
+    .c2 { background-color: #F59E0B; }
+    .c3 { background-color: #10B981; }
+    .c4 { background-color: #3B82F6; }
+    .c5 { background-color: #8B5CF6; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;palette&quot;&gt;
+    &lt;div class=&quot;swatch c1&quot;&gt;#EF4444&lt;/div&gt;
+    &lt;div class=&quot;swatch c2&quot;&gt;#F59E0B&lt;/div&gt;
+    &lt;div class=&quot;swatch c3&quot;&gt;#10B981&lt;/div&gt;
+    &lt;div class=&quot;swatch c4&quot;&gt;#3B82F6&lt;/div&gt;
+    &lt;div class=&quot;swatch c5&quot;&gt;#8B5CF6&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-4">
+  <div class="ex-header">
+    <span class="ex-num">E4</span>
+    <h3>Box Model Explorer</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Create a box model visualisation with nested divs. The outer div represents margin (amber background), the next represents border (slate), the next padding (sky blue), and the innermost is content (violet). Add a label inside each layer. Each box should be centered within its parent.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; padding: 20px; }
+
+    .margin-box {
+      background-color: #fde68a;
+      padding: 30px;
+      /* TODO: add text-align: center and a max-width */
+    }
+    .border-box {
+      /* TODO: background #6b7280, padding 20px */
+    }
+    .padding-box {
+      /* TODO: background #bfdbfe, padding 24px */
+    }
+    .content-box {
+      /* TODO: background #ddd6fe, padding 20px */
+    }
+
+    .layer-label {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;margin-box&quot;&gt;
+    &lt;span class=&quot;layer-label&quot;&gt;Margin&lt;/span&gt;
+    &lt;div class=&quot;border-box&quot;&gt;
+      &lt;span class=&quot;layer-label&quot;&gt;Border&lt;/span&gt;
+      &lt;div class=&quot;padding-box&quot;&gt;
+        &lt;span class=&quot;layer-label&quot;&gt;Padding&lt;/span&gt;
+        &lt;div class=&quot;content-box&quot;&gt;
+          &lt;span class=&quot;layer-label&quot;&gt;Content&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Each layer just needs <code>background-color</code> and <code>padding</code>. The nesting creates the visual effect automatically. Add <code>text-align: center</code> to the outer box.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; padding: 40px; }
+    .margin-box {
+      background-color: #fde68a;
+      padding: 30px;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .border-box {
+      background-color: #6b7280;
+      padding: 24px;
+      color: white;
+    }
+    .padding-box {
+      background-color: #bfdbfe;
+      padding: 24px;
+      color: #1e3a5f;
+    }
+    .content-box {
+      background-color: #ddd6fe;
+      padding: 24px;
+      color: #3730a3;
+    }
+    .layer-label {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 4px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;margin-box&quot;&gt;
+    &lt;span class=&quot;layer-label&quot;&gt;🟡 Margin — outside the border&lt;/span&gt;
+    &lt;div class=&quot;border-box&quot;&gt;
+      &lt;span class=&quot;layer-label&quot;&gt;⬛ Border — the visible edge&lt;/span&gt;
+      &lt;div class=&quot;padding-box&quot;&gt;
+        &lt;span class=&quot;layer-label&quot;&gt;🔵 Padding — inside the border&lt;/span&gt;
+        &lt;div class=&quot;content-box&quot;&gt;
+          &lt;span class=&quot;layer-label&quot;&gt;🟣 Content — your actual text/image&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-5">
+  <div class="ex-header">
+    <span class="ex-num">E5</span>
+    <h3>Fix the Broken CSS</h3>
+    <span class="diff intermediate">Intermediate</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">The CSS below has 5 errors. Find and fix them all. Clues: a missing colon, an equals sign instead of colon, a missing semicolon, wrong comment syntax, and a non-existent property name.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body {
+      font-family: sans-serif
+      background-color: #f0fdf4;
+    }
+
+    h1 {
+      color = #15803d;
+      font-size: 2rem;
+      text-align center;
+    }
+
+    p {
+      line-height: 1.7;
+      foreground: #334155;  /* wrong property name */
+    }
+
+    // This is a broken comment
+    .highlight {
+      background-color: #dcfce7;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Fix Me!&lt;/h1&gt;
+  &lt;p&gt;This paragraph has &lt;span class=&quot;highlight&quot;&gt;broken CSS&lt;/span&gt; around it.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Look for: 1) missing semicolon after <code>sans-serif</code>, 2) <code>=</code> instead of <code>:</code> in color, 3) missing colon in <code>text-align center</code>, 4) <code>foreground</code> is not a CSS property (use <code>color</code>), 5) <code>//</code> is not valid CSS comment syntax.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    body {
+      font-family: sans-serif;        /* fix 1: added semicolon */
+      background-color: #f0fdf4;
+    }
+
+    h1 {
+      color: #15803d;                 /* fix 2: = changed to : */
+      font-size: 2rem;
+      text-align: center;             /* fix 3: added colon */
+    }
+
+    p {
+      line-height: 1.7;
+      color: #334155;                 /* fix 4: foreground → color */
+    }
+
+    /* This is a correct CSS comment */  /* fix 5: // → /* */ */
+    .highlight {
+      background-color: #dcfce7;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Fixed!&lt;/h1&gt;
+  &lt;p&gt;This paragraph has &lt;span class=&quot;highlight&quot;&gt;working CSS&lt;/span&gt; around it.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-6">
+  <div class="ex-header">
+    <span class="ex-num">E6</span>
+    <h3>Flexbox Navigation Bar</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a horizontal navigation bar using Flexbox. The bar should have a dark background (#1e293b), logo text on the left, and navigation links on the right. Links should be white, have no underline, and change to emerald (#10B981) on hover. Use <code>justify-content: space-between</code> to push logo left and links right.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; }
+
+    /* TODO: style the nav — dark background, display flex, padding */
+    nav {
+
+    }
+
+    /* TODO: style .logo — white, bold, no decoration */
+    .logo {
+
+    }
+
+    /* TODO: style .nav-links — display flex, gap */
+    .nav-links {
+
+    }
+
+    /* TODO: style .nav-links a — white, no underline */
+    .nav-links a {
+
+    }
+
+    /* TODO: hover state — emerald #10B981 */
+    .nav-links a:hover {
+
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;#&quot; class=&quot;logo&quot;&gt;WebPro&lt;/a&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Topics&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Quiz&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Set <code>display: flex; justify-content: space-between; align-items: center;</code> on the nav. For links, <code>text-decoration: none; color: white;</code>. The hover needs a <code>:hover</code> pseudo-class.</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1e293b;
+      padding: 16px 32px;
+    }
+
+    .logo {
+      color: #10B981;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #10B981;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav&gt;
+    &lt;a href=&quot;#&quot; class=&quot;logo&quot;&gt;WebPro&lt;/a&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Topics&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Quiz&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-7">
+  <div class="ex-header">
+    <span class="ex-num">E7</span>
+    <h3>Profile Card with CSS</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Build a profile card from scratch using CSS. Requirements: white card on a light background, avatar circle (80×80px, green background, white initial letter centred), name in 1.5rem bold, role text in muted grey, a horizontal line, and a Flexbox row of skill badges (rounded pills with green background). Put it all in one self-contained HTML file.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    /* TODO: write all CSS here */
+    /* Hint: start with body, then .card, then .avatar, .name, .role, hr, .skills, .badge */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;avatar&quot;&gt;K&lt;/div&gt;
+    &lt;h2 class=&quot;name&quot;&gt;Kim Jisoo&lt;/h2&gt;
+    &lt;p class=&quot;role&quot;&gt;Web Programming Student&lt;/p&gt;
+    &lt;hr&gt;
+    &lt;div class=&quot;skills&quot;&gt;
+      &lt;span class=&quot;badge&quot;&gt;HTML5&lt;/span&gt;
+      &lt;span class=&quot;badge&quot;&gt;CSS3&lt;/span&gt;
+      &lt;span class=&quot;badge&quot;&gt;Flexbox&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>For the avatar circle: <code>border-radius: 50%; display: flex; align-items: center; justify-content: center;</code>. For skills: <code>display: flex; gap: 8px; flex-wrap: wrap;</code>. For the card: <code>max-width: 360px; margin: 40px auto; padding: 32px; border-radius: 16px;</code></div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;style&gt;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fdf4;
+      padding: 40px 16px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 360px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #15803d;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #15803d;
+      margin-bottom: 6px;
+    }
+
+    .role {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .skills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      background-color: #dcfce7;
+      color: #15803d;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;avatar&quot;&gt;K&lt;/div&gt;
+    &lt;h2 class=&quot;name&quot;&gt;Kim Jisoo&lt;/h2&gt;
+    &lt;p class=&quot;role&quot;&gt;Web Programming Student&lt;/p&gt;
+    &lt;hr&gt;
+    &lt;div class=&quot;skills&quot;&gt;
+      &lt;span class=&quot;badge&quot;&gt;HTML5&lt;/span&gt;
+      &lt;span class=&quot;badge&quot;&gt;CSS3&lt;/span&gt;
+      &lt;span class=&quot;badge&quot;&gt;Flexbox&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="exercise" id="exercise-8">
+  <div class="ex-header">
+    <span class="ex-num">E8</span>
+    <h3>Full Style Sheet from Scratch</h3>
+    <span class="diff advanced">Advanced</span>
+  </div>
+  <div class="ex-body">
+    <div class="ex-section-label">Task</div>
+    <div class="task-box">Write a complete multi-section page about yourself using everything from this week: external structure (inline CSS here), box model reset, type selectors for base styles, class selectors for components, Flexbox for layout. Sections: a navigation bar, a hero section (large heading + subtitle + button), a 3-column skills grid, and a footer. All on one page.</div>
+    <div class="editor-area">
+      <div class="ex-section-label">Your Code</div>
+      <textarea class="code-editor">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;My CSS Portfolio&lt;/title&gt;
+  &lt;style&gt;
+    /* 1. Reset */
+
+    /* 2. Base styles (body, a, h1-h3, p) */
+
+    /* 3. Navigation (.nav, .nav-logo, .nav-links, .nav-links a) */
+
+    /* 4. Hero section (.hero, .hero h1, .hero p, .btn) */
+
+    /* 5. Skills grid (.skills-section, .skills-grid, .skill-card) */
+
+    /* 6. Footer (.footer) */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class=&quot;nav&quot;&gt;
+    &lt;span class=&quot;nav-logo&quot;&gt;MyPortfolio&lt;/span&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#skills&quot;&gt;Skills&lt;/a&gt;
+      &lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+
+  &lt;section class=&quot;hero&quot;&gt;
+    &lt;h1&gt;Hello, I am Learning CSS!&lt;/h1&gt;
+    &lt;p&gt;Week 3 · CSS Introduction · Gachon University&lt;/p&gt;
+    &lt;a href=&quot;#skills&quot; class=&quot;btn&quot;&gt;See My Skills&lt;/a&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;skills-section&quot; id=&quot;skills&quot;&gt;
+    &lt;h2&gt;What I Know&lt;/h2&gt;
+    &lt;div class=&quot;skills-grid&quot;&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;HTML5&lt;/h3&gt;&lt;p&gt;Structure and semantics&lt;/p&gt;&lt;/div&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;CSS3&lt;/h3&gt;&lt;p&gt;Styling and layout&lt;/p&gt;&lt;/div&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;Flexbox&lt;/h3&gt;&lt;p&gt;Modern layout model&lt;/p&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;footer class=&quot;footer&quot;&gt;
+    &lt;p&gt;K0126002 Web Programming &amp;copy; 2026 Gachon University&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="ex-btns">
+        <button class="btn-preview" onclick="previewExercise(this)">&#9654; Preview</button>
+        <button class="btn-hint" onclick="toggleHint(this)">Hint</button>
+        <button class="btn-sol" onclick="toggleSolution(this)">Solution</button>
+      </div>
+      <iframe class="preview-frame"></iframe>
+      <div class="hint-box" hidden>Write each section's CSS one at a time, preview after each. Start with the reset, then body, then nav (display:flex, justify-content:space-between), then hero (padding, text-align:center), then .skills-grid (display:flex, gap), then .skill-card (border, padding, border-radius), finally footer (background, text-align, padding).</div>
+      <div class="solution-box" hidden>
+        <div class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;My CSS Portfolio&lt;/title&gt;
+  &lt;style&gt;
+    /* 1. Reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* 2. Base */
+    body { font-family: 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.6; color: #1e293b; }
+    a    { text-decoration: none; }
+    h1   { font-size: 2.5rem; }
+    h2   { font-size: 1.75rem; margin-bottom: 24px; }
+    h3   { font-size: 1.1rem; margin-bottom: 8px; color: #15803d; }
+    p    { color: #475569; }
+
+    /* 3. Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1e293b;
+      padding: 16px 40px;
+    }
+    .nav-logo { color: #10B981; font-weight: 700; font-size: 1.3rem; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: #94a3b8; font-size: 0.9rem; }
+    .nav-links a:hover { color: #10B981; }
+
+    /* 4. Hero */
+    .hero {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      padding: 100px 40px;
+      text-align: center;
+    }
+    .hero h1 { color: #15803d; margin-bottom: 16px; }
+    .hero p  { font-size: 1.15rem; margin-bottom: 32px; color: #475569; }
+    .btn {
+      display: inline-block;
+      background-color: #15803d;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .btn:hover { background-color: #166534; }
+
+    /* 5. Skills grid */
+    .skills-section { padding: 80px 40px; max-width: 900px; margin: 0 auto; }
+    .skills-grid {
+      display: flex;
+      gap: 20px;
+    }
+    .skill-card {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .skill-card p { font-size: 0.9rem; }
+
+    /* 6. Footer */
+    .footer {
+      background-color: #1e293b;
+      color: #94a3b8;
+      text-align: center;
+      padding: 28px;
+      font-size: 0.875rem;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;nav class=&quot;nav&quot;&gt;
+    &lt;span class=&quot;nav-logo&quot;&gt;MyPortfolio&lt;/span&gt;
+    &lt;div class=&quot;nav-links&quot;&gt;
+      &lt;a href=&quot;#skills&quot;&gt;Skills&lt;/a&gt;
+      &lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+
+  &lt;section class=&quot;hero&quot;&gt;
+    &lt;h1&gt;Hello, I am Learning CSS!&lt;/h1&gt;
+    &lt;p&gt;Week 3 · CSS Introduction · Gachon University&lt;/p&gt;
+    &lt;a href=&quot;#skills&quot; class=&quot;btn&quot;&gt;See My Skills&lt;/a&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;skills-section&quot; id=&quot;skills&quot;&gt;
+    &lt;h2&gt;What I Know&lt;/h2&gt;
+    &lt;div class=&quot;skills-grid&quot;&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;HTML5&lt;/h3&gt;&lt;p&gt;Structure and semantics&lt;/p&gt;&lt;/div&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;CSS3&lt;/h3&gt;&lt;p&gt;Styling and layout&lt;/p&gt;&lt;/div&gt;
+      &lt;div class=&quot;skill-card&quot;&gt;&lt;h3&gt;Flexbox&lt;/h3&gt;&lt;p&gt;Modern layout model&lt;/p&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;footer class=&quot;footer&quot;&gt;
+    &lt;p&gt;K0126002 Web Programming &amp;copy; 2026 Gachon University&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+    </section>
+
+  </main>
+</div>
+
+<footer id="site-footer">
+  K0126002 Web Programming &middot; Gachon University &middot; Week 3 Monday: CSS Introduction
+</footer>
+
+<script>
+function toggleTheme(){
+  const r=document.documentElement;
+  const cur=r.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  document.querySelector('.theme-btn').textContent=next==='dark'?'☀ Light':'🌙 Dark';
+  try{localStorage.setItem('theme',next);}catch(e){}
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function getCode(btn){
+  const wrap=btn.closest('.code-wrap')||btn.closest('.solution-box');
+  return wrap?wrap.querySelector('.code-block code').innerText:'';
+}
+function previewCode(btn){
+  const wrap=btn.closest('.code-wrap');
+  let fr=wrap.querySelector('.preview-frame');
+  if(!fr){fr=document.createElement('iframe');fr.className='preview-frame';wrap.appendChild(fr);}
+  const code=wrap.querySelector('.code-block code').innerText;
+  fr.style.display='block';
+  fr.srcdoc=code;
+}
+function copyCode(btn){
+  const code=btn.closest('.code-wrap').querySelector('.code-block code').innerText;
+  navigator.clipboard.writeText(code).then(()=>{
+    const t=btn.textContent;btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent=t,1500);
+  });
+}
+function previewExercise(btn){
+  const ea=btn.closest('.editor-area');
+  const ta=ea.querySelector('textarea');
+  let fr=ea.querySelector('.preview-frame');
+  if(!fr){fr=document.createElement('iframe');fr.className='preview-frame';ea.appendChild(fr);}
+  fr.style.display='block';
+  fr.srcdoc=ta.value;
+}
+function toggleHint(btn){
+  const box=btn.closest('.editor-area').querySelector('.hint-box');
+  box.hidden=!box.hidden;
+  btn.textContent=box.hidden?'Hint':'Hide Hint';
+}
+function toggleSolution(btn){
+  const box=btn.closest('.editor-area').querySelector('.solution-box');
+  box.hidden=!box.hidden;
+  btn.textContent=box.hidden?'Solution':'Hide Solution';
+}
+// Scroll spy
+const allAnchors=document.querySelectorAll('#sidebar nav a[href^="#"]');
+const allSections=[...document.querySelectorAll('.topic-section, .exercise')];
+function onScroll(){
+  const top=window.scrollY+80;
+  let cur=null;
+  allSections.forEach(s=>{if(s.offsetTop<=top)cur=s;});
+  allAnchors.forEach(a=>{
+    a.classList.remove('active');
+    if(cur&&a.getAttribute('href')==='#'+cur.id)a.classList.add('active');
+  });
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+// Restore theme
+try{
+  const t=localStorage.getItem('theme');
+  if(t){document.documentElement.setAttribute('data-theme',t);
+    document.querySelector('.theme-btn').textContent=t==='dark'?'☀ Light':'🌙 Dark';}
+}catch(e){}
+</script>
+</body>
+</html>

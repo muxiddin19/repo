@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Blog</title>
+</head>
+<body>
+  <!-- Fix 1+2: h1 and nav go in body inside header, not in <head> -->
+  <header>
+    <h1>My Blog</h1>
+    <nav><a href="/">Home</a></nav>  <!-- fix 2: navigation → nav -->
+  </header>
+
+  <main>
+    <article>
+      <h2>Semantic HTML</h2>
+      <figure>
+        <!-- Fix 3: add alt attribute -->
+        <img src="img.jpg" alt="Diagram showing semantic HTML elements">
+      </figure>
+      <!-- Fix 4: related content is NOT part of the article footer -->
+    </article>
+
+    <!-- Fix 4+5: use aside, not footer inside article, not sidebar -->
+    <aside>
+      <h2>Topics</h2>
+      <p>Related: <a href="/html">HTML Guide</a></p>
+    </aside>
+  </main>
+</body>
+</html>

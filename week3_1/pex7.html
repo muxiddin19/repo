@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fdf4;
+      padding: 40px 16px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 360px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #15803d;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #15803d;
+      margin-bottom: 6px;
+    }
+
+    .role {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .skills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      background-color: #dcfce7;
+      color: #15803d;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">K</div>
+    <h2 class="name">Kim Jisoo</h2>
+    <p class="role">Web Programming Student</p>
+    <hr>
+    <div class="skills">
+      <span class="badge">HTML5</span>
+      <span class="badge">CSS3</span>
+      <span class="badge">Flexbox</span>
+    </div>
+  </div>
+</body>
+</html>

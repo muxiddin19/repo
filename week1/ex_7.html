@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Korean Bibimbap Recipe</title>
+</head>
+<body>
+  <h1>Korean Bibimbap Recipe</h1>
+  <h2>What You Need</h2>
+  <ul>
+    <li>2 cups cooked rice</li>
+    <li>Spinach, bean sprouts, carrots</li>
+    <li>1 egg</li>
+    <li>Sesame oil</li>
+    <li>Gochujang (Korean red pepper paste)</li>
+  </ul>
+  <h2>Steps</h2>
+  <ol>
+    <li>Cook the rice and let it cool slightly.</li>
+    <li>Blanch and season the vegetables separately.</li>
+    <li><strong>Warning: use medium heat</strong> when frying the egg.</li>
+    <li>Place rice in a bowl; arrange vegetables and egg on top.</li>
+    <li>Add <em>gochujang</em> and sesame oil, then mix everything together.</li>
+  </ol>
+</body>
+</html>

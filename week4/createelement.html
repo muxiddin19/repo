@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>createElement &amp; appendChild - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">11</span><h1>createElement &amp; appendChild</h1></div>
+<div class="theory"><p>JavaScript can build new elements and put them on the page: <strong>create, configure, append</strong>.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>const li = document.createElement(&#x27;li&#x27;);   // 1. create
+li.textContent = &#x27;New item!&#x27;;              // 2. configure
+list.appendChild(li);                      // 3. append (at the end)
+list.prepend(li);                          //    or at the start</code></pre></div>
+<div class="demo-box"><h4>Live demo - build a list dynamically</h4>
+<div class="row" style="margin:0 0 12px"><input type="text" id="inp" placeholder="Type a new item..."><button class="demo-btn" id="add">+ Add Item</button></div>
+<ul class="items" id="list"></ul><p id="count" style="margin-top:10px;font-size:13px"></p>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li><code>document.createElement('tag')</code> makes an element not yet on the page.</li><li>Configure it first, then append.</li><li><code>appendChild</code> adds at the end, <code>prepend</code> at the start.</li></ul></div>
+<nav class="pager"><span><a href="bubbling.html">&larr; Event Bubbling &amp; Delegation</a></span><span><a href="removing.html">Removing Elements &rarr;</a></span></nav>
+</main>
+<script>
+const list=document.getElementById('list'),inp=document.getElementById('inp'),count=document.getElementById('count');
+function update(){const n=list.children.length;count.textContent=n+' item'+(n===1?'':'s')}
+function addItem(){const t=inp.value.trim();if(!t)return;
+  const li=document.createElement('li');const s=document.createElement('span');s.textContent=t;
+  const b=document.createElement('button');b.textContent='\u2715';b.className='demo-btn red sm';
+  b.addEventListener('click',()=>{li.remove();update()});
+  li.append(s,b);list.appendChild(li);inp.value='';inp.focus();update()}
+document.getElementById('add').addEventListener('click',addItem);
+inp.addEventListener('keydown',e=>{if(e.key==='Enter')addItem()});
+update();
+</script>
+</body>
+</html>

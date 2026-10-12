@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSS Advanced Portfolio</title>
+<style>
+  :root {
+    --primary: #0f766e; --accent: #14b8a6;
+    --bg: #f0fdfa;      --text: #1e293b;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #051a0a; --text: #d4edda; }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { background: var(--bg); color: var(--text);
+         font-family: 'Segoe UI', sans-serif; }
+
+  /* Fixed nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1e293b;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 32px;
+  }
+  nav span { color: var(--accent); font-weight: 700; font-size: 1.2rem; }
+  nav a { color: #94a3b8; text-decoration: none; margin-left: 20px;
+          transition: color 0.2s; }
+  nav a:hover { color: var(--accent); }
+
+  /* Hero with @keyframes */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero {
+    padding: 140px 40px 80px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg) 0%, #ccfbf1 100%);
+  }
+  .hero h1 {
+    font-size: 2.5rem; color: var(--primary);
+    animation: fadeSlideIn 0.8s ease-out forwards;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 1.1rem; color: #64748b;
+    animation: fadeSlideIn 0.8s ease-out 0.2s both;
+  }
+
+  /* Skills section */
+  .skills-section { padding: 0 24px 60px; }
+
+  /* Sticky heading */
+  .sticky-h2 {
+    position: sticky; top: 56px;
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 1.4rem; padding: 14px 0 10px;
+    border-bottom: 3px solid var(--accent);
+    margin-bottom: 20px;
+  }
+
+  /* Responsive grid */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Cards with ::before and hover */
+  .card {
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--text);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(15,118,110,0.18);
+  }
+  .card[data-icon]::before {
+    content: attr(data-icon);
+    display: block; font-size: 2rem; margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <span>Kim Jisoo</span>
+    <div><a href="#">Home</a><a href="#">Skills</a></div>
+  </nav>
+  <section class="hero">
+    <h1>Hello, I am Kim Jisoo</h1>
+    <p>AI Software Engineering · Gachon University · Week 3 CSS Advanced</p>
+  </section>
+  <section class="skills-section">
+    <h2 class="sticky-h2">My Skills</h2>
+    <div class="grid">
+      <div class="card" data-icon="🌐">HTML5</div>
+      <div class="card" data-icon="🎨">CSS3 Advanced</div>
+      <div class="card" data-icon="⚡">JavaScript</div>
+      <div class="card" data-icon="📐">Flexbox</div>
+      <div class="card" data-icon="🗂">CSS Grid</div>
+      <div class="card" data-icon="📱">Responsive Design</div>
+    </div>
+  </section>
+</body>
+</html>

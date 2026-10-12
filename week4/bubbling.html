@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Bubbling &amp; Delegation - JS DOM &amp; Events</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><span class="js-badge">JS</span><strong>JavaScript DOM &amp; Events</strong><a class="back" href="index.html">All topics</a></header>
+<main>
+<div class="topic-hdr"><span class="t-num">10</span><h1>Event Bubbling &amp; Delegation</h1></div>
+<div class="theory"><p>A click on a child also fires on every parent, from the target up to the document: this is <strong>bubbling</strong>. <strong>Delegation</strong> uses it: put one listener on the parent and check <code>e.target</code>. It even works for elements added later.</p></div>
+<div class="code-wrap"><div class="code-bar">JavaScript</div><pre class="code-block"><code>// one listener on the parent handles every button
+list.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+  if (e.target.matches(&#x27;button&#x27;)) {
+    e.target.textContent = &#x27;Clicked!&#x27;;
+  }
+});</code></pre></div>
+<div class="demo-box"><h4>Live demo - bubbling and delegation</h4>
+<div class="n1" id="outer">outer div<div class="n2" id="middle">middle div<br><button class="demo-btn yellow" id="inner" style="margin-top:6px">inner button - click me</button></div></div>
+<div class="row"><label><input type="checkbox" id="stop"> call e.stopPropagation() on the button</label><button class="demo-btn outline sm" id="clear">Clear log</button></div>
+<div class="log" id="log">Click the button...</div>
+<h4 style="margin:20px 0 8px;font-size:12px;color:var(--mu);text-transform:uppercase">Delegation: one listener on the parent</h4>
+<div class="row" id="dl"><button class="demo-btn sm" data-n="1">Button 1</button><button class="demo-btn sm" data-n="2">Button 2</button></div>
+<div class="row"><button class="demo-btn outline sm" id="addbtn">+ Add a button later</button></div>
+</div>
+<div class="keypoints"><h4>Key Points</h4><ul><li>Events bubble up from the target through all parents.</li><li>Delegation = one listener on the parent, use <code>e.target</code>.</li><li>It works for elements added dynamically.</li><li><code>e.target.matches('.cls')</code> tests the clicked element.</li></ul></div>
+<nav class="pager"><span><a href="preventdefault.html">&larr; e.preventDefault()</a></span><span><a href="createelement.html">createElement &amp; appendChild &rarr;</a></span></nav>
+</main>
+<script>
+const log=document.getElementById('log');
+['inner','middle','outer'].forEach(id=>document.getElementById(id).addEventListener('click',()=>{if(log.textContent.startsWith('Click'))log.textContent='';const l=document.createElement('div');l.textContent='-> click reached #'+id;log.appendChild(l)}));
+document.getElementById('inner').addEventListener('click',e=>{if(document.getElementById('stop').checked)e.stopPropagation()});
+document.getElementById('clear').addEventListener('click',()=>{log.textContent=''});
+const dl=document.getElementById('dl');
+dl.addEventListener('click',e=>{if(e.target.matches('button')){e.target.textContent='Button '+e.target.dataset.n+' clicked'}});
+document.getElementById('addbtn').addEventListener('click',()=>{const b=document.createElement('button');b.className='demo-btn sm';b.dataset.n=dl.children.length+1;b.textContent='Button '+b.dataset.n;dl.appendChild(b)});
+</script>
+</body>
+</html>

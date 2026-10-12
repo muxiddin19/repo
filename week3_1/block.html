@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .block       { display: block;        background: #6366f1; color: white; padding: 8px; margin: 4px 0; }
+    .inline      { display: inline;       background: #10B981; color: white; padding: 4px 8px; }
+    .inlineblock { display: inline-block; background: #f59e0b; color: white; padding: 8px; width: 140px; height: 40px; }
+    .none        { display: none; }       /* completely invisible */
+  </style>
+</head>
+<body>
+
+  <!-- BLOCK: each takes its own row -->
+  <div class="block">Block 1 — full row</div>
+  <div class="block">Block 2 — full row</div>
+
+  <!-- INLINE: sit next to each other inside text -->
+  <p>
+    Normal text <span class="inline">inline A</span> more text
+    <span class="inline">inline B</span> more text here.
+  </p>
+
+  <!-- INLINE-BLOCK: sit in a row but have fixed size -->
+  <div class="inlineblock">inline-block 1</div>
+  <div class="inlineblock">inline-block 2</div>
+
+  <!-- NONE: completely gone -->
+  <p class="none">You will NEVER see this paragraph.</p>
+
+</body>
+</html>
