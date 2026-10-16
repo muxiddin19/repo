@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 2 — Request Journey Animation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 60px}
+
+/* Demo */
+.demo-box{background:var(--dark);border:2px solid var(--jsyel);border-radius:14px;padding:28px;margin-bottom:24px}
+.demo-box h2{color:#fff;font-size:19px;font-weight:700;margin-bottom:6px}
+.demo-box .sub{color:#94a3b8;font-size:14px;margin-bottom:24px}
+
+/* Network diagram */
+.diagram{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.node{background:#0d1a35;border:2px solid #2a5298;border-radius:10px;padding:14px 18px;text-align:center;min-width:100px}
+.node.you{border-color:var(--jsyel)}
+.node.server{border-color:var(--green)}
+.node-icon{font-size:24px;margin-bottom:4px}
+.node-label{font-size:12px;font-weight:700;color:#93c5fd}
+.node.you .node-label{color:var(--jsyel)}
+.node.server .node-label{color:#86efac}
+.node-sub{font-size:10px;color:#475569;margin-top:2px}
+
+.arrow-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 8px}
+.arrow-track{width:100%;height:18px;position:relative}
+.arrow-line{width:100%;height:2px;background:#1e3a5f;position:absolute;top:8px}
+.arrow-head{position:absolute;top:4px;font-size:10px;color:#4a7ac7}
+.arrow-head.right{right:-2px}
+.arrow-head.left{left:-2px}
+.dot{width:10px;height:10px;border-radius:50%;position:absolute;top:4px;display:none}
+.dot.send{background:var(--ac);left:0}
+.dot.recv{background:#86efac;right:0}
+.dot.send.go{animation:moveRight 1s ease-out forwards}
+.dot.recv.go{animation:moveLeft 1s ease-out forwards}
+@keyframes moveRight{from{left:0;opacity:1}to{left:calc(100% - 10px);opacity:1}}
+@keyframes moveLeft{from{right:0;opacity:1}to{right:calc(100% - 10px);opacity:1}}
+.arrow-step{font-size:11px;color:#475569;font-family:'JetBrains Mono',monospace}
+
+/* Steps timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin-bottom:20px}
+.step-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:8px;border-left:3px solid transparent;transition:all .3s;opacity:.35}
+.step-item.active{opacity:1;background:rgba(26,86,219,.1);border-left-color:var(--ac)}
+.step-item.done{opacity:.7}
+.step-num{width:26px;height:26px;min-width:26px;border-radius:50%;background:#1e3a5f;color:#93c5fd;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-item.active .step-num{background:var(--ac);color:#fff}
+.step-text{font-size:14px;color:#c8daf8;padding-top:3px;line-height:1.5}
+.step-item.active .step-text{color:#fff}
+
+.status-bar{text-align:center;font-size:15px;color:#94a3b8;padding:12px;min-height:44px;font-weight:500}
+.status-bar.active{color:var(--jsyel)}
+.status-bar.done{color:#86efac}
+
+.play-btn{background:var(--ac);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;display:block;margin:0 auto;transition:opacity .15s}
+.play-btn:hover{opacity:.88}
+
+/* Explanation */
+.section-title{font-size:14px;font-weight:700;margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:16px;background:var(--ac);border-radius:2px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:16px 18px;margin-bottom:10px;font-size:14px;line-height:1.7;color:var(--text)}
+.card code{background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.analogy{background:var(--acl);border-left:4px solid var(--ac);border-radius:0 10px 10px 0;padding:14px 18px;font-size:14px;line-height:1.7;margin-bottom:10px}
+.analogy strong{color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 2 — Request Journey Animation</h1>
+  <div class="badge">visualization</div>
+</div>
+
+<div class="wrap">
+  <div class="demo-box">
+    <h2>🌐 What happens inside fetch()?</h2>
+    <p class="sub">Click Play to see the 4-step journey of a fetch() request from your browser to the server and back.</p>
+
+    <!-- Diagram -->
+    <div class="diagram">
+      <div class="node you">
+        <div class="node-icon">💻</div>
+        <div class="node-label">YOUR<br>BROWSER</div>
+        <div class="node-sub">runs JS</div>
+      </div>
+      <div class="arrow-wrap">
+        <div class="arrow-track">
+          <div class="arrow-line"></div>
+          <div class="arrow-head right">▶</div>
+          <div class="dot send" id="dot1"></div>
+        </div>
+        <div class="arrow-step">request →</div>
+      </div>
+      <div class="node" style="border-color:#7c3aed">
+        <div class="node-icon">📡</div>
+        <div class="node-label" style="color:#c4b5fd">INTERNET</div>
+        <div class="node-sub">packets travel</div>
+      </div>
+      <div class="arrow-wrap">
+        <div class="arrow-track">
+          <div class="arrow-line"></div>
+          <div class="arrow-head right">▶</div>
+          <div class="dot send" id="dot2"></div>
+        </div>
+        <div class="arrow-step">→ to server</div>
+      </div>
+      <div class="node server">
+        <div class="node-icon">🗃️</div>
+        <div class="node-label">JOKE<br>SERVER</div>
+        <div class="node-sub">api.example.com</div>
+      </div>
+    </div>
+
+    <div class="diagram" style="flex-direction:row-reverse;margin-bottom:16px">
+      <div class="node you">
+        <div class="node-label">✅ DATA</div>
+        <div class="node-sub">JS updates page</div>
+      </div>
+      <div class="arrow-wrap">
+        <div class="arrow-track">
+          <div class="arrow-line" style="background:#1a3a2a"></div>
+          <div class="arrow-head left">◀</div>
+          <div class="dot recv" id="dot4"></div>
+        </div>
+        <div class="arrow-step">← JSON reply</div>
+      </div>
+      <div class="node" style="border-color:#7c3aed">
+        <div class="node-icon">📦</div>
+        <div class="node-label" style="color:#c4b5fd">INTERNET</div>
+        <div class="node-sub">response travels</div>
+      </div>
+      <div class="arrow-wrap">
+        <div class="arrow-track">
+          <div class="arrow-line" style="background:#1a3a2a"></div>
+          <div class="arrow-head left">◀</div>
+          <div class="dot recv" id="dot3"></div>
+        </div>
+        <div class="arrow-step">← from server</div>
+      </div>
+      <div class="node server">
+        <div class="node-label">📝 FOUND</div>
+        <div class="node-sub">joke ready</div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="timeline">
+      <div class="step-item" id="s0"><div class="step-num">①</div><div class="step-text">JS calls <code>fetch(url)</code> — browser creates an HTTP GET request</div></div>
+      <div class="step-item" id="s1"><div class="step-num">②</div><div class="step-text">Request travels across the internet (50–300 ms typically)</div></div>
+      <div class="step-item" id="s2"><div class="step-num">③</div><div class="step-text">Server receives it, finds a joke, sends back JSON data</div></div>
+      <div class="step-item" id="s3"><div class="step-num">④</div><div class="step-text">Browser receives the response — <code>await fetch()</code> completes, JS updates the page</div></div>
+    </div>
+
+    <div class="status-bar" id="status">Press Play to see the journey</div>
+    <button class="play-btn" id="playBtn" onclick="play()">▶ Play Animation</button>
+  </div>
+
+  <div class="section-title">What is "asynchronous" and why does it matter?</div>
+  <div class="analogy"><strong>Restaurant analogy:</strong> You place your food order (call fetch). The waiter takes it to the kitchen (sends request). You <strong>don't stand frozen at the counter</strong> — you go back to your table and chat with friends (JS keeps running other code). When your food is ready (server responds), the waiter brings it to you (data arrives, JS updates the page).</div>
+  <div class="card">The key insight: JavaScript is a <strong>single-threaded</strong> language — it can only do one thing at a time. But <code>fetch()</code> is handled by the browser's networking engine (a different thread). So while the network request is in flight, your JS code is free to do other work. <code>await</code> simply says "when this network thing is done, come back and continue from here."</div>
+  <div class="card">If network requests were synchronous (blocking), your entire webpage would freeze for every 100ms network delay. Every button, animation, and scroll would stop. This is why async exists.</div>
+</div>
+
+<script>
+let running = false;
+let timer;
+
+function resetDots() {
+  ['dot1','dot2','dot3','dot4'].forEach(id => {
+    const d = document.getElementById(id);
+    d.style.display = 'none';
+    d.className = d.className.replace(' go','');
+  });
+  ['s0','s1','s2','s3'].forEach(id => {
+    document.getElementById(id).classList.remove('active','done');
+  });
+}
+
+function activateDot(id) {
+  const d = document.getElementById(id);
+  d.style.display = 'block';
+  void d.offsetWidth;
+  d.classList.add('go');
+}
+
+function setStep(i, msg) {
+  ['s0','s1','s2','s3'].forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (idx < i) el.className = 'step-item done';
+    else if (idx === i) el.className = 'step-item active';
+    else el.className = 'step-item';
+  });
+  const st = document.getElementById('status');
+  st.textContent = msg;
+  st.className = 'status-bar active';
+}
+
+function play() {
+  if (running) return;
+  running = true;
+  document.getElementById('playBtn').disabled = true;
+  document.getElementById('status').className = 'status-bar';
+  document.getElementById('status').textContent = 'Starting…';
+  resetDots();
+
+  const steps = [
+    () => { setStep(0, '① Your JS calls fetch(url) — request created'); activateDot('dot1'); },
+    () => { setStep(1, '② Request traveling to the server…'); activateDot('dot2'); },
+    () => { setStep(2, '③ Server processing your request…'); },
+    () => { setStep(2, '③ Server found a joke — sending response…'); activateDot('dot3'); },
+    () => { setStep(3, '④ Response arriving at your browser…'); activateDot('dot4'); },
+    () => {
+      ['s0','s1','s2','s3'].forEach(id => document.getElementById(id).className = 'step-item done');
+      const st = document.getElementById('status');
+      st.textContent = '✅ Complete! The await resolves — JS puts the joke on the page.';
+      st.className = 'status-bar done';
+      document.getElementById('playBtn').disabled = false;
+      document.getElementById('playBtn').textContent = '▶ Play Again';
+      running = false;
+    }
+  ];
+
+  let i = 0;
+  function next() {
+    if (i >= steps.length) return;
+    steps[i]();
+    i++;
+    if (i < steps.length) timer = setTimeout(next, 1200);
+  }
+  timer = setTimeout(next, 400);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 3 — Promise States</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--red:#dc2626;--amber:#d97706}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 60px}
+
+/* State boxes */
+.states-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.state-box{border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s;user-select:none}
+.state-box:hover{transform:translateY(-2px)}
+.state-box.pending{background:#fef3c7;border-color:#f59e0b}
+.state-box.fulfilled{background:#dcfce7;border-color:var(--green)}
+.state-box.rejected{background:#fee2e2;border-color:var(--red)}
+.state-box .s-icon{font-size:32px;margin-bottom:8px}
+.state-box .s-name{font-weight:700;font-size:15px;margin-bottom:4px}
+.state-box.pending .s-name{color:#92400e}
+.state-box.fulfilled .s-name{color:#14532d}
+.state-box.rejected .s-name{color:#7f1d1d}
+.state-box .s-hint{font-size:12px;opacity:.7}
+.state-box.active-state{outline:3px solid #000;outline-offset:2px;transform:scale(1.04)}
+
+.info-panel{min-height:120px;background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:20px;margin-bottom:20px;transition:all .3s}
+.info-panel .intro{color:var(--sub);font-size:14px;text-align:center;padding:20px 0}
+.info-panel .detail{display:none}
+.info-panel.show .intro{display:none}
+.info-panel.show .detail{display:block}
+.info-panel .state-title{font-size:18px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.info-panel .state-body{font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:10px}
+.info-panel .code-example{background:var(--dark);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#c8daf8;line-height:1.7}
+.info-panel .code-example .kw{color:#c792ea}
+.info-panel .code-example .fn{color:#82aaff}
+.info-panel .code-example .str{color:#c3e88d}
+.info-panel .code-example .kw2{color:var(--jsyel)}
+.info-panel .code-example .cm{color:#546e7a;font-style:italic}
+
+/* Live simulation */
+.sim-box{background:var(--dark);border:2px solid var(--jsyel);border-radius:14px;padding:24px;margin-bottom:20px}
+.sim-box h2{color:#fff;font-size:18px;font-weight:700;margin-bottom:6px}
+.sim-box .sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
+
+.promise-display{background:#0a0f1e;border-radius:10px;padding:18px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#c8daf8;line-height:1.8;min-height:80px}
+.promise-display .p-line{opacity:.4;transition:all .4s}
+.promise-display .p-line.active{opacity:1}
+.promise-display .p-line.hl{background:rgba(247,223,30,.12);border-radius:3px}
+
+.sim-state-bar{display:flex;gap:8px;margin-bottom:14px}
+.sim-state{flex:1;padding:8px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);transition:all .4s}
+.sim-state.lit-pending{background:rgba(245,158,11,.2);border-color:#f59e0b;color:#fbbf24}
+.sim-state.lit-fulfilled{background:rgba(22,163,74,.2);border-color:#16a34a;color:#4ade80}
+.sim-state.lit-rejected{background:rgba(220,38,38,.2);border-color:#dc2626;color:#f87171}
+
+.sim-btn-row{display:flex;gap:8px}
+.sim-btn{padding:9px 20px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.sim-btn:hover{opacity:.85}
+.sim-btn.success{background:var(--green);color:#fff}
+.sim-btn.fail{background:var(--red);color:#fff}
+.sim-btn.reset{background:#334155;color:#fff}
+
+/* Section */
+.section-title{font-size:14px;font-weight:700;margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:16px;background:var(--ac);border-radius:2px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:16px 18px;margin-bottom:10px;font-size:14px;line-height:1.7;color:var(--text)}
+.card code{background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.analogy{background:var(--acl);border-left:4px solid var(--ac);border-radius:0 10px 10px 0;padding:14px 18px;font-size:14px;line-height:1.7;margin-bottom:10px}
+.analogy strong{color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 3 — Promise States</h1>
+  <div class="badge">Promise · states</div>
+</div>
+
+<div class="wrap">
+
+  <!-- State explorer -->
+  <div class="section-title">Click a state to learn what it means</div>
+  <div class="states-grid">
+    <div class="state-box pending" onclick="showState('pending',this)">
+      <div class="s-icon">⏳</div>
+      <div class="s-name">Pending</div>
+      <div class="s-hint">Waiting…</div>
+    </div>
+    <div class="state-box fulfilled" onclick="showState('fulfilled',this)">
+      <div class="s-icon">✅</div>
+      <div class="s-name">Fulfilled</div>
+      <div class="s-hint">Got the data!</div>
+    </div>
+    <div class="state-box rejected" onclick="showState('rejected',this)">
+      <div class="s-icon">❌</div>
+      <div class="s-name">Rejected</div>
+      <div class="s-hint">Something failed</div>
+    </div>
+  </div>
+
+  <div class="info-panel" id="infoPanel">
+    <div class="intro">☝ Click any state box above to see what it means in JavaScript</div>
+    <div class="detail" id="infoDetail"></div>
+  </div>
+
+  <!-- Live simulation -->
+  <div class="sim-box">
+    <h2>🔬 Live Simulation</h2>
+    <p class="sub">Watch the Promise state change in real time. Choose how the request ends.</p>
+
+    <div class="promise-display" id="simDisplay">
+<span class="p-line" id="pl0"><span style="color:#c792ea">const</span> p = <span style="color:#82aaff">fetch</span>(<span style="color:#c3e88d">'https://api.example.com/joke'</span>);</span>
+<span class="p-line" id="pl1"><span style="color:#546e7a;font-style:italic">// p is now a Promise...</span></span>
+<span class="p-line" id="pl2"><span style="color:#546e7a;font-style:italic">// State: ??? (tap a button below)</span></span>
+<span class="p-line" id="pl3" style="display:none"></span>
+    </div>
+
+    <div class="sim-state-bar">
+      <div class="sim-state" id="ss-pending">⏳ Pending</div>
+      <div class="sim-state" id="ss-fulfilled">✅ Fulfilled</div>
+      <div class="sim-state" id="ss-rejected">❌ Rejected</div>
+    </div>
+
+    <div class="sim-btn-row">
+      <button class="sim-btn reset" onclick="simReset()">↺ Reset</button>
+      <button class="sim-btn success" onclick="simResolve()">✅ Simulate Success</button>
+      <button class="sim-btn fail" onclick="simReject()">❌ Simulate Failure</button>
+    </div>
+  </div>
+
+  <div class="section-title">The café analogy</div>
+  <div class="analogy"><strong>Think of it like this:</strong> You order coffee at a café. The barista hands you a <strong>paper cup with your name on it</strong> — that cup is the Promise. You walk away and sit down (your code keeps running). A moment later, either your coffee is ready <strong>(Fulfilled ✅)</strong> — the barista calls your name and you get your coffee. OR they ran out of oat milk <strong>(Rejected ❌)</strong> — they apologize. The cup (Promise) can only change state ONCE.</div>
+
+  <div class="section-title">Key facts about Promises</div>
+  <div class="card">A Promise can only change state <strong>once</strong>: Pending → Fulfilled, or Pending → Rejected. It can never go backwards, and it can never change from Fulfilled to Rejected.</div>
+  <div class="card"><code>fetch(url)</code> always returns a Promise that starts as <strong>Pending</strong>. When the server responds successfully, it becomes <strong>Fulfilled</strong>. If there's no internet at all, it becomes <strong>Rejected</strong>.</div>
+  <div class="card"><strong>Important gotcha:</strong> A server replying with HTTP 404 or 500 does NOT reject the Promise — the Promise is fulfilled (it got a response), but <code>res.ok</code> is <code>false</code>. You must check this yourself.</div>
+</div>
+
+<script>
+const stateData = {
+  pending: {
+    title: '⏳ Pending',
+    color: '#92400e',
+    body: 'The request has been sent but the server has not responded yet. This is the initial state of every Promise. Your JavaScript code keeps running while the Promise is Pending — the browser handles the network in the background.',
+    code: `<span class="kw">const</span> p = <span class="fn">fetch</span>(<span class="str">'https://api.example.com/data'</span>);
+<span class="cm">// p is: Promise { &lt;pending&gt; }</span>
+<span class="cm">// The request is traveling through the internet...</span>
+<span class="cm">// JavaScript DOES NOT WAIT here. It keeps running.</span>`
+  },
+  fulfilled: {
+    title: '✅ Fulfilled',
+    color: '#14532d',
+    body: 'The server responded successfully. The Promise has resolved with a value — in fetch\'s case, a Response object. The code after await (or inside .then()) now runs.',
+    code: `<span class="kw2">await</span> p; <span class="cm">// the await here receives the fulfilled value</span>
+<span class="cm">// res is now: Response { status: 200, ok: true }</span>
+<span class="cm">// Your .then() or the line after await now runs!</span>
+<span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();`
+  },
+  rejected: {
+    title: '❌ Rejected',
+    color: '#7f1d1d',
+    body: 'Something went wrong at the network level — no internet, DNS failure, server unreachable, request timed out. The Promise has rejected with an error. fetch() ONLY rejects for these network-level failures. An HTTP 404 or 500 response does NOT reject — it fulfills!',
+    code: `<span class="cm">// No internet → fetch() rejects</span>
+<span class="kw">try</span> {
+  <span class="kw">const</span> res = <span class="kw2">await</span> <span class="fn">fetch</span>(...);
+} <span class="kw">catch</span> (err) {
+  <span class="cm">// Arrives here automatically when rejected</span>
+  console.error(err.message); <span class="cm">// "Failed to fetch"</span>
+}`
+  }
+};
+
+let currentBox = null;
+
+function showState(name, box) {
+  if (currentBox) currentBox.classList.remove('active-state');
+  box.classList.add('active-state');
+  currentBox = box;
+
+  const d = stateData[name];
+  document.getElementById('infoDetail').innerHTML = `
+    <div class="state-title" style="color:${d.color}">${d.title}</div>
+    <div class="state-body">${d.body}</div>
+    <div class="code-example">${d.code}</div>
+  `;
+  const panel = document.getElementById('infoPanel');
+  panel.classList.add('show');
+}
+
+// Simulation
+function simReset() {
+  ['ss-pending','ss-fulfilled','ss-rejected'].forEach(id =>
+    document.getElementById(id).className = 'sim-state'
+  );
+  document.getElementById('pl3').style.display = 'none';
+  document.getElementById('pl3').innerHTML = '';
+  document.getElementById('pl2').innerHTML = '<span style="color:#546e7a;font-style:italic">// State: ??? (tap a button below)</span>';
+}
+
+function simResolve() {
+  simReset();
+  document.getElementById('ss-pending').className = 'sim-state lit-pending';
+  setTimeout(() => {
+    document.getElementById('ss-pending').className = 'sim-state';
+    document.getElementById('ss-fulfilled').className = 'sim-state lit-fulfilled';
+    document.getElementById('pl2').innerHTML = '<span style="color:#546e7a;font-style:italic">// State: ✅ FULFILLED</span>';
+    const pl3 = document.getElementById('pl3');
+    pl3.style.display = 'block';
+    pl3.innerHTML = '<span style="color:#c792ea">const</span> data = <span style="color:#c792ea">await</span> res.<span style="color:#82aaff">json</span>(); <span style="color:#546e7a;font-style:italic">// ← now you have the data!</span>';
+  }, 1000);
+}
+
+function simReject() {
+  simReset();
+  document.getElementById('ss-pending').className = 'sim-state lit-pending';
+  setTimeout(() => {
+    document.getElementById('ss-pending').className = 'sim-state';
+    document.getElementById('ss-rejected').className = 'sim-state lit-rejected';
+    document.getElementById('pl2').innerHTML = '<span style="color:#546e7a;font-style:italic">// State: ❌ REJECTED — no internet!</span>';
+    const pl3 = document.getElementById('pl3');
+    pl3.style.display = 'block';
+    pl3.innerHTML = '<span style="color:#f87171">// → goes to catch block: "Failed to fetch"</span>';
+  }, 1000);
+}
+
+// Start simulation in pending state
+simReset();
+document.getElementById('ss-pending').className = 'sim-state lit-pending';
+</script>
+</body>
+</html>
