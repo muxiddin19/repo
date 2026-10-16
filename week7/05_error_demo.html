@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 5 — Error Explorer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;--amber:#d97706;--amberl:#fef3c7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 60px}
+
+/* URL tester */
+.tester{background:var(--dark);border:2px solid var(--jsyel);border-radius:14px;padding:24px;margin-bottom:24px}
+.tester h2{color:#fff;font-size:18px;font-weight:700;margin-bottom:6px}
+.tester .sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
+
+.url-row{display:flex;gap:8px;margin-bottom:10px}
+.url-input{flex:1;background:#0a0f1e;border:1px solid #2a4a7a;border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#c8daf8;outline:none}
+.url-input:focus{border-color:var(--ac)}
+.fetch-btn{background:var(--ac);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.fetch-btn:hover{opacity:.88}
+.fetch-btn:disabled{opacity:.5}
+
+.quick-urls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.quick-url{font-size:12px;padding:4px 10px;border-radius:4px;border:1px solid #2a4a7a;color:#94a3b8;cursor:pointer;font-family:'JetBrains Mono',monospace;background:#0a0f1e;transition:border-color .15s}
+.quick-url:hover{border-color:var(--jsyel);color:var(--jsyel)}
+.quick-url.warn{border-color:#7c3a2a;color:#f87171}
+
+/* Result display */
+.result-panel{display:none;border-radius:10px;overflow:hidden;margin-top:16px}
+.result-header{padding:12px 16px;display:flex;align-items:center;gap:10px}
+.result-header .verdict{font-size:15px;font-weight:700}
+.result-header .verdict-sub{font-size:13px;opacity:.8;margin-top:2px}
+.result-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8}
+.result-row{display:flex;gap:12px;margin-bottom:4px}
+.result-key{color:#94a3b8;min-width:100px}
+.result-val.ok{color:#86efac}
+.result-val.warn{color:#fbbf24}
+.result-val.err{color:#f87171}
+.preview-box{margin-top:8px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:6px;font-size:11px;color:#94a3b8;word-break:break-all;max-height:100px;overflow:auto}
+.result-panel.success .result-header{background:rgba(22,163,74,.2)}
+.result-panel.success{border:1px solid rgba(22,163,74,.4)}
+.result-panel.http-err .result-header{background:rgba(217,119,6,.2)}
+.result-panel.http-err{border:1px solid rgba(217,119,6,.4)}
+.result-panel.network-err .result-header{background:rgba(220,38,38,.2)}
+.result-panel.network-err{border:1px solid rgba(220,38,38,.4)}
+
+/* Insight boxes */
+.insight{border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.7;margin-bottom:10px;border-left:4px solid}
+.insight.ok{background:var(--greenl);border-color:var(--green)}
+.insight.warn{background:var(--amberl);border-color:var(--amber)}
+.insight.err{background:var(--redl);border-color:var(--red)}
+.insight strong{display:block;font-weight:700;margin-bottom:3px}
+.insight code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+/* Section */
+.section-title{font-size:14px;font-weight:700;margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:16px;background:var(--ac);border-radius:2px}
+.code-box{background:var(--dark);border-radius:10px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;color:#c8daf8;overflow-x:auto;margin-bottom:12px}
+.code-box .kw{color:#c792ea}.code-box .fn{color:#82aaff}.code-box .str{color:#c3e88d}.code-box .cm{color:#546e7a;font-style:italic}.code-box .kw2{color:var(--jsyel)}
+.table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surf);border-radius:10px;overflow:hidden;border:1px solid var(--bdr)}
+.table th{padding:10px 14px;text-align:left;background:var(--bg);font-weight:600;color:var(--sub);font-size:12px}
+.table td{padding:10px 14px;border-top:1px solid var(--bdr);vertical-align:top;line-height:1.5}
+.table td code{font-family:'JetBrains Mono',monospace;font-size:.85em;background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px}
+.badge-ok{background:var(--greenl);color:#14532d;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+.badge-warn{background:var(--amberl);color:#78350f;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+.badge-err{background:var(--redl);color:#7f1d1d;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 5 — Error Explorer</h1>
+  <div class="badge">res.ok · errors · gotcha</div>
+</div>
+
+<div class="wrap">
+  <div class="tester">
+    <h2>⚠️ Test any URL — see exactly what fetch() does</h2>
+    <p class="sub">Try real URLs, fake URLs, and broken URLs to discover when fetch throws vs. when you must check res.ok.</p>
+
+    <div class="quick-urls">
+      <span style="font-size:11px;color:#475569;align-self:center">Quick test:</span>
+      <div class="quick-url" onclick="setUrl('https://jsonplaceholder.typicode.com/posts/1')">✅ real URL</div>
+      <div class="quick-url warn" onclick="setUrl('https://jsonplaceholder.typicode.com/posts/99999')">⚠️ 404 URL</div>
+      <div class="quick-url warn" onclick="setUrl('https://httpstat.us/500')">⚠️ 500 URL</div>
+      <div class="quick-url warn" onclick="setUrl('https://this-domain-does-not-exist-xyz.com/data')">❌ bad domain</div>
+    </div>
+
+    <div class="url-row">
+      <input class="url-input" id="urlInput" type="text" value="https://jsonplaceholder.typicode.com/posts/1" placeholder="https://...">
+      <button class="fetch-btn" id="fetchBtn" onclick="runFetch()">Try fetch()</button>
+    </div>
+
+    <div class="result-panel" id="result">
+      <div class="result-header">
+        <div>
+          <div class="verdict" id="r-verdict"></div>
+          <div class="verdict-sub" id="r-sub"></div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="result-row"><div class="result-key">fetch threw:</div><div class="result-val" id="r-threw"></div></div>
+        <div class="result-row" id="r-ok-row"><div class="result-key">res.ok:</div><div class="result-val" id="r-ok"></div></div>
+        <div class="result-row" id="r-status-row"><div class="result-key">res.status:</div><div class="result-val" id="r-status"></div></div>
+        <div class="preview-box" id="r-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">The 3 scenarios you must know</div>
+
+  <div class="insight ok">
+    <strong>✅ Scenario 1: Success (HTTP 200)</strong>
+    fetch() resolves normally. <code>res.ok</code> is <code>true</code>. <code>res.status</code> is 200. You can safely call <code>await res.json()</code>.
+  </div>
+
+  <div class="insight warn">
+    <strong>⚠️ Scenario 2: HTTP Error (404, 500, etc.) — THE GOTCHA</strong>
+    fetch() STILL RESOLVES (does NOT throw). <code>res.ok</code> is <code>false</code>. <code>res.status</code> is 404 or 500. Your <code>try</code> block keeps running — you MUST manually check <code>if (!res.ok) throw new Error(...)</code> to handle this.
+  </div>
+
+  <div class="insight err">
+    <strong>❌ Scenario 3: Network Failure (no internet, bad domain)</strong>
+    fetch() REJECTS — it throws a TypeError like "Failed to fetch". This goes directly to your <code>catch</code> block automatically. No need to check <code>res.ok</code> — there is no response object.
+  </div>
+
+  <div class="section-title">The correct pattern to handle all 3</div>
+  <div class="code-box">
+<span class="kw">async function</span> <span class="fn">loadData</span>(url) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw2">await</span> <span class="fn">fetch</span>(url);
+
+    <span class="cm">// Handle Scenario 2 — fetch() didn't throw, but status is bad</span>
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">`HTTP error: ${res.status}`</span>);
+
+    <span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();
+    <span class="fn">render</span>(data); <span class="cm">// Scenario 1 — success!</span>
+
+  } <span class="kw">catch</span> (err) {
+    <span class="cm">// Catches BOTH: Scenario 2 (manual throw) + Scenario 3 (network failure)</span>
+    <span class="fn">showError</span>(err.message);
+  }
+}
+  </div>
+
+  <div class="section-title">Quick reference table</div>
+  <table class="table">
+    <thead><tr><th>Situation</th><th>fetch() throws?</th><th>res.ok</th><th>res.status</th></tr></thead>
+    <tbody>
+      <tr><td>Server responds OK</td><td><span class="badge-ok">No</span></td><td><code>true</code></td><td>200</td></tr>
+      <tr><td>Server says Not Found</td><td><span class="badge-warn">No — check res.ok!</span></td><td><code>false</code></td><td>404</td></tr>
+      <tr><td>Server says Error</td><td><span class="badge-warn">No — check res.ok!</span></td><td><code>false</code></td><td>500</td></tr>
+      <tr><td>No internet / bad domain</td><td><span class="badge-err">YES → catch runs</span></td><td>N/A</td><td>N/A</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function setUrl(url) {
+  document.getElementById('urlInput').value = url;
+}
+
+async function runFetch() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Fetching…';
+  const panel = document.getElementById('result');
+  panel.style.display = 'none';
+
+  try {
+    const res = await fetch(url);
+    let preview = '';
+    try {
+      const text = await res.text();
+      preview = text.length > 200 ? text.slice(0, 200) + '…' : text;
+    } catch { preview = '(could not read body)'; }
+
+    if (res.ok) {
+      panel.className = 'result-panel success';
+      document.getElementById('r-verdict').textContent = '✅ Scenario 1: Success';
+      document.getElementById('r-sub').textContent = 'fetch() resolved normally. res.ok is true. Data is usable.';
+    } else {
+      panel.className = 'result-panel http-err';
+      document.getElementById('r-verdict').textContent = '⚠️ Scenario 2: HTTP Error — THE GOTCHA';
+      document.getElementById('r-sub').textContent = 'fetch() did NOT throw. You must check res.ok yourself!';
+    }
+    document.getElementById('r-threw').className = 'result-val ok';
+    document.getElementById('r-threw').textContent = 'No — fetch() resolved';
+    document.getElementById('r-ok-row').style.display = 'flex';
+    document.getElementById('r-ok').className = 'result-val ' + (res.ok ? 'ok' : 'warn');
+    document.getElementById('r-ok').textContent = String(res.ok);
+    document.getElementById('r-status-row').style.display = 'flex';
+    document.getElementById('r-status').className = 'result-val ' + (res.ok ? 'ok' : 'warn');
+    document.getElementById('r-status').textContent = res.status + ' ' + res.statusText;
+    document.getElementById('r-preview').textContent = 'Response body preview: ' + preview;
+
+  } catch (err) {
+    panel.className = 'result-panel network-err';
+    document.getElementById('r-verdict').textContent = '❌ Scenario 3: Network Error';
+    document.getElementById('r-sub').textContent = 'fetch() threw automatically. Goes directly to catch block.';
+    document.getElementById('r-threw').className = 'result-val err';
+    document.getElementById('r-threw').textContent = 'YES — ' + err.message;
+    document.getElementById('r-ok-row').style.display = 'none';
+    document.getElementById('r-status-row').style.display = 'none';
+    document.getElementById('r-preview').textContent = '(no response — network failure)';
+  }
+
+  panel.style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = 'Try fetch()';
+}
+</script>
+</body>
+</html>
