@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 4 — Code Stepper</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 60px}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--surf);color:var(--sub);transition:all .15s}
+.tab.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+/* Stepper */
+.stepper-box{background:var(--dark);border-radius:14px;padding:24px;margin-bottom:12px}
+.stepper-box h2{color:#fff;font-size:17px;font-weight:700;margin-bottom:4px}
+.stepper-box .desc{color:#94a3b8;font-size:13px;margin-bottom:18px}
+
+.code-block{border-radius:10px;overflow:hidden;margin-bottom:14px}
+pre{background:#0a0f1e;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:#c8daf8;overflow-x:auto}
+.sl{display:block;border-radius:4px;padding:0 4px;margin:0 -4px;transition:all .3s;opacity:.4}
+.sl.hl{opacity:1;background:rgba(247,223,30,.15);outline:2px solid rgba(247,223,30,.35)}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.kw2{color:var(--jsyel)}.cnum{color:#f78c6c}
+
+/* Progress dots */
+.progress-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.dot-ind{width:8px;height:8px;border-radius:50%;background:#1e3a5f;transition:background .3s}
+.dot-ind.active{background:var(--ac)}
+.dot-ind.done{background:#4a7ac7}
+
+/* Explanation */
+.explain-box{background:var(--jsyel);color:#1a2340;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:500;line-height:1.6;min-height:60px;margin-bottom:14px}
+.explain-placeholder{color:#94a3b8;font-size:14px;font-style:italic;background:#0a0f1e;border-radius:10px;padding:14px 18px;min-height:60px;margin-bottom:14px;display:flex;align-items:center}
+
+/* Nav buttons */
+.nav-row{display:flex;gap:8px;align-items:center}
+.nav-btn{padding:8px 20px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.nav-btn:hover{opacity:.85}
+.nav-btn.prev{background:#1e2d50;color:#94a3b8;border:1px solid #2a3f6a}
+.nav-btn.next{background:var(--ac);color:#fff}
+.nav-btn:disabled{opacity:.35;cursor:default}
+.step-counter{font-size:13px;color:#475569;margin-left:auto}
+
+/* Tip card */
+.tip{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.7;margin-top:20px}
+.tip code{background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.tip strong{color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 4 — Code Stepper</h1>
+  <div class="badge">step-by-step</div>
+</div>
+
+<div class="wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="switchExample(1,this)">Example 1: Joke Loader</div>
+    <div class="tab" onclick="switchExample(2,this)">Example 2: User Fetcher</div>
+  </div>
+
+  <!-- EXAMPLE 1 -->
+  <div id="ex1">
+    <div class="stepper-box">
+      <h2>😂 loadJoke() — step through it</h2>
+      <p class="desc">Press Next to advance one line at a time. Each step explains exactly what that line does.</p>
+
+      <div class="progress-dots" id="dots1"></div>
+
+      <div class="code-block"><pre><span class="sl" id="e1-0"><span class="kw">async function</span> <span class="fn">loadJoke</span>() {</span>
+<span class="sl" id="e1-1">  <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(<span class="str">'https://official-joke-api.appspot.com/random_joke'</span>);</span>
+<span class="sl" id="e1-2">  <span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();</span>
+<span class="sl" id="e1-3">  document.<span class="fn">getElementById</span>(<span class="str">'setup'</span>).textContent = data.setup;</span>
+<span class="sl" id="e1-4">  document.<span class="fn">getElementById</span>(<span class="str">'punchline'</span>).textContent = data.punchline;</span>
+<span class="sl" id="e1-5">}</span></pre></div>
+
+      <div class="explain-placeholder" id="e1-hint-placeholder">← Click Next to start stepping through the code</div>
+      <div class="explain-box" id="e1-explain" style="display:none"></div>
+
+      <div class="nav-row">
+        <button class="nav-btn prev" id="e1-prev" onclick="step(1,-1)" disabled>← Prev</button>
+        <button class="nav-btn next" id="e1-next" onclick="step(1,1)">Next →</button>
+        <div class="step-counter" id="e1-counter">Step 0 of 6</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 2 -->
+  <div id="ex2" style="display:none">
+    <div class="stepper-box">
+      <h2>👤 loadUser() — step through it</h2>
+      <p class="desc">This example fetches user data from a test API. Same pattern, different data.</p>
+
+      <div class="progress-dots" id="dots2"></div>
+
+      <div class="code-block"><pre><span class="sl" id="e2-0"><span class="kw">async function</span> <span class="fn">loadUser</span>() {</span>
+<span class="sl" id="e2-1">  <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(<span class="str">'https://jsonplaceholder.typicode.com/users/1'</span>);</span>
+<span class="sl" id="e2-2">  <span class="kw">const</span> user = <span class="kw2">await</span> res.<span class="fn">json</span>();</span>
+<span class="sl" id="e2-3">  console.<span class="fn">log</span>(<span class="str">'Name:'</span>, user.name);   <span class="cm">// → "Leanne Graham"</span></span>
+<span class="sl" id="e2-4">  console.<span class="fn">log</span>(<span class="str">'Email:'</span>, user.email);  <span class="cm">// → "Sincere@april.biz"</span></span>
+<span class="sl" id="e2-5">}</span></pre></div>
+
+      <div class="explain-placeholder" id="e2-hint-placeholder">← Click Next to start stepping through the code</div>
+      <div class="explain-box" id="e2-explain" style="display:none"></div>
+
+      <div class="nav-row">
+        <button class="nav-btn prev" id="e2-prev" onclick="step(2,-1)" disabled>← Prev</button>
+        <button class="nav-btn next" id="e2-next" onclick="step(2,1)">Next →</button>
+        <div class="step-counter" id="e2-counter">Step 0 of 6</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Tip:</strong> After going through both examples, you'll notice the <strong>exact same pattern</strong>: <code>async function</code> → <code>await fetch(url)</code> → <code>await res.json()</code> → use the data. This two-await pattern is the foundation of all fetch code.
+  </div>
+</div>
+
+<script>
+const STEPS = {
+  1: [
+    'Declare an <strong>async function</strong> named <code>loadJoke</code>. The keyword <code>async</code> before <code>function</code> does two things: (1) enables <code>await</code> inside this function, and (2) makes the function automatically return a Promise.',
+    '<code>await fetch(url)</code> — sends an HTTP GET request to the joke API. The <code>await</code> keyword pauses THIS function here and waits for the server to send a response. <code>res</code> is the HTTP Response object (not the data yet — just the response headers and status code).',
+    '<code>await res.json()</code> — asks the Response to read its body and parse it as JSON. This is ALSO a Promise, so we need a second <code>await</code>. After this line, <code>data</code> is a plain JavaScript object like <code>{ setup: "...", punchline: "...", type: "..." }</code>.',
+    '<code>document.getElementById(\'setup\')</code> — this is DOM manipulation from Week 4. We find the HTML element with id="setup" and set its text content to <code>data.setup</code> — the first part of the joke.',
+    '<code>data.punchline</code> — same idea. We find the "punchline" element and set it to the funny part of the joke. After this line, the joke is visible on the page!',
+    'Closing brace <code>}</code> — the function ends here. We wrote only 4 meaningful lines of code to fetch and display real internet data. That is the power of <code>async/await</code>.'
+  ],
+  2: [
+    'Declare an <strong>async function</strong> named <code>loadUser</code>. Same pattern as loadJoke — <code>async</code> before <code>function</code> enables <code>await</code> inside.',
+    '<code>await fetch(url)</code> — sends a request to <code>jsonplaceholder.typicode.com</code> — a free "fake" API that returns test data. Useful for practice! <code>res</code> holds the HTTP Response (headers + status).',
+    '<code>await res.json()</code> — reads the response body and parses it. <code>user</code> is now an object with properties like <code>user.name</code>, <code>user.email</code>, <code>user.phone</code>, etc.',
+    '<code>user.name</code> — access the "name" property from the JSON object. This API returns the name "Leanne Graham" for user ID 1. Notice it\'s just dot notation — nothing special, same as any JS object.',
+    '<code>user.email</code> — another property from the same object. The API returned ALL the user\'s data in one fetch call. You just pick the properties you need using dot notation.',
+    'Closing brace. Done! The pattern is identical to Example 1: <code>async</code> → <code>await fetch</code> → <code>await .json()</code> → use the data. Once you know this pattern, you can fetch from any API.'
+  ]
+};
+
+const pos = { 1: -1, 2: -1 };
+const COUNT = { 1: 6, 2: 6 };
+
+function buildDots(ex) {
+  const container = document.getElementById('dots' + ex);
+  container.innerHTML = '';
+  for (let i = 0; i < COUNT[ex]; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot-ind';
+    d.id = `dot${ex}-${i}`;
+    container.appendChild(d);
+  }
+}
+
+buildDots(1);
+buildDots(2);
+
+function step(ex, dir) {
+  const steps = STEPS[ex];
+  pos[ex] = Math.max(-1, Math.min(steps.length - 1, pos[ex] + dir));
+  const p = pos[ex];
+
+  // Highlight lines
+  for (let i = 0; i < steps.length; i++) {
+    const el = document.getElementById(`e${ex}-${i}`);
+    el.classList.toggle('hl', i === p);
+    el.style.opacity = i === p ? '1' : (p < 0 ? '.4' : (i <= p ? '.6' : '.25'));
+  }
+
+  // Dots
+  for (let i = 0; i < COUNT[ex]; i++) {
+    const d = document.getElementById(`dot${ex}-${i}`);
+    d.className = 'dot-ind' + (i === p ? ' active' : (i < p ? ' done' : ''));
+  }
+
+  // Explain
+  const placeholder = document.getElementById(`e${ex}-hint-placeholder`);
+  const explain = document.getElementById(`e${ex}-explain`);
+  if (p >= 0) {
+    placeholder.style.display = 'none';
+    explain.style.display = 'block';
+    explain.innerHTML = steps[p];
+  } else {
+    placeholder.style.display = 'flex';
+    explain.style.display = 'none';
+  }
+
+  // Counter
+  document.getElementById(`e${ex}-counter`).textContent =
+    `Step ${Math.max(0, p + 1)} of ${steps.length}`;
+
+  // Buttons
+  document.getElementById(`e${ex}-prev`).disabled = p <= -1;
+  document.getElementById(`e${ex}-next`).disabled = p >= steps.length - 1;
+}
+
+function switchExample(ex, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('ex1').style.display = ex === 1 ? 'block' : 'none';
+  document.getElementById('ex2').style.display = ex === 2 ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

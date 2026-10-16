@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 1 — Live Joke Fetcher</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+
+.wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+
+/* Demo box */
+.demo-box{background:var(--dark);border:2px solid var(--jsyel);border-radius:14px;padding:28px;margin-bottom:24px}
+.demo-box h2{color:#fff;font-size:20px;font-weight:700;margin-bottom:6px}
+.demo-box .sub{color:#94a3b8;font-size:14px;margin-bottom:20px}
+
+.load-btn{background:var(--jsyel);color:#1a2540;border:none;padding:12px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.load-btn:hover{opacity:.88}
+.load-btn:disabled{opacity:.5;cursor:default}
+
+.result-area{margin-top:20px;min-height:80px;background:#0a0f1e;border-radius:10px;padding:18px;border:1px solid #1e3a5f;display:none}
+.joke-setup{color:#94a3b8;font-size:14px;margin-bottom:6px}
+.joke-punchline{color:var(--jsyel);font-size:17px;font-weight:600;line-height:1.4}
+.joke-meta{color:#475569;font-size:11px;margin-top:10px;font-family:'JetBrains Mono',monospace}
+.error-msg{color:#f87171;font-size:14px;font-style:italic}
+.loading-msg{color:#94a3b8;font-size:14px}
+
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* count badge */
+.count-badge{display:inline-block;background:rgba(255,255,255,.1);color:#94a3b8;border-radius:20px;font-size:12px;padding:3px 10px;margin-top:12px}
+
+/* Code section */
+.section-title{font-size:14px;font-weight:700;margin-bottom:10px;margin-top:28px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:16px;background:var(--ac);border-radius:2px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:16px 18px;margin-bottom:12px;font-size:14px;line-height:1.7}
+.card code{background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.code-box{background:var(--dark);border-radius:10px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;color:#c8daf8;overflow-x:auto;position:relative;margin-top:10px}
+.code-box .kw{color:#c792ea}.code-box .fn{color:#82aaff}.code-box .str{color:#c3e88d}.code-box .cm{color:#546e7a;font-style:italic}.code-box .kw2{color:var(--jsyel)}
+.copy-btn{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.1);border:none;color:#94a3b8;padding:3px 10px;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit}
+.copy-btn:hover{background:rgba(255,255,255,.2)}
+.explain{background:var(--acl);border-left:3px solid var(--ac);border-radius:0 8px 8px 0;padding:12px 14px;font-size:14px;margin-top:8px}
+.explain strong{color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 1 — Live Joke Fetcher</h1>
+  <div class="badge">fetch · async · await</div>
+</div>
+
+<div class="wrap">
+
+  <!-- THE LIVE DEMO -->
+  <div class="demo-box">
+    <h2>😂 Click the button to fetch a real joke</h2>
+    <p class="sub">Data is loaded live from the internet. Every click gets a different joke.</p>
+    <button class="load-btn" id="btn" onclick="loadJoke()">Load a Joke</button>
+    <div class="count-badge" id="cnt" style="display:none">Loaded: <span id="count">0</span> joke(s)</div>
+    <div class="result-area" id="out">
+      <div class="loading-msg" id="loading"><span class="spinner"></span> Asking the server…</div>
+      <div id="joke" style="display:none">
+        <div class="joke-setup" id="setup"></div>
+        <div class="joke-punchline" id="punchline"></div>
+        <div class="joke-meta" id="meta"></div>
+      </div>
+      <div class="error-msg" id="errMsg" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- EXPLANATIONS -->
+  <div class="section-title">What just happened?</div>
+  <div class="card">When you clicked the button, the function <code>loadJoke()</code> ran. It used <code>fetch()</code> to send a request to <code>official-joke-api.appspot.com</code> — a server that lives on the internet. A fraction of a second later, the server replied with JSON data containing a joke. JavaScript put that data onto the page. <strong>The page never reloaded.</strong></div>
+
+  <div class="section-title">The complete code powering this demo</div>
+
+  <div style="position:relative">
+    <div class="code-box" id="srcCode">
+<span class="cm">// The URL of the joke API</span>
+<span class="kw">const</span> API = <span class="str">'https://official-joke-api.appspot.com/random_joke'</span>;
+<span class="kw">const</span> FALLBACK = { setup: <span class="str">'Why do programmers prefer dark mode?'</span>, punchline: <span class="str">'Light attracts bugs! 🐛'</span>, type: <span class="str">'demo'</span> };
+
+<span class="kw">let</span> count = 0;
+
+<span class="kw2">async</span> <span class="kw">function</span> <span class="fn">loadJoke</span>() {
+  <span class="cm">// Disable button while loading</span>
+  document.<span class="fn">getElementById</span>(<span class="str">'btn'</span>).disabled = <span class="kw">true</span>;
+
+  <span class="cm">// Show the output area and loading message</span>
+  document.<span class="fn">getElementById</span>(<span class="str">'out'</span>).style.display = <span class="str">'block'</span>;
+  document.<span class="fn">getElementById</span>(<span class="str">'loading'</span>).style.display = <span class="str">'block'</span>;
+  document.<span class="fn">getElementById</span>(<span class="str">'joke'</span>).style.display = <span class="str">'none'</span>;
+  document.<span class="fn">getElementById</span>(<span class="str">'errMsg'</span>).style.display = <span class="str">'none'</span>;
+
+  <span class="kw">try</span> {
+    <span class="cm">// Step 1: Send request, wait for RESPONSE (headers)</span>
+    <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(API);
+
+    <span class="cm">// Step 2: Wait for BODY and parse as JSON</span>
+    <span class="kw">const</span> data = res.ok ? <span class="kw2">await</span> res.<span class="fn">json</span>() : FALLBACK;
+
+    <span class="cm">// Step 3: Put the data on the page (DOM manipulation)</span>
+    document.<span class="fn">getElementById</span>(<span class="str">'setup'</span>).textContent     = data.setup;
+    document.<span class="fn">getElementById</span>(<span class="str">'punchline'</span>).textContent  = data.punchline;
+    document.<span class="fn">getElementById</span>(<span class="str">'meta'</span>).textContent      = <span class="str">`Type: ${data.type}  |  Source: joke API ✓`</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'joke'</span>).style.display    = <span class="str">'block'</span>;
+    count++;
+
+  } <span class="kw">catch</span> (err) {
+    <span class="cm">// Network failure (no internet) → show fallback</span>
+    document.<span class="fn">getElementById</span>(<span class="str">'setup'</span>).textContent    = FALLBACK.setup;
+    document.<span class="fn">getElementById</span>(<span class="str">'punchline'</span>).textContent = FALLBACK.punchline;
+    document.<span class="fn">getElementById</span>(<span class="str">'meta'</span>).textContent     = <span class="str">'(demo fallback — no internet?)'</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'joke'</span>).style.display   = <span class="str">'block'</span>;
+    count++;
+
+  } <span class="kw">finally</span> {
+    <span class="cm">// ALWAYS: hide loading, re-enable button, update count</span>
+    document.<span class="fn">getElementById</span>(<span class="str">'loading'</span>).style.display = <span class="str">'none'</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'btn'</span>).disabled = <span class="kw">false</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'btn'</span>).textContent = <span class="str">'Load Another Joke'</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'cnt'</span>).style.display = <span class="str">'inline-block'</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'count'</span>).textContent = count;
+  }
+}
+    </div>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+  </div>
+
+  <div class="section-title">Key concepts in this demo</div>
+  <div class="explain"><strong>async function</strong> — The word <code>async</code> before <code>function</code> enables the <code>await</code> keyword inside. Without it, <code>await</code> causes a syntax error.</div>
+  <div class="explain" style="margin-top:8px"><strong>Two awaits</strong> — The first <code>await fetch()</code> waits for the server's response headers. The second <code>await res.json()</code> waits for the response body to be fully downloaded and parsed.</div>
+  <div class="explain" style="margin-top:8px"><strong>finally block</strong> — Runs whether the request succeeded or failed. Perfect for re-enabling buttons and hiding loading spinners.</div>
+</div>
+
+<script>
+const API = 'https://official-joke-api.appspot.com/random_joke';
+const FALLBACK = { setup: 'Why do programmers prefer dark mode?', punchline: 'Light attracts bugs! 🐛', type: 'demo' };
+let count = 0;
+
+async function loadJoke() {
+  document.getElementById('btn').disabled = true;
+  document.getElementById('out').style.display = 'block';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('joke').style.display = 'none';
+  document.getElementById('errMsg').style.display = 'none';
+  try {
+    const res  = await fetch(API);
+    const data = res.ok ? await res.json() : FALLBACK;
+    document.getElementById('setup').textContent    = data.setup;
+    document.getElementById('punchline').textContent = data.punchline;
+    document.getElementById('meta').textContent     = `Type: ${data.type}  |  Source: joke API ✓`;
+    document.getElementById('joke').style.display   = 'block';
+    count++;
+  } catch (err) {
+    document.getElementById('setup').textContent    = FALLBACK.setup;
+    document.getElementById('punchline').textContent = FALLBACK.punchline;
+    document.getElementById('meta').textContent     = '(demo fallback — no internet?)';
+    document.getElementById('joke').style.display   = 'block';
+    count++;
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('btn').disabled = false;
+    document.getElementById('btn').textContent = 'Load Another Joke';
+    document.getElementById('cnt').style.display = 'inline-block';
+    document.getElementById('count').textContent = count;
+  }
+}
+
+function copyCode() {
+  const text = document.getElementById('srcCode').innerText;
+  navigator.clipboard.writeText(text).catch(() => {});
+  event.target.textContent = 'Copied!';
+  setTimeout(() => event.target.textContent = 'Copy', 1500);
+}
+</script>
+</body>
+</html>

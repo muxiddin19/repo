@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 6 — Fetch API Demos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--jsyel);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:26px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:14px}
+.grid{max-width:860px;margin:32px auto;padding:0 20px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:10px}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,37,64,.12)}
+.card-icon{font-size:28px}
+.card-num{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--sub)}
+.card h2{font-size:16px;font-weight:700}
+.card p{font-size:13px;color:var(--sub);line-height:1.6;flex:1}
+.card-tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;background:var(--bg);color:var(--ac);align-self:flex-start}
+.note{max-width:860px;margin:0 auto;padding:0 20px 24px;font-size:13px;color:var(--sub);background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:14px 18px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="badge">WEEK 6 · FRIDAY · FETCH API</div>
+  <h1>Interactive Demos</h1>
+  <p>Each example from the Study Guide as its own standalone page</p>
+</div>
+
+<div style="max-width:860px;margin:24px auto 0;padding:0 20px">
+  <div class="note">📂 Open any file below directly in your browser. Each one is fully self-contained — no server needed. View the source code with F12 (DevTools) to see how each demo works.</div>
+</div>
+
+<div class="grid">
+  <a class="card" href="01_joke_demo.html">
+    <div class="card-icon">😂</div>
+    <div class="card-num">Demo 1</div>
+    <h2>Live Joke Fetcher</h2>
+    <p>Fetches a real programming joke from the internet. Shows loading state, error handling, and how JSON data appears on the page.</p>
+    <div class="card-tag">fetch · async · await</div>
+  </a>
+  <a class="card" href="02_network_anim.html">
+    <div class="card-icon">🌐</div>
+    <div class="card-num">Demo 2</div>
+    <h2>Request Journey</h2>
+    <p>Animated visualization of what happens step-by-step when you call fetch() — from your browser through the internet to the server and back.</p>
+    <div class="card-tag">animation · visualization</div>
+  </a>
+  <a class="card" href="03_promise_states.html">
+    <div class="card-icon">⏳</div>
+    <div class="card-num">Demo 3</div>
+    <h2>Promise States</h2>
+    <p>Interactive explorer for the three Promise states: Pending, Fulfilled, and Rejected. Includes a live simulation.</p>
+    <div class="card-tag">Promise · states</div>
+  </a>
+  <a class="card" href="04_code_stepper.html">
+    <div class="card-icon">👣</div>
+    <div class="card-num">Demo 4</div>
+    <h2>Code Stepper</h2>
+    <p>Step through fetch code line-by-line with explanations for each line. Two examples: joke loader and user fetcher.</p>
+    <div class="card-tag">step-by-step · async/await</div>
+  </a>
+  <a class="card" href="05_error_demo.html">
+    <div class="card-icon">⚠️</div>
+    <div class="card-num">Demo 5</div>
+    <h2>Error Explorer</h2>
+    <p>Test any URL and see exactly what fetch() returns. Discover the 404 gotcha — why fetch() does NOT auto-throw on HTTP errors.</p>
+    <div class="card-tag">res.ok · try/catch · errors</div>
+  </a>
+  <a class="card" href="06_build_steps.html">
+    <div class="card-icon">🔨</div>
+    <div class="card-num">Demo 6</div>
+    <h2>Build It: Step by Step</h2>
+    <p>Watch the joke app get built from zero — one step at a time, from HTML skeleton to full try/catch/finally pattern.</p>
+    <div class="card-tag">step builder · complete pattern</div>
+  </a>
+  <a class="card" href="07_quiz.html">
+    <div class="card-icon">✏️</div>
+    <div class="card-num">Demo 7</div>
+    <h2>Self-Check Quiz</h2>
+    <p>5 multiple-choice questions to check your understanding of fetch(), Promise, async/await, and error handling.</p>
+    <div class="card-tag">quiz · self-assessment</div>
+  </a>
+</div>
+</body>
+</html>

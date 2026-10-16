@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 7 — Self-Check Quiz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 60px}
+
+/* Progress */
+.progress-bar-outer{height:6px;background:#c8d4f0;border-radius:3px;margin-bottom:20px;overflow:hidden}
+.progress-bar-inner{height:100%;background:var(--ac);border-radius:3px;transition:width .4s ease}
+.progress-text{font-size:13px;color:var(--sub);margin-bottom:8px;display:flex;justify-content:space-between}
+
+/* Question card */
+.q-card{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:24px;margin-bottom:14px;transition:border-color .3s}
+.q-card.correct{border-color:var(--green);background:var(--greenl)}
+.q-card.wrong{border-color:var(--red);background:var(--redl)}
+.q-num{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.q-text{font-size:16px;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:16px}
+.q-text code{background:var(--acl);color:var(--ac);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+/* Options */
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{padding:11px 16px;border-radius:8px;border:2px solid var(--bdr);background:var(--surf);font-size:14px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:all .15s;line-height:1.5;font-family:inherit;width:100%;text-align:left;color:var(--text)}
+.opt:hover:not(:disabled){border-color:var(--ac);background:var(--acl)}
+.opt:disabled{cursor:default}
+.opt.selected-correct{border-color:var(--green);background:var(--greenl)!important;color:#14532d}
+.opt.selected-wrong{border-color:var(--red);background:var(--redl)!important;color:#7f1d1d}
+.opt.reveal-correct{border-color:var(--green);background:var(--greenl)!important;color:#14532d}
+.opt .opt-letter{font-weight:700;min-width:18px;font-family:'JetBrains Mono',monospace}
+.opt code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+/* Feedback */
+.feedback{margin-top:12px;font-size:14px;line-height:1.6;padding:12px 16px;border-radius:8px;display:none}
+.feedback.correct{background:var(--greenl);color:#14532d;display:block}
+.feedback.wrong{background:var(--redl);color:#7f1d1d;display:block}
+.feedback strong{font-weight:700}
+.feedback code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+/* Score panel */
+.score-panel{display:none;text-align:center;background:var(--dark);border:2px solid var(--jsyel);border-radius:16px;padding:32px;margin-top:16px}
+.score-big{font-size:64px;font-weight:800;color:var(--jsyel);line-height:1}
+.score-label{color:#94a3b8;font-size:16px;margin-top:8px;margin-bottom:20px}
+.score-msg{font-size:17px;font-weight:600;color:#fff;margin-bottom:16px}
+.score-detail{font-size:14px;color:#94a3b8;margin-bottom:24px;line-height:1.7}
+.retry-btn{background:var(--jsyel);color:#1a2540;border:none;padding:12px 30px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.retry-btn:hover{opacity:.88}
+
+.section-title{font-size:13px;font-weight:700;color:var(--sub);letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--ac);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 7 — Self-Check Quiz</h1>
+  <div class="badge">5 questions · instant feedback</div>
+</div>
+
+<div class="wrap">
+  <div class="section-title">Week 6 Fetch API — Knowledge Check</div>
+
+  <div class="progress-text">
+    <span id="progressLabel">Question 0 of 5 answered</span>
+    <span id="scoreLabel"></span>
+  </div>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div id="quiz"></div>
+  <div class="score-panel" id="scorePanel">
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-label">out of 5 questions</div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <div class="score-detail" id="scoreDetail"></div>
+    <button class="retry-btn" onclick="retry()">↺ Try Again</button>
+  </div>
+</div>
+
+<script>
+const QS = [
+  {
+    q: 'What does <code>fetch(url)</code> return right away?',
+    opts: ['The JSON data from the server', 'A Promise', 'An HTTP Response object', 'undefined'],
+    correct: 1,
+    explain: '<strong>B is correct.</strong> <code>fetch(url)</code> returns a <strong>Promise</strong> immediately — before the server has even responded. The Promise will eventually resolve to a Response object, which you then read with <code>await res.json()</code>. The data never arrives directly from <code>fetch()</code> itself.'
+  },
+  {
+    q: 'The server returns a <b>404 Not Found</b> response. What does <code>fetch()</code> do?',
+    opts: [
+      'Throws an error automatically',
+      'Rejects the Promise',
+      'Resolves normally — you must check <code>res.ok</code> yourself',
+      'Returns <code>null</code>'
+    ],
+    correct: 2,
+    explain: '<strong>C is correct — this is the classic gotcha.</strong> <code>fetch()</code> only rejects (throws) on <em>network</em> failures (no internet, bad domain). An HTTP 404 or 500 is still a valid response from the server, so the Promise resolves. You <strong>must manually check</strong> <code>if (!res.ok) throw new Error(...)</code> to handle these cases.'
+  },
+  {
+    q: 'Which keyword goes before <code>function</code> to allow <code>await</code> inside it?',
+    opts: ['await', 'Promise', 'async', 'fetch'],
+    correct: 2,
+    explain: '<strong>C is correct.</strong> The keyword <code>async</code> before <code>function</code> does two things: (1) it enables the <code>await</code> keyword inside that function, and (2) it makes the function automatically return a Promise. Without <code>async</code>, writing <code>await</code> inside the function causes a <em>SyntaxError</em>.'
+  },
+  {
+    q: 'Which block runs whether <code>fetch()</code> succeeds or fails?',
+    opts: ['try', 'catch', 'finally', 'resolve'],
+    correct: 2,
+    explain: '<strong>C is correct.</strong> The <code>finally</code> block <strong>always runs</strong> — after <code>try</code> (if successful) and after <code>catch</code> (if it failed). It is the perfect place to put cleanup code: re-enabling buttons, hiding loading spinners, resetting state. The classic analogy: you lock your door <em>whether</em> the evening went well or not.'
+  },
+  {
+    q: 'You forget to <code>return</code> inside a <code>.then()</code> callback. What does the next <code>.then()</code> in the chain receive?',
+    opts: [
+      'The original value from the first <code>.then()</code>',
+      '<code>undefined</code>',
+      'An Error object',
+      'The chain skips to <code>.catch()</code>'
+    ],
+    correct: 1,
+    explain: '<strong>B is correct.</strong> In a Promise chain, each <code>.then()</code> wraps its return value in a new Promise. If you forget <code>return</code>, the callback returns <code>undefined</code> by default — so the next <code>.then()</code> receives <code>undefined</code> as its input. This is a common silent bug: the chain doesn\'t break, you just lose your data. With <code>async/await</code> this is less common because you use regular variable assignment instead of returning from callbacks.'
+  }
+];
+
+const answered = new Array(QS.length).fill(false);
+const results = new Array(QS.length).fill(null);
+
+function buildQuiz() {
+  const container = document.getElementById('quiz');
+  container.innerHTML = QS.map((q, i) => `
+    <div class="q-card" id="qcard${i}">
+      <div class="q-num">Question ${i+1} of ${QS.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts${i}">
+        ${q.opts.map((o, j) => `
+          <button class="opt" id="opt${i}_${j}" onclick="checkQ(${i},${j})">
+            <span class="opt-letter">${['A','B','C','D'][j]}.</span>
+            <span>${o}</span>
+          </button>`).join('')}
+      </div>
+      <div class="feedback" id="fb${i}"></div>
+    </div>
+  `).join('');
+}
+
+function checkQ(qi, chosen) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+
+  const q = QS[qi];
+  const correct = chosen === q.correct;
+  results[qi] = correct;
+
+  // Style options
+  for (let j = 0; j < q.opts.length; j++) {
+    const btn = document.getElementById(`opt${qi}_${j}`);
+    btn.disabled = true;
+    if (j === q.correct) btn.classList.add('reveal-correct');
+    if (j === chosen && !correct) btn.classList.add('selected-wrong');
+  }
+  if (correct) {
+    document.getElementById(`opt${qi}_${chosen}`).classList.remove('reveal-correct');
+    document.getElementById(`opt${qi}_${chosen}`).classList.add('selected-correct');
+  }
+
+  // Card border
+  document.getElementById('qcard' + qi).classList.add(correct ? 'correct' : 'wrong');
+
+  // Feedback
+  const fb = document.getElementById('fb' + qi);
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.explain;
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = answered.filter(Boolean).length;
+  const score = results.filter(Boolean).length;
+  document.getElementById('progressBar').style.width = (done / QS.length * 100) + '%';
+  document.getElementById('progressLabel').textContent = `Question ${done} of ${QS.length} answered`;
+  document.getElementById('scoreLabel').textContent = done > 0 ? `${score}/${done} correct so far` : '';
+
+  if (done === QS.length) {
+    setTimeout(showScore, 600);
+  }
+}
+
+function showScore() {
+  const score = results.filter(Boolean).length;
+  document.getElementById('scoreBig').textContent = score + '/5';
+  const msgs = [
+    [5, '🏆 Perfect! You\'ve mastered the Fetch API.', 'Every concept clicked — async/await, the two-await pattern, error handling. You\'re ready to build real projects.'],
+    [4, '🌟 Excellent! Almost perfect.', 'You have a strong grasp of Fetch. Review the one you missed and you\'ll have it all.'],
+    [3, '👍 Good progress! A few gaps to fill.', 'The core concepts are there. Re-read the error handling demo (Demo 5) and stepper demo (Demo 4) for the ones you missed.'],
+    [0, '📖 Keep studying — you\'ll get there!', 'Go back through Demos 1–5 and try again. Pay special attention to the 404 gotcha (Demo 5) and the async keyword (Demo 4).'],
+  ];
+  const [, msg, detail] = msgs.find(([min]) => score >= min);
+  document.getElementById('scoreMsg').textContent = msg;
+  document.getElementById('scoreDetail').textContent = detail;
+  document.getElementById('scorePanel').style.display = 'block';
+  document.getElementById('scorePanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function retry() {
+  answered.fill(false);
+  results.fill(null);
+  document.getElementById('scorePanel').style.display = 'none';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressLabel').textContent = 'Question 0 of 5 answered';
+  document.getElementById('scoreLabel').textContent = '';
+  buildQuiz();
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

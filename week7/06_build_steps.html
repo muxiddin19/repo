@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo 6 — Build an App Step by Step</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--acl:#dbeafe;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.back{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid #2a3f6a;padding:4px 10px;border-radius:6px}
+.back:hover{color:#fff}
+.header h1{color:#fff;font-size:20px;font-weight:700;flex:1}
+.badge{background:var(--jsyel);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.wrap{max-width:720px;margin:0 auto;padding:24px 20px 60px}
+
+/* Step tabs */
+.step-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.step-tab{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--bdr);background:var(--surf);color:var(--sub);transition:all .15s;display:flex;align-items:center;gap:6px}
+.step-tab:hover{border-color:var(--ac);color:var(--ac)}
+.step-tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.step-tab.done{border-color:#4a7ac7;color:#4a7ac7}
+.step-tab .check{color:#86efac;display:none}
+.step-tab.done .check{display:inline}
+
+/* Preview + Code split */
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:600px){.layout{grid-template-columns:1fr}}
+
+/* Live preview panel */
+.preview-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.panel-label{background:var(--bg);padding:8px 14px;font-size:11px;font-weight:700;color:var(--sub);border-bottom:1px solid var(--bdr);letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.panel-label .dot{width:8px;height:8px;border-radius:50%}
+.panel-label .dot.green{background:#22c55e}
+.preview-body{padding:20px;min-height:140px}
+
+/* Simulated webpage */
+.sim-h2{font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px}
+.sim-btn{background:var(--jsyel);color:#1a2540;border:none;padding:9px 20px;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:block;margin-bottom:12px;transition:opacity .15s}
+.sim-btn:hover:not(:disabled){opacity:.85}
+.sim-btn:disabled{opacity:.5}
+.sim-output{border:1px solid var(--bdr);border-radius:8px;padding:14px;min-height:60px;background:var(--bg);font-size:14px}
+.sim-loading{color:var(--sub);font-style:italic;font-size:13px}
+.sim-setup{color:var(--sub);font-size:13px;margin-bottom:4px}
+.sim-punchline{color:var(--text);font-weight:600;font-size:15px}
+.sim-err{color:#dc2626;font-size:13px;font-style:italic}
+.sim-note{color:var(--sub);font-size:12px;margin-top:8px;font-style:italic}
+
+/* Code panel */
+.code-panel{background:var(--dark);border-radius:12px;overflow:hidden}
+.code-scroll{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.85;color:#c8daf8;overflow-x:auto;min-height:140px}
+.l{display:block;transition:opacity .3s}
+.l.new{background:rgba(247,223,30,.12);animation:fade-in .4s ease}
+.l.old{opacity:.45}
+@keyframes fade-in{from{background:rgba(247,223,30,.35)}to{background:rgba(247,223,30,.12)}}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.kw2{color:var(--jsyel)}.tag{color:#f78c6c}
+
+/* Step explanation */
+.explain-card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;margin-bottom:20px}
+.explain-card h3{font-size:16px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.explain-card .num{background:var(--ac);color:#fff;width:26px;height:26px;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.explain-card p{font-size:14px;line-height:1.7;color:var(--sub)}
+.explain-card code{background:var(--acl);color:var(--ac);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.explain-card .tag-pill{display:inline-block;background:var(--greenl);color:#14532d;border-radius:4px;font-size:11px;font-weight:700;padding:2px 8px;margin-left:8px}
+
+/* Nav buttons */
+.nav-row{display:flex;gap:10px;align-items:center}
+.nav-btn{padding:9px 22px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.nav-btn:hover{opacity:.85}
+.nav-btn.prev{background:#e2e8f0;color:var(--sub)}
+.nav-btn.next{background:var(--ac);color:#fff}
+.nav-btn:disabled{opacity:.35;cursor:default}
+.step-counter{font-size:13px;color:var(--sub);margin-left:auto}
+</style>
+</head>
+<body>
+<div class="header">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Demo 6 — Build an App Step by Step</h1>
+  <div class="badge">accordion · build</div>
+</div>
+
+<div class="wrap">
+
+  <div class="step-tabs" id="stepTabs"></div>
+
+  <div class="layout">
+    <div class="preview-panel">
+      <div class="panel-label">
+        <div class="dot green"></div>
+        Browser Preview
+      </div>
+      <div class="preview-body" id="previewBody"></div>
+    </div>
+    <div class="code-panel">
+      <div class="panel-label" style="background:#0d1a35;border-color:#1e3a5f;color:#64748b">
+        <div class="dot" style="background:#f7df1e"></div>
+        JavaScript
+      </div>
+      <div class="code-scroll" id="codeBlock"></div>
+    </div>
+  </div>
+
+  <div class="explain-card" id="explainCard"></div>
+
+  <div class="nav-row">
+    <button class="nav-btn prev" id="prevBtn" onclick="goStep(cur-1)" disabled>← Prev</button>
+    <button class="nav-btn next" id="nextBtn" onclick="goStep(cur+1)">Next Step →</button>
+    <div class="step-counter" id="stepCounter"></div>
+  </div>
+
+</div>
+
+<script>
+const STEPS = [
+  {
+    label: 'HTML Skeleton',
+    tag: 'HTML',
+    title: 'Step 1 — HTML Skeleton',
+    desc: 'Start with the HTML structure only. We need a button to trigger the fetch, and an output area to show the joke. No JavaScript yet — clicking the button does nothing.',
+    preview: `
+      <h2 class="sim-h2">😂 Random Joke</h2>
+      <button class="sim-btn" disabled onclick>Get Joke (no JS yet)</button>
+      <div class="sim-output"><span class="sim-note">Button is not connected yet</span></div>`,
+    code: [
+      {text:'<span class="tag">&lt;h2&gt;</span>😂 Random Joke<span class="tag">&lt;/h2&gt;</span>',kind:'old'},
+      {text:'',kind:'old'},
+      {text:'<span class="tag">&lt;button</span> <span class="kw">onclick</span>=<span class="str">"loadJoke()"</span><span class="tag">&gt;</span>Get Joke<span class="tag">&lt;/button&gt;</span>',kind:'old'},
+      {text:'',kind:'old'},
+      {text:'<span class="tag">&lt;div</span> <span class="kw">id</span>=<span class="str">"output"</span><span class="tag">&gt;&lt;/div&gt;</span>',kind:'old'},
+    ]
+  },
+  {
+    label: 'Add Function',
+    tag: 'JS',
+    title: 'Step 2 — Add the async function',
+    desc: 'Declare the async function and add a loading message. Now the button calls loadJoke(), which shows "Loading…" — but no fetch yet, so it stays there forever.',
+    preview: `
+      <h2 class="sim-h2">😂 Random Joke</h2>
+      <button class="sim-btn" onclick="(function(){document.getElementById('s2out').innerHTML='<span class=sim-loading>Loading…</span>'})()">Get Joke</button>
+      <div class="sim-output" id="s2out"><span class="sim-note">Click to see loading state</span></div>`,
+    code: [
+      {text:'<span class="tag">&lt;h2&gt;</span>😂 Random Joke<span class="tag">&lt;/h2&gt;</span>',kind:'old'},
+      {text:'<span class="tag">&lt;button</span> <span class="kw">onclick</span>=<span class="str">"loadJoke()"</span><span class="tag">&gt;</span>Get Joke<span class="tag">&lt;/button&gt;</span>',kind:'old'},
+      {text:'<span class="tag">&lt;div</span> <span class="kw">id</span>=<span class="str">"output"</span><span class="tag">&gt;&lt;/div&gt;</span>',kind:'old'},
+      {text:'',kind:'old'},
+      {text:'<span class="cm">// NEW: async function</span>',kind:'new'},
+      {text:'<span class="kw2">async</span> <span class="kw">function</span> <span class="fn">loadJoke</span>() {',kind:'new'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML =',kind:'new'},
+      {text:'    <span class="str">\'&lt;em&gt;Loading…&lt;/em&gt;\'</span>;',kind:'new'},
+      {text:'  <span class="cm">// fetch() call goes here next</span>',kind:'new'},
+      {text:'}',kind:'new'},
+    ]
+  },
+  {
+    label: 'Add fetch()',
+    tag: 'JS',
+    title: 'Step 3 — fetch() + res.json()',
+    desc: 'Add the two-await pattern: await fetch() gets the HTTP response, await res.json() reads and parses the body. Now we have real data in the "data" variable — but we\'re not displaying it yet.',
+    preview: `
+      <h2 class="sim-h2">😂 Random Joke</h2>
+      <button class="sim-btn" id="s3btn" onclick="s3fetch()">Get Joke</button>
+      <div class="sim-output" id="s3out"><span class="sim-note">Click to see fetch in action (data logged to console)</span></div>`,
+    code: [
+      {text:'<span class="kw2">async</span> <span class="kw">function</span> <span class="fn">loadJoke</span>() {',kind:'old'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML = <span class="str">\'&lt;em&gt;Loading…&lt;/em&gt;\'</span>;',kind:'old'},
+      {text:'',kind:'old'},
+      {text:'  <span class="cm">// NEW: two-await pattern</span>',kind:'new'},
+      {text:'  <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(<span class="str">\'https://official-joke-api.appspot.com/random_joke\'</span>);',kind:'new'},
+      {text:'  <span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();',kind:'new'},
+      {text:'',kind:'new'},
+      {text:'  console.<span class="fn">log</span>(data); <span class="cm">// see the data object in DevTools</span>',kind:'new'},
+      {text:'  <span class="cm">// display code goes here next</span>',kind:'new'},
+      {text:'}',kind:'old'},
+    ]
+  },
+  {
+    label: 'Display Data',
+    tag: 'JS',
+    title: 'Step 4 — Display the data',
+    desc: 'Now use the data we fetched! Put data.setup and data.punchline into the HTML. The app works end-to-end — but there\'s no error handling yet. If the network fails, the user sees nothing.',
+    preview: `
+      <h2 class="sim-h2">😂 Random Joke</h2>
+      <button class="sim-btn" id="s4btn" onclick="s4fetch()">Get Joke</button>
+      <div class="sim-output" id="s4out"><span class="sim-note">Click the button!</span></div>`,
+    code: [
+      {text:'<span class="kw2">async</span> <span class="kw">function</span> <span class="fn">loadJoke</span>() {',kind:'old'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML = <span class="str">\'&lt;em&gt;Loading…&lt;/em&gt;\'</span>;',kind:'old'},
+      {text:'  <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(<span class="str">\'https://official-joke-api.appspot.com/random_joke\'</span>);',kind:'old'},
+      {text:'  <span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();',kind:'old'},
+      {text:'',kind:'old'},
+      {text:'  <span class="cm">// NEW: put data on the page</span>',kind:'new'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML =',kind:'new'},
+      {text:'    <span class="str">`&lt;p&gt;${data.setup}&lt;/p&gt;',kind:'new'},
+      {text:'     &lt;strong&gt;${data.punchline}&lt;/strong&gt;`</span>;',kind:'new'},
+      {text:'}',kind:'old'},
+    ]
+  },
+  {
+    label: 'try/catch/finally',
+    tag: 'Complete',
+    title: 'Step 5 — Add try / catch / finally',
+    desc: 'Wrap everything in try/catch/finally. Now errors are handled gracefully. The finally block re-enables the button whether fetch succeeded or failed — production-ready code.',
+    preview: `
+      <h2 class="sim-h2">😂 Random Joke</h2>
+      <button class="sim-btn" id="s5btn" onclick="s5fetch()">Get Joke</button>
+      <div class="sim-output" id="s5out"><span class="sim-note">Click to fetch a joke (fully error-handled)</span></div>`,
+    code: [
+      {text:'<span class="kw2">async</span> <span class="kw">function</span> <span class="fn">loadJoke</span>() {',kind:'old'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML = <span class="str">\'&lt;em&gt;Loading…&lt;/em&gt;\'</span>;',kind:'old'},
+      {text:'  document.<span class="fn">getElementById</span>(<span class="str">\'btn\'</span>).disabled = <span class="kw">true</span>; <span class="cm">// NEW</span>',kind:'new'},
+      {text:'',kind:'old'},
+      {text:'  <span class="kw">try</span> {  <span class="cm">// NEW</span>',kind:'new'},
+      {text:'    <span class="kw">const</span> res  = <span class="kw2">await</span> <span class="fn">fetch</span>(<span class="str">\'https://official-joke-api.appspot.com/random_joke\'</span>);',kind:'old'},
+      {text:'    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">`HTTP ${res.status}`</span>); <span class="cm">// NEW</span>',kind:'new'},
+      {text:'    <span class="kw">const</span> data = <span class="kw2">await</span> res.<span class="fn">json</span>();',kind:'old'},
+      {text:'    document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML =',kind:'old'},
+      {text:'      <span class="str">`&lt;p&gt;${data.setup}&lt;/p&gt;&lt;strong&gt;${data.punchline}&lt;/strong&gt;`</span>;',kind:'old'},
+      {text:'',kind:'new'},
+      {text:'  } <span class="kw">catch</span> (err) {  <span class="cm">// NEW</span>',kind:'new'},
+      {text:'    document.<span class="fn">getElementById</span>(<span class="str">\'output\'</span>).innerHTML =',kind:'new'},
+      {text:'      <span class="str">`&lt;em style="color:red"&gt;Error: ${err.message}&lt;/em&gt;`</span>;',kind:'new'},
+      {text:'  } <span class="kw">finally</span> {  <span class="cm">// NEW: always runs</span>',kind:'new'},
+      {text:'    document.<span class="fn">getElementById</span>(<span class="str">\'btn\'</span>).disabled = <span class="kw">false</span>;',kind:'new'},
+      {text:'  }',kind:'new'},
+      {text:'}',kind:'old'},
+    ]
+  }
+];
+
+let cur = 0;
+
+function buildTabs() {
+  const tabs = document.getElementById('stepTabs');
+  tabs.innerHTML = STEPS.map((s, i) =>
+    `<div class="step-tab${i===0?' active':''}" id="tab${i}" onclick="goStep(${i})">
+      <span class="check">✓</span> ${i+1}. ${s.label}
+    </div>`
+  ).join('');
+}
+
+function goStep(n) {
+  if (n < 0 || n >= STEPS.length) return;
+
+  // Mark old as done
+  if (cur < n) {
+    for (let i = cur; i < n; i++) {
+      const t = document.getElementById('tab' + i);
+      t.classList.remove('active');
+      t.classList.add('done');
+    }
+  } else {
+    for (let i = n; i < STEPS.length; i++) {
+      const t = document.getElementById('tab' + i);
+      t.classList.remove('done', 'active');
+    }
+  }
+
+  cur = n;
+  const s = STEPS[cur];
+
+  // Tab states
+  document.querySelectorAll('.step-tab').forEach((t, i) => {
+    if (i === cur) { t.classList.add('active'); t.classList.remove('done'); }
+    else if (i < cur) { t.classList.remove('active'); t.classList.add('done'); }
+    else { t.classList.remove('active','done'); }
+  });
+
+  // Preview
+  document.getElementById('previewBody').innerHTML = s.preview;
+
+  // Code
+  document.getElementById('codeBlock').innerHTML =
+    s.code.map(l => `<span class="l ${l.kind}">${l.text}</span>`).join('\n');
+
+  // Explain
+  const tagClass = s.tag === 'Complete' ? 'done' : '';
+  document.getElementById('explainCard').innerHTML = `
+    <h3><span class="num">${cur+1}</span>${s.title}<span class="tag-pill">${s.tag}</span></h3>
+    <p style="margin-top:10px">${s.desc}</p>`;
+
+  // Counter
+  document.getElementById('stepCounter').textContent = `Step ${cur+1} of ${STEPS.length}`;
+  document.getElementById('prevBtn').disabled = cur === 0;
+  document.getElementById('nextBtn').disabled = cur === STEPS.length - 1;
+  document.getElementById('nextBtn').textContent = cur === STEPS.length - 2 ? '✓ Final Step →' : 'Next Step →';
+}
+
+buildTabs();
+goStep(0);
+
+// Live demos for preview panels
+async function s3fetch() {
+  document.getElementById('s3out').innerHTML = '<span class="sim-loading">Fetching… (check browser console for data object)</span>';
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    const data = await res.json();
+    console.log('Joke data:', data);
+    document.getElementById('s3out').innerHTML = '<span class="sim-note">✅ Data received! Check DevTools Console (F12) to see the object.</span>';
+  } catch (e) {
+    document.getElementById('s3out').innerHTML = '<span class="sim-err">Network error: ' + e.message + '</span>';
+  }
+}
+
+async function s4fetch() {
+  document.getElementById('s4out').innerHTML = '<span class="sim-loading">Loading…</span>';
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    const data = await res.json();
+    document.getElementById('s4out').innerHTML =
+      `<div class="sim-setup">${data.setup}</div><div class="sim-punchline">${data.punchline}</div>`;
+  } catch (e) {
+    document.getElementById('s4out').innerHTML = '<span class="sim-note">(No error handling yet — nothing shown on failure)</span>';
+  }
+}
+
+async function s5fetch() {
+  const btn = document.getElementById('s5btn');
+  const out = document.getElementById('s5out');
+  btn.disabled = true;
+  out.innerHTML = '<span class="sim-loading">Loading…</span>';
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    out.innerHTML = `<div class="sim-setup">${data.setup}</div><div class="sim-punchline">${data.punchline}</div>`;
+  } catch (err) {
+    out.innerHTML = `<span class="sim-err">Error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
