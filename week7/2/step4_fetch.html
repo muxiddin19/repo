@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 4 — Fetch: Call the API</title>
+<style>
+:root{--dark:#1a2540;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--dark);padding:32px;text-align:center}
+header h1{color:#fff;font-size:24px;font-weight:800}
+header p{color:#94a3b8;font-size:14px;margin-top:6px}
+#search-section{max-width:600px;margin:32px auto;padding:0 20px}
+form{display:flex;gap:10px}
+input{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:16px;font-family:inherit}
+button{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}
+button:hover{background:#1447b3}
+#results-section{max-width:1000px;margin:0 auto;padding:24px 20px}
+#results-section h2{font-size:18px;font-weight:700}
+#status{font-size:13px;color:var(--muted);margin-top:8px;padding:10px 14px;border-radius:8px;background:var(--surf);border:1px solid var(--border);display:none}
+#status.visible{display:block}
+#status.error{background:var(--redl);border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Book Search</h1>
+  <p>Search the Open Library — millions of books, free</p>
+</header>
+
+<main>
+  <section id="search-section">
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search books…" required>
+      <button id="search-btn" type="submit">Search</button>
+    </form>
+  </section>
+
+  <section id="results-section">
+    <h2>Results</h2>
+    <div id="status"></div>
+    <div id="results-grid"></div>
+  </section>
+</main>
+
+<script>
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  STEP 4 — Fetch: Call the Open Library API          ║
+  ║                                                      ║
+  ║  The API URL:                                        ║
+  ║  https://openlibrary.org/search.json?q=QUERY&limit=12
+  ║                                                      ║
+  ║  Example (paste in browser to see the JSON):        ║
+  ║  https://openlibrary.org/search.json?q=dune&limit=3 ║
+  ║                                                      ║
+  ║  Each result object has:                            ║
+  ║    .title             — book title (string)          ║
+  ║    .author_name       — array of authors             ║
+  ║    .first_publish_year — year (number)               ║
+  ║    .cover_i           — cover image ID (number)      ║
+  ║                                                      ║
+  ║  Cover image URL:                                    ║
+  ║  https://covers.openlibrary.org/b/id/{cover_i}-M.jpg ║
+  ║                                                      ║
+  ║  ── YOUR TASK ──────────────────────────────────── ║
+  ║                                                      ║
+  ║  Complete the searchBooks() async function:         ║
+  ║                                                      ║
+  ║  1. Build the URL:                                   ║
+  ║     const url = 'https://openlibrary.org/search.json?q='
+  ║               + encodeURIComponent(query)            ║
+  ║               + '&limit=12';                        ║
+  ║                                                      ║
+  ║  2. Call fetch(url) with await:                     ║
+  ║     const res = await fetch(url);                   ║
+  ║                                                      ║
+  ║  3. Check res.ok — if false, throw an error:        ║
+  ║     if (!res.ok) throw new Error('HTTP ' + res.status);
+  ║                                                      ║
+  ║  4. Parse JSON:                                     ║
+  ║     const data = await res.json();                  ║
+  ║                                                      ║
+  ║  5. Log the result count and first book:            ║
+  ║     console.log('Found:', data.numFound);            ║
+  ║     console.log('First book:', data.docs[0]);        ║
+  ║                                                      ║
+  ║  6. Update #status with the count:                  ║
+  ║     status.textContent = 'Found ' + data.numFound   ║
+  ║                        + ' results for "' + query + '"';
+  ║                                                      ║
+  ║  DONE?  Open DevTools Console → search "dune"      ║
+  ║  You should see: Found: 1748  and a book object.    ║
+  ╚══════════════════════════════════════════════════════╝
+*/
+
+const form   = document.getElementById('search-form');
+const input  = document.getElementById('search-input');
+const status = document.getElementById('status');
+const btn    = document.getElementById('search-btn');
+
+async function searchBooks(query) {
+  status.className = 'visible';
+  status.textContent = 'Searching…';
+
+  // YOUR CODE HERE:
+  // 1. Build the URL
+  // 2. await fetch(url)
+  // 3. Check res.ok
+  // 4. await res.json()
+  // 5. console.log the results
+  // 6. Update status.textContent with the count
+}
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const query = input.value.trim();
+  if (!query) return;
+  searchBooks(query);
+});
+</script>
+</body>
+</html>

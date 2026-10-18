@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API Explorer — Open Library</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;--jsyel:#f7df1e;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:24px;text-align:center}
+header h1{color:#fff;font-size:20px;font-weight:800}
+header p{color:#94a3b8;font-size:13px;margin-top:4px}
+.wrap{max-width:900px;margin:24px auto;padding:0 20px 60px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.panel-header{background:var(--dark);padding:12px 16px;font-size:13px;font-weight:700;color:#94a3b8;display:flex;align-items:center;gap:8px}
+.panel-header span{color:var(--jsyel)}
+.panel-body{padding:16px}
+label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px}
+.url-bar{display:flex;gap:8px;margin-bottom:12px}
+.url-bar input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text)}
+.url-bar button,.send-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.url-bar button:hover,.send-btn:hover{background:#1447b3}
+.url-preview{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);word-break:break-all;margin-bottom:12px;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)}
+.url-preview strong{color:var(--accent)}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.badge-btn{padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--surf);color:var(--muted);transition:all .15s}
+.badge-btn:hover,.badge-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.json-box{background:#0f172a;border-radius:8px;padding:14px;overflow-x:auto;max-height:480px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#e2e8f0;white-space:pre;tab-size:2}
+.json-key{color:#7dd3fc}
+.json-str{color:#86efac}
+.json-num{color:#fbbf24}
+.json-bool{color:#f472b6}
+.json-null{color:#94a3b8}
+.status-bar{font-size:12px;color:var(--muted);margin-top:8px;display:flex;gap:14px}
+.status-bar .ok{color:var(--green);font-weight:600}
+.status-bar .err{color:var(--red);font-weight:600}
+.field-map{display:flex;flex-direction:column;gap:8px}
+.field{padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg)}
+.field-name{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent)}
+.field-type{font-size:11px;color:var(--muted);margin-left:6px}
+.field-desc{font-size:12px;color:var(--text);margin-top:3px}
+.field-example{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-top:2px}
+.section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+.section-title::before{content:'';display:block;width:2px;height:12px;background:var(--accent);border-radius:1px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔍 Open Library API Explorer</h1>
+  <p>See the raw JSON response — understand the data shape before you write the code</p>
+</header>
+
+<div class="wrap">
+
+  <!-- LEFT: Request builder -->
+  <div class="panel">
+    <div class="panel-header"><span>REQUEST</span> — Build your query</div>
+    <div class="panel-body">
+      <label>Search query</label>
+      <div class="url-bar">
+        <input type="text" id="query-input" value="dune" placeholder="title, author, subject…">
+        <button onclick="sendRequest()">Send →</button>
+      </div>
+
+      <label>Quick examples</label>
+      <div class="badges">
+        <button class="badge-btn" onclick="setQuery('dune')">Dune</button>
+        <button class="badge-btn" onclick="setQuery('harry potter')">Harry Potter</button>
+        <button class="badge-btn" onclick="setQuery('korean history')">Korean history</button>
+        <button class="badge-btn" onclick="setQuery('machine learning')">ML</button>
+        <button class="badge-btn" onclick="setQuery('tolkien')">Tolkien</button>
+      </div>
+
+      <label>Actual URL sent</label>
+      <div class="url-preview" id="url-preview">
+        <strong>https://openlibrary.org/search.json</strong>?q=<span id="preview-q">dune</span>&limit=3
+      </div>
+
+      <div class="section-title">Response fields (docs[0])</div>
+      <div class="field-map">
+        <div class="field">
+          <span class="field-name">.title</span><span class="field-type">string</span>
+          <div class="field-desc">The book's title</div>
+          <div class="field-example">"Dune"</div>
+        </div>
+        <div class="field">
+          <span class="field-name">.author_name</span><span class="field-type">string[]</span>
+          <div class="field-desc">Array of author names — use [0] for the first</div>
+          <div class="field-example">["Frank Herbert"]</div>
+        </div>
+        <div class="field">
+          <span class="field-name">.first_publish_year</span><span class="field-type">number</span>
+          <div class="field-desc">Year of first publication — may be undefined</div>
+          <div class="field-example">1965</div>
+        </div>
+        <div class="field">
+          <span class="field-name">.cover_i</span><span class="field-type">number</span>
+          <div class="field-desc">Cover image ID — may be undefined (no cover)</div>
+          <div class="field-example">579158 → use in cover URL below</div>
+        </div>
+        <div class="field">
+          <span class="field-name">.numFound</span><span class="field-type">number (root)</span>
+          <div class="field-desc">Total results matching the query</div>
+          <div class="field-example">1748</div>
+        </div>
+      </div>
+
+      <div class="section-title">Cover image URL pattern</div>
+      <div class="url-preview">https://covers.openlibrary.org/b/id/<strong>{cover_i}</strong>-M.jpg</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Response viewer -->
+  <div class="panel">
+    <div class="panel-header"><span>RESPONSE</span> — Raw JSON (first 3 results)</div>
+    <div class="panel-body">
+      <div class="status-bar" id="status-bar">
+        <span>Press Send to see a live response</span>
+      </div>
+      <div class="json-box" id="json-box">// response appears here</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const queryInput  = document.getElementById('query-input');
+const urlPreview  = document.getElementById('preview-q');
+const jsonBox     = document.getElementById('json-box');
+const statusBar   = document.getElementById('status-bar');
+
+queryInput.addEventListener('input', () => {
+  urlPreview.textContent = queryInput.value || '…';
+});
+
+function setQuery(q) {
+  queryInput.value = q;
+  urlPreview.textContent = q;
+  sendRequest();
+}
+
+function syntaxHighlight(json) {
+  return json
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(?=\s*:))/g,
+             '<span class="json-key">$1</span>')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(?!\s*:))/g,
+             '<span class="json-str">$1</span>')
+    .replace(/\b(-?\d+\.?\d*([eE][+-]?\d+)?)\b/g,
+             '<span class="json-num">$1</span>')
+    .replace(/\b(true|false)\b/g,
+             '<span class="json-bool">$1</span>')
+    .replace(/\bnull\b/g,
+             '<span class="json-null">null</span>');
+}
+
+async function sendRequest() {
+  const q = queryInput.value.trim();
+  if (!q) return;
+  urlPreview.textContent = q;
+
+  jsonBox.innerHTML = '<span style="color:#64748b">// fetching…</span>';
+  statusBar.innerHTML = '<span>Sending request…</span>';
+
+  const url = 'https://openlibrary.org/search.json?q='
+            + encodeURIComponent(q) + '&limit=3';
+
+  try {
+    const t0  = Date.now();
+    const res = await fetch(url);
+    const ms  = Date.now() - t0;
+    const data = await res.json();
+
+    // Show only top-level + first 3 docs (compact for teaching)
+    const preview = {
+      numFound: data.numFound,
+      start: data.start,
+      docs: data.docs.slice(0, 3).map(d => ({
+        title: d.title,
+        author_name: d.author_name ? d.author_name.slice(0, 2) : undefined,
+        first_publish_year: d.first_publish_year,
+        cover_i: d.cover_i,
+        subject: d.subject ? d.subject.slice(0, 3) : undefined,
+        key: d.key
+      }))
+    };
+
+    const pretty = JSON.stringify(preview, null, 2);
+    jsonBox.innerHTML = syntaxHighlight(pretty);
+
+    const okClass = res.ok ? 'ok' : 'err';
+    statusBar.innerHTML =
+      '<span class="' + okClass + '">' + res.status + ' ' + res.statusText + '</span>' +
+      '<span>' + ms + ' ms</span>' +
+      '<span>' + data.numFound.toLocaleString() + ' total results</span>' +
+      '<span>showing first 3 of ' + data.docs.length + ' returned</span>';
+
+  } catch (err) {
+    jsonBox.innerHTML = '<span style="color:#f87171">// Error: ' + err.message + '</span>';
+    statusBar.innerHTML = '<span class="err">Network error</span>';
+  }
+}
+
+// Load initial example
+sendRequest();
+</script>
+</body>
+</html>

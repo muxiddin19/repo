@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3 — JS DOM: Wire the Form</title>
+<style>
+:root{--dark:#1a2540;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--dark);padding:32px;text-align:center}
+header h1{color:#fff;font-size:24px;font-weight:800}
+header p{color:#94a3b8;font-size:14px;margin-top:6px}
+#search-section{max-width:600px;margin:32px auto;padding:0 20px}
+form{display:flex;gap:10px}
+input{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:16px;font-family:inherit}
+button{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s}
+button:hover{background:#1447b3}
+#results-section{max-width:1000px;margin:0 auto;padding:24px 20px}
+#results-section h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+#status{font-size:13px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Book Search</h1>
+  <p>Search the Open Library — millions of books, free</p>
+</header>
+
+<main>
+  <section id="search-section">
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search books…" required>
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <section id="results-section">
+    <h2>Results</h2>
+    <p id="status">Type a title or author above and press Search.</p>
+    <div id="results-grid"></div>
+  </section>
+</main>
+
+<script>
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  STEP 3 — JS DOM: Wire the Form                     ║
+  ║                                                      ║
+  ║  TASK: Complete the searchBooks() function below.   ║
+  ║  No API call yet — just read the input and log it.  ║
+  ║                                                      ║
+  ║  Step-by-step:                                      ║
+  ║                                                      ║
+  ║  A) Get references to DOM elements using            ║
+  ║     document.getElementById():                      ║
+  ║       · 'search-form'   → const form               ║
+  ║       · 'search-input'  → const input              ║
+  ║       · 'status'        → const status             ║
+  ║                                                      ║
+  ║  B) Add an event listener to `form` for 'submit':   ║
+  ║     form.addEventListener('submit', function(e) {   ║
+  ║       ...                                           ║
+  ║     });                                             ║
+  ║                                                      ║
+  ║  C) Inside the listener:                            ║
+  ║     1. Call e.preventDefault()  ← IMPORTANT!        ║
+  ║        (without this, the page reloads on submit)   ║
+  ║     2. Read the query:                              ║
+  ║        const query = input.value.trim();            ║
+  ║     3. Update the status text:                      ║
+  ║        status.textContent = 'Searching: ' + query;  ║
+  ║     4. console.log('Query:', query);                ║
+  ║                                                      ║
+  ║  DONE?  Open DevTools (F12) → Console tab.         ║
+  ║  Type "Harry Potter" → click Search.               ║
+  ║  You should see: Query: Harry Potter               ║
+  ║  The page should NOT reload.                        ║
+  ╚══════════════════════════════════════════════════════╝
+*/
+
+// A) Get DOM element references
+// YOUR CODE HERE
+
+
+// B) & C) Listen for submit, prevent reload, log the query
+// YOUR CODE HERE
+
+
+</script>
+</body>
+</html>
