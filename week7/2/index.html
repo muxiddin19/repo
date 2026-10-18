@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 7 — Practical Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--jsyel);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:26px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:14px;max-width:560px;margin:0 auto}
+.wrap{max-width:900px;margin:32px auto;padding:0 20px 60px}
+.intro{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:22px 24px;margin-bottom:28px;line-height:1.7;font-size:14px;color:var(--sub)}
+.intro strong{color:var(--text)}
+.intro code{background:#eef2ff;color:var(--ac);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.section-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:13px;background:var(--ac);border-radius:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:32px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:8px;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,37,64,.12)}
+.card-step{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--sub)}
+.card h2{font-size:15px;font-weight:700}
+.card p{font-size:13px;color:var(--sub);line-height:1.6;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--ac)}
+.tag.green{background:var(--greenl);color:#166534}
+.card.solution{border-color:#6366f1;border-style:dashed}
+.card.solution .card-step{color:#6366f1}
+.goal-box{background:#1a2540;border-radius:12px;padding:22px 24px;color:#94a3b8;font-size:13px;line-height:1.8;margin-bottom:28px}
+.goal-box h3{color:#fff;font-size:15px;font-weight:700;margin-bottom:10px}
+.goal-box code{background:rgba(255,255,255,.08);color:#f7df1e;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">WEEK 7 · FRIDAY · PRACTICAL LAB</div>
+  <h1>📚 Book Search App</h1>
+  <p>Apply everything learned in Weeks 1–6: Semantic HTML · CSS Layout · JS DOM · Fetch API</p>
+</div>
+
+<div class="wrap">
+
+  <div class="goal-box">
+    <h3>🎯 What you will build</h3>
+    A book search page that queries the free <code>Open Library API</code> and displays results as styled cards — cover image, title, author, year.<br><br>
+    You will build it in <strong style="color:#f7df1e">5 guided steps</strong>, starting from a blank skeleton and adding one layer at a time.
+    Each step file is <strong style="color:#f7df1e">already saved on your computer</strong> — open it, read the task comment at the top, then add the code.
+  </div>
+
+  <div class="section-title">Guided Steps — work through these in order</div>
+  <div class="grid">
+    <a class="card" href="step1_html.html">
+      <div class="card-step">STEP 1</div>
+      <h2>HTML Structure</h2>
+      <p>Write semantic HTML: header, search form, results section. No CSS yet — structure only.</p>
+      <div class="card-tags">
+        <span class="tag">Semantic HTML</span>
+        <span class="tag">Forms</span>
+      </div>
+    </a>
+    <a class="card" href="step2_css.html">
+      <div class="card-step">STEP 2</div>
+      <h2>CSS — Layout &amp; Cards</h2>
+      <p>Style the header, center the search bar, and write the card grid. Use Flexbox and CSS variables.</p>
+      <div class="card-tags">
+        <span class="tag">CSS Variables</span>
+        <span class="tag">Flexbox</span>
+        <span class="tag">Grid</span>
+      </div>
+    </a>
+    <a class="card" href="step3_dom.html">
+      <div class="card-step">STEP 3</div>
+      <h2>JS DOM — Wire the Form</h2>
+      <p>Listen for the submit event, read the input value, and log it to the console. No fetch yet.</p>
+      <div class="card-tags">
+        <span class="tag">querySelector</span>
+        <span class="tag">addEventListener</span>
+        <span class="tag">preventDefault</span>
+      </div>
+    </a>
+    <a class="card" href="step4_fetch.html">
+      <div class="card-step">STEP 4</div>
+      <h2>Fetch — Call the API</h2>
+      <p>Use fetch() to call Open Library. Check res.ok. Parse JSON. Log the first result to the console.</p>
+      <div class="card-tags">
+        <span class="tag">fetch</span>
+        <span class="tag">async/await</span>
+        <span class="tag">res.ok</span>
+      </div>
+    </a>
+    <a class="card" href="step5_render.html">
+      <div class="card-step">STEP 5</div>
+      <h2>Render — Display the Cards</h2>
+      <p>Loop through the API results and dynamically create a card element for each book.</p>
+      <div class="card-tags">
+        <span class="tag">createElement</span>
+        <span class="tag">appendChild</span>
+        <span class="tag">textContent</span>
+      </div>
+    </a>
+    <a class="card" href="step6_polish.html">
+      <div class="card-step">STEP 6 · BONUS</div>
+      <h2>Polish — Loading &amp; Errors</h2>
+      <p>Show a spinner while fetching. Show a friendly message on error or empty results.</p>
+      <div class="card-tags">
+        <span class="tag">try/catch/finally</span>
+        <span class="tag">UX</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-title">Reference</div>
+  <div class="grid">
+    <a class="card solution" href="solution.html">
+      <div class="card-step">COMPLETE SOLUTION</div>
+      <h2>📖 Finished App</h2>
+      <p>The fully working book search app. Only look at this after attempting each step yourself!</p>
+      <div class="card-tags">
+        <span class="tag green">All steps combined</span>
+      </div>
+    </a>
+    <a class="card solution" href="api_explorer.html">
+      <div class="card-step">TOOL</div>
+      <h2>🔍 API Explorer</h2>
+      <p>Type a query and see the raw Open Library JSON response — understand the data shape before coding.</p>
+      <div class="card-tags">
+        <span class="tag">API</span>
+        <span class="tag">JSON</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="intro">
+    <strong>API used:</strong> <code>https://openlibrary.org/search.json?q=YOUR_QUERY&limit=12</code><br>
+    Free, no API key, no account needed. Each result has <code>.title</code>, <code>.author_name[]</code>,
+    <code>.first_publish_year</code>, and <code>.cover_i</code> (cover image ID).<br><br>
+    Cover images: <code>https://covers.openlibrary.org/b/id/{cover_i}-M.jpg</code>
+  </div>
+
+</div>
+</body>
+</html>

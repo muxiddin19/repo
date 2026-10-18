@@ -1,0 +1,41 @@
+<!-- A button the user clicks -->
+<button id="joke-btn" onclick="loadJoke()">Load a Joke</button>
+
+<!-- Where the joke will appear -->
+<div id="joke-area">
+  <p><strong id="setup"></strong></p>
+  <p id="punchline"></p>
+</div>
+
+<!-- Loading and error text -->
+<p id="status"></p>
+
+<script>
+async function loadJoke() {
+  const btn       = document.getElementById('joke-btn');
+  const status    = document.getElementById('status');
+  const setup     = document.getElementById('setup');
+  const punchline = document.getElementById('punchline');
+
+  btn.disabled = true;              // prevent double clicks
+  status.textContent = 'Loading…';
+  setup.textContent = '';           // clear the previous joke
+  punchline.textContent = '';
+
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    setup.textContent = data.setup;          // textContent, not innerHTML
+    punchline.textContent = data.punchline;
+    status.textContent = '';                 // success: clear status
+
+  } catch (err) {
+    status.textContent = 'Error: ' + err.message;
+
+  } finally {
+    btn.disabled = false;           // always re-enable the button
+  }
+}
+</script>
