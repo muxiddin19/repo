@@ -6,3 +6,6 @@
 ### https://muxiddin19.github.io/WebPro/
 ## View also the relevant source code on GitHub
 ### https://github.com/muxiddin19/WebPro 
+
+## Personal page: 
+### https://muxiddin19.github.io/
