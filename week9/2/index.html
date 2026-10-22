@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 9 — Deploy to GitHub Pages</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;
+  --accent:#1a56db;
+  --accent-hover:#1447b3;
+  --bg:#f0f4ff;
+  --surf:#fff;
+  --border:#c8d4f0;
+  --text:#1a2340;
+  --muted:#5a6a8a;
+  --green:#16a34a;
+  --greenl:#dcfce7;
+  --yellow:#f59e0b;
+  --github:#24292f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.header{background:var(--dark);padding:36px 24px 28px;text-align:center}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:14px}
+.header h1{color:#fff;font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px;max-width:580px;margin:0 auto;line-height:1.6}
+
+.wrap{max-width:920px;margin:36px auto;padding:0 20px 60px}
+
+.goal-box{background:var(--dark);border-radius:12px;padding:24px 28px;color:#94a3b8;font-size:14px;line-height:1.8;margin-bottom:32px}
+.goal-box h3{color:#fff;font-size:16px;font-weight:700;margin-bottom:12px}
+.goal-box .item{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.goal-box .num{background:var(--accent);color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.goal-box code{background:rgba(255,255,255,.1);color:#93c5fd;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.83em}
+
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:36px}
+
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:8px}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,27,45,.12)}
+.card-step{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.card h2{font-size:15px;font-weight:700}
+.card p{font-size:13px;color:var(--muted);line-height:1.6;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:var(--bg);color:var(--accent)}
+.tag.green{background:var(--greenl);color:#166534}
+.tag.dark{background:var(--dark);color:#93c5fd}
+
+.card.solution{border-color:#6366f1;border-style:dashed}
+.card.solution .card-step{color:#6366f1}
+
+.info-box{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;font-size:13px;color:var(--muted);line-height:1.8}
+.info-box strong{color:var(--text)}
+.info-box code{background:#eef2ff;color:var(--accent);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+.progress-bar{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap}
+.prog-step{flex:1;min-width:80px;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;transition:background .15s,border-color .15s}
+.prog-step:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.prog-step .pnum{display:block;font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px}
+.prog-step:hover .pnum{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">WEEK 9 &middot; FRIDAY &middot; PRACTICAL LAB</div>
+  <h1>Deploy to GitHub Pages</h1>
+  <p>Take your Book Search App from your computer to the internet — live, shareable, and free — using Git and GitHub Pages.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="goal-box">
+    <h3>What you will accomplish today</h3>
+    <div class="item"><span class="num">1</span><span>Set up Git on your computer and configure your identity</span></div>
+    <div class="item"><span class="num">2</span><span>Turn your Book Search project folder into a <code>git repository</code></span></div>
+    <div class="item"><span class="num">3</span><span>Create a remote repository on GitHub called <code>webpro-booksearch</code></span></div>
+    <div class="item"><span class="num">4</span><span>Push your code to GitHub with <code>git push</code></span></div>
+    <div class="item"><span class="num">5</span><span>Enable <strong style="color:#fff">GitHub Pages</strong> so your app is live at <code>https://username.github.io/webpro-booksearch</code></span></div>
+    <div class="item"><span class="num">6</span><span>Verify the live site and fix common deployment problems</span></div>
+  </div>
+
+  <div class="section-title">Quick navigation</div>
+  <div class="progress-bar">
+    <a class="prog-step" href="step1.html"><span class="pnum">1</span>Setup Git</a>
+    <a class="prog-step" href="step2.html"><span class="pnum">2</span>Init Repo</a>
+    <a class="prog-step" href="step3.html"><span class="pnum">3</span>GitHub Repo</a>
+    <a class="prog-step" href="step4.html"><span class="pnum">4</span>Push Code</a>
+    <a class="prog-step" href="step5.html"><span class="pnum">5</span>Enable Pages</a>
+    <a class="prog-step" href="step6.html"><span class="pnum">6</span>Verify</a>
+  </div>
+
+  <div class="section-title">Guided steps — work through these in order</div>
+  <div class="grid">
+    <a class="card" href="step1.html">
+      <div class="card-step">Step 1</div>
+      <h2>Create a GitHub Account &amp; Install Git</h2>
+      <p>Sign up at github.com, download and install Git, then set your name and email for commits.</p>
+      <div class="card-tags"><span class="tag dark">git --version</span><span class="tag">git config</span></div>
+    </a>
+    <a class="card" href="step2.html">
+      <div class="card-step">Step 2</div>
+      <h2>Initialize Your Local Repository</h2>
+      <p>Open your Book Search project folder in the terminal. Run <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">git init</code>, stage all files, and make your first commit.</p>
+      <div class="card-tags"><span class="tag">git init</span><span class="tag">git add</span><span class="tag">git commit</span></div>
+    </a>
+    <a class="card" href="step3.html">
+      <div class="card-step">Step 3</div>
+      <h2>Create a GitHub Repository</h2>
+      <p>Create a new public repository on GitHub named <em>webpro-booksearch</em>. Do NOT add a README yet.</p>
+      <div class="card-tags"><span class="tag dark">GitHub.com</span><span class="tag">New repository</span></div>
+    </a>
+    <a class="card" href="step4.html">
+      <div class="card-step">Step 4</div>
+      <h2>Connect &amp; Push to GitHub</h2>
+      <p>Link your local repo to GitHub with <em>git remote add</em>, then push your commits to the cloud.</p>
+      <div class="card-tags"><span class="tag">git remote</span><span class="tag">git push</span></div>
+    </a>
+    <a class="card" href="step5.html">
+      <div class="card-step">Step 5</div>
+      <h2>Enable GitHub Pages</h2>
+      <p>In your repository Settings, turn on GitHub Pages. Choose the <em>main</em> branch and <em>/ (root)</em> folder. Save and wait.</p>
+      <div class="card-tags"><span class="tag dark">Settings → Pages</span><span class="tag green">Live URL</span></div>
+    </a>
+    <a class="card" href="step6.html">
+      <div class="card-step">Step 6</div>
+      <h2>Verify &amp; Troubleshoot</h2>
+      <p>Open your live URL in an incognito window. Debug common issues: missing index.html, wrong branch, broken paths.</p>
+      <div class="card-tags"><span class="tag">Troubleshoot</span><span class="tag">DevTools</span></div>
+    </a>
+  </div>
+
+  <div class="section-title">Reference</div>
+  <div class="grid">
+    <a class="card solution" href="solution.html">
+      <div class="card-step">Complete Reference</div>
+      <h2>All Commands in Order</h2>
+      <p>Every terminal command from setup to live deployment, in one place. Use this when you get stuck or want a quick recap.</p>
+      <div class="card-tags"><span class="tag green">Full workflow</span></div>
+    </a>
+  </div>
+
+  <div class="info-box">
+    <strong>What you need before starting:</strong> Your Book Search App files from Week 7 (at minimum an <code>index.html</code> that works locally). A laptop with internet access. That's it — Git, GitHub, and GitHub Pages are all free.<br><br>
+    <strong>Time estimate:</strong> ~45 minutes if everything goes smoothly. Allow extra time for troubleshooting in Step 6.
+  </div>
+
+</div>
+</body>
+</html>

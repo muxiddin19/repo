@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solution — Complete Deployment Reference</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--accent-hover:#1447b3;
+  --bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;
+  --text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;
+  --code-bg:#1e293b;--cmd:#93c5fd;--comment:#64748b;--string:#86efac;--out:#f1f5f9;
+  --kw:#f0abfc;--num:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--dark);padding:36px 24px 28px;text-align:center}
+.badge{display:inline-block;background:#6366f1;color:#fff;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:26px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px;max-width:560px;margin:0 auto;line-height:1.6}
+.wrap{max-width:860px;margin:32px auto;padding:0 20px 60px;flex:1;width:100%}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:22px}
+.card-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.phase-num{background:var(--accent);color:#fff;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.phase-num.purple{background:#6366f1}
+.phase-title{font-size:17px;font-weight:700}
+.phase-subtitle{font-size:13px;color:var(--muted);margin-top:2px}
+.code-block{background:var(--code-bg);border-radius:10px;padding:20px 22px;margin:0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;overflow-x:auto;position:relative}
+.code-block .line{display:block}
+.code-block .cmd{color:var(--cmd)}
+.code-block .cmt{color:var(--comment)}
+.code-block .str{color:var(--string)}
+.code-block .out{color:var(--out)}
+.code-block .kw{color:var(--kw)}
+.code-block .num{color:var(--num)}
+.code-block .prompt{color:#475569;user-select:none}
+.copy-hint{position:absolute;top:12px;right:14px;font-size:10px;color:#475569;font-family:Inter,sans-serif;letter-spacing:.05em;font-weight:600}
+.note{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;line-height:1.6;margin:14px 0 0}
+.note strong{color:#92400e}
+.info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;font-size:13px;color:#1e40af;line-height:1.6;margin:14px 0 0}
+.success{background:var(--greenl);border:1px solid #86efac;border-radius:8px;padding:14px 18px;font-size:13px;color:#166534;line-height:1.7;margin:14px 0 0}
+/* All-in-one block */
+.all-in-one{background:var(--code-bg);border-radius:12px;padding:28px 28px;margin:14px 0 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;overflow-x:auto;border:2px solid #6366f1}
+.all-in-one .section-comment{color:#6366f1;font-weight:600;margin-top:8px;display:block}
+.all-in-one .section-comment:first-child{margin-top:0}
+.all-in-one .line{display:block}
+.all-in-one .cmd{color:var(--cmd)}
+.all-in-one .cmt{color:var(--comment)}
+.all-in-one .str{color:var(--string)}
+/* Quick reference table */
+.ref-table{width:100%;border-collapse:collapse;margin-top:4px}
+.ref-table th{background:var(--bg);padding:10px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border)}
+.ref-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:top}
+.ref-table tr:last-child td{border-bottom:none}
+.ref-table .mono{font-family:'JetBrains Mono',monospace;color:var(--accent);background:#eef2ff;padding:2px 6px;border-radius:3px;font-size:.87em;white-space:nowrap}
+.ref-table .desc{color:var(--muted);line-height:1.5}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,color .15s}
+.nav .prev{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.nav .prev:hover{background:var(--border)}
+.nav .home{background:var(--accent);color:#fff}
+.nav .home:hover{background:var(--accent-hover)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">COMPLETE REFERENCE</div>
+  <h1>All Commands in Order</h1>
+  <p>Every terminal command you need to deploy your Book Search App to GitHub Pages — from zero to live URL.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- Phase 0: Prerequisites -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">0</div>
+      <div><div class="phase-title">Prerequisites — one-time setup</div><div class="phase-subtitle">Do this once on a new computer</div></div>
+    </div>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># Verify Git is installed</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git --version</span></span>
+      <span class="line"><span class="out">git version 2.47.0</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Set your identity (use the email from your GitHub account)</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git config --global user.name </span><span class="str">"Your Name"</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git config --global user.email </span><span class="str">"youremail@example.com"</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Verify</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git config --global user.name</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git config --global user.email</span></span>
+    </div>
+    <div class="info">Already done? Skip Phase 0 — your identity is stored globally and applies to every project.</div>
+  </div>
+
+  <!-- Phase 1: Initialize -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">1</div>
+      <div><div class="phase-title">Initialize Your Local Repository</div><div class="phase-subtitle">Run once per project, inside the project folder</div></div>
+    </div>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># Navigate to your project folder first, then:</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Initialize Git in this folder</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git init</span></span>
+      <span class="line"><span class="out">Initialized empty Git repository in .../webpro-booksearch/.git/</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Stage all files</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git add .</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Verify what is staged</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git status</span></span>
+      <span class="line"><span class="out">On branch master</span></span>
+      <span class="line"><span class="str">Changes to be committed:</span></span>
+      <span class="line"><span class="str">  new file:   index.html</span></span>
+      <span class="line"><span class="str">  new file:   script.js</span></span>
+      <span class="line"><span class="str">  new file:   style.css</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Create the first commit</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git commit -m </span><span class="str">"first commit: add Book Search App"</span></span>
+      <span class="line"><span class="out">[master (root-commit) a1b2c3d] first commit: add Book Search App</span></span>
+      <span class="line"><span class="out"> 3 files changed, 87 insertions(+)</span></span>
+    </div>
+  </div>
+
+  <!-- Phase 2: GitHub repo -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">2</div>
+      <div><div class="phase-title">Create the GitHub Repository</div><div class="phase-subtitle">Done on github.com — no terminal commands</div></div>
+    </div>
+    <ol style="font-size:14px;color:var(--muted);line-height:2;padding-left:18px">
+      <li>Go to <strong style="color:var(--text)">github.com</strong> → click <strong style="color:var(--text)">+</strong> → <strong style="color:var(--text)">New repository</strong></li>
+      <li>Name: <code style="background:#eef2ff;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.87em">webpro-booksearch</code> &nbsp;&nbsp;Visibility: <strong style="color:var(--text)">Public</strong></li>
+      <li>Leave all "Initialize" checkboxes <strong style="color:var(--text)">unchecked</strong></li>
+      <li>Click <strong style="color:var(--text)">Create repository</strong></li>
+      <li>Copy the HTTPS URL shown: <code style="background:#eef2ff;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.87em">https://github.com/your-username/webpro-booksearch.git</code></li>
+    </ol>
+  </div>
+
+  <!-- Phase 3: Connect and push -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">3</div>
+      <div><div class="phase-title">Connect Local Repo to GitHub &amp; Push</div><div class="phase-subtitle">Run once per project</div></div>
+    </div>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># Add GitHub as the remote (paste YOUR URL from Step 2)</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git remote add origin </span><span class="str">https://github.com/your-username/webpro-booksearch.git</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Rename the local branch to 'main'</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git branch -M main</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Push commits to GitHub and set tracking branch</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git push -u origin main</span></span>
+      <span class="line"><span class="out">Enumerating objects: 5, done.</span></span>
+      <span class="line"><span class="str">To https://github.com/your-username/webpro-booksearch.git</span></span>
+      <span class="line"><span class="str"> * [new branch]      main -&gt; main</span></span>
+    </div>
+    <div class="note"><strong>Authentication:</strong> A browser window should open asking you to sign in to GitHub. After signing in, return to the terminal. If it asks for a password directly, enter a Personal Access Token (not your login password).</div>
+  </div>
+
+  <!-- Phase 4: Enable Pages -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">4</div>
+      <div><div class="phase-title">Enable GitHub Pages</div><div class="phase-subtitle">Done on github.com — no terminal commands</div></div>
+    </div>
+    <ol style="font-size:14px;color:var(--muted);line-height:2;padding-left:18px">
+      <li>Open your repository on GitHub</li>
+      <li>Click the <strong style="color:var(--text)">Settings</strong> tab</li>
+      <li>In the left sidebar, click <strong style="color:var(--text)">Pages</strong></li>
+      <li>Under Source → Branch: select <strong style="color:var(--text)">main</strong> &nbsp; Folder: select <strong style="color:var(--text)">/ (root)</strong></li>
+      <li>Click <strong style="color:var(--text)">Save</strong></li>
+      <li>Wait ~60 seconds, then refresh the Settings → Pages page</li>
+      <li>Your live URL appears: <code style="background:#eef2ff;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.87em">https://your-username.github.io/webpro-booksearch</code></li>
+    </ol>
+  </div>
+
+  <!-- Phase 5: Update workflow -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">5</div>
+      <div><div class="phase-title">Update Your Live Site (repeat each time)</div><div class="phase-subtitle">After any code change</div></div>
+    </div>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># Stage your changes</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git add .</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Commit with a descriptive message</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git commit -m </span><span class="str">"add loading spinner"</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Push to GitHub — Pages rebuilds in ~60 seconds</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git push</span></span>
+    </div>
+    <div class="info">Hard-refresh your browser after pushing to see the update: <strong>Ctrl+Shift+R</strong> (Windows/Linux) or <strong>Cmd+Shift+R</strong> (Mac).</div>
+  </div>
+
+  <!-- All-in-one -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num purple">&#x2605;</div>
+      <div><div class="phase-title">Complete Terminal Commands — Copy &amp; Paste</div><div class="phase-subtitle">All commands in one block, in order</div></div>
+    </div>
+    <div class="all-in-one">
+      <span class="section-comment"># ── PHASE 0 · One-time setup ──────────────────────────────</span>
+      <span class="line"><span class="cmd">git config --global user.name </span><span class="str">"Your Name"</span></span>
+      <span class="line"><span class="cmd">git config --global user.email </span><span class="str">"youremail@example.com"</span></span>
+      <span class="line">&nbsp;</span>
+      <span class="section-comment"># ── PHASE 1 · Initialize local repo ───────────────────────</span>
+      <span class="line"><span class="cmd">git init</span></span>
+      <span class="line"><span class="cmd">git add .</span></span>
+      <span class="line"><span class="cmd">git commit -m </span><span class="str">"first commit: add Book Search App"</span></span>
+      <span class="line">&nbsp;</span>
+      <span class="section-comment"># ── PHASE 3 · Connect to GitHub &amp; push ───────────────────</span>
+      <span class="line"><span class="cmd">git remote add origin </span><span class="str">https://github.com/YOUR-USERNAME/webpro-booksearch.git</span></span>
+      <span class="line"><span class="cmd">git branch -M main</span></span>
+      <span class="line"><span class="cmd">git push -u origin main</span></span>
+      <span class="line">&nbsp;</span>
+      <span class="section-comment"># ── PHASE 5 · Update after future changes ─────────────────</span>
+      <span class="line"><span class="cmd">git add .</span></span>
+      <span class="line"><span class="cmd">git commit -m </span><span class="str">"describe what you changed"</span></span>
+      <span class="line"><span class="cmd">git push</span></span>
+    </div>
+    <div class="success"><strong>Remember:</strong> Phases 2 and 4 are done on the GitHub website, not in the terminal.</div>
+  </div>
+
+  <!-- Quick reference -->
+  <div class="card">
+    <div class="card-header">
+      <div class="phase-num">&#x1F4D6;</div>
+      <div><div class="phase-title">Git Command Quick Reference</div><div class="phase-subtitle">The commands you will use most often</div></div>
+    </div>
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="mono">git status</span></td><td class="desc">Show which files have changed, are staged, or are untracked</td></tr>
+        <tr><td><span class="mono">git add .</span></td><td class="desc">Stage all changes in the current folder</td></tr>
+        <tr><td><span class="mono">git add filename</span></td><td class="desc">Stage one specific file</td></tr>
+        <tr><td><span class="mono">git commit -m "msg"</span></td><td class="desc">Save a snapshot of staged files with a message</td></tr>
+        <tr><td><span class="mono">git log --oneline</span></td><td class="desc">List all commits (short format), newest first</td></tr>
+        <tr><td><span class="mono">git diff</span></td><td class="desc">Show unstaged changes (what changed since last add)</td></tr>
+        <tr><td><span class="mono">git push</span></td><td class="desc">Upload new commits to GitHub (after first push setup)</td></tr>
+        <tr><td><span class="mono">git pull</span></td><td class="desc">Download and merge changes from GitHub into your local repo</td></tr>
+        <tr><td><span class="mono">git remote -v</span></td><td class="desc">Show the remote connections for this repo</td></tr>
+        <tr><td><span class="mono">git branch</span></td><td class="desc">List local branches (the * shows the current branch)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nav">
+    <a class="prev" href="step6.html">&larr; Step 6: Verify</a>
+    <a class="home" href="index.html">&#x2302; Lab Overview</a>
+  </div>
+
+</div>
+</body>
+</html>

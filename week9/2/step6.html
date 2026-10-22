@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 6 — Verify &amp; Troubleshoot</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--accent-hover:#1447b3;
+  --bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;
+  --text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;
+  --red:#dc2626;--redl:#fef2f2;
+  --code-bg:#1e293b;--cmd:#93c5fd;--comment:#64748b;--string:#86efac;--out:#f1f5f9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--dark);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:14px;max-width:520px;margin:0 auto;line-height:1.6}
+.wrap{max-width:820px;margin:32px auto;padding:0 20px 32px;flex:1;width:100%}
+.section{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:22px}
+.section h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section h2 .ico{background:var(--accent);color:#fff;width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.section h2 .ico.red{background:var(--red)}
+.section p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px}
+.section p:last-child{margin-bottom:0}
+.section a{color:var(--accent);text-decoration:none}
+.section a:hover{text-decoration:underline}
+.code-block{background:var(--code-bg);border-radius:10px;padding:18px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;overflow-x:auto;position:relative}
+.code-block .line{display:block}
+.code-block .cmd{color:var(--cmd)}
+.code-block .cmt{color:var(--comment)}
+.code-block .str{color:var(--string)}
+.code-block .out{color:var(--out)}
+.copy-hint{position:absolute;top:10px;right:12px;font-size:10px;color:#475569;font-family:Inter,sans-serif;letter-spacing:.05em}
+.step-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step-num{background:var(--accent);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;color:var(--text);line-height:1.7;flex:1}
+.step-text code{background:#eef2ff;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.note{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;line-height:1.6;margin:12px 0}
+.note strong{color:#92400e}
+.info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;font-size:13px;color:#1e40af;line-height:1.6;margin:12px 0}
+.success{background:var(--greenl);border:1px solid #86efac;border-radius:8px;padding:14px 18px;font-size:14px;color:#166534;line-height:1.7;margin:14px 0}
+/* Issue cards */
+.issue-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.issue-header{background:var(--redl);border-bottom:1px solid #fca5a5;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.issue-symptom{font-size:14px;font-weight:700;color:var(--red)}
+.issue-tag{font-size:11px;font-weight:700;background:var(--red);color:#fff;padding:2px 7px;border-radius:4px;margin-left:auto;white-space:nowrap}
+.issue-body{padding:16px 18px;background:var(--surf)}
+.issue-cause{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.7}
+.fix-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green);margin-bottom:6px}
+.issue-body .step-text code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+/* Verify steps */
+.verify-step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)}
+.verify-step:last-child{border-bottom:none}
+.verify-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.verify-icon.green{background:var(--greenl)}
+.verify-icon.blue{background:#dbeafe}
+.verify-icon.yellow{background:#fefce8}
+.verify-body{flex:1}
+.verify-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.verify-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.verify-desc code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.checklist{list-style:none;margin-top:8px}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);line-height:1.5}
+.checklist li:last-child{border-bottom:none}
+.checklist input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;margin-top:1px;flex-shrink:0}
+.checklist label{cursor:pointer}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,color .15s}
+.nav .prev{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.nav .prev:hover{background:var(--border)}
+.nav .next{background:var(--green);color:#fff}
+.nav .next:hover{background:#15803d}
+.try-box{background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;border-radius:12px;padding:22px 24px}
+.try-box h3{font-size:14px;font-weight:700;margin-bottom:14px;color:#1e1b4b}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">STEP 6 OF 6</div>
+  <h1>Verify &amp; Troubleshoot</h1>
+  <p>Check that your live site works correctly, and fix the most common deployment problems.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- Verify the site -->
+  <div class="section">
+    <h2><span class="ico">&#10003;</span> Verify Your Live Site</h2>
+    <p>Before calling it done, check that your site works correctly for a real visitor.</p>
+
+    <div class="verify-step">
+      <div class="verify-icon green">&#x1F575;</div>
+      <div class="verify-body">
+        <div class="verify-title">Test in an incognito / private window</div>
+        <div class="verify-desc">Press <strong>Ctrl+Shift+N</strong> (Chrome/Edge) or <strong>Ctrl+Shift+P</strong> (Firefox) to open an incognito window. Open your GitHub Pages URL there. This ensures you are not seeing a cached version from your development work.</div>
+      </div>
+    </div>
+    <div class="verify-step">
+      <div class="verify-icon blue">&#x1F4F1;</div>
+      <div class="verify-body">
+        <div class="verify-title">Test on a phone</div>
+        <div class="verify-desc">Open your GitHub Pages URL on your smartphone. If your CSS uses relative units and flexbox, the layout should adapt. A live mobile test catches issues that desktop DevTools emulation misses.</div>
+      </div>
+    </div>
+    <div class="verify-step">
+      <div class="verify-icon green">&#x1F50D;</div>
+      <div class="verify-body">
+        <div class="verify-title">Search for a book</div>
+        <div class="verify-desc">Type a query ("dune", "harry potter") and submit the form. The Open Library API is a public HTTPS endpoint — it should work from any hosted domain. If results appear, your full stack is working.</div>
+      </div>
+    </div>
+    <div class="verify-step">
+      <div class="verify-icon yellow">&#x1F6A8;</div>
+      <div class="verify-body">
+        <div class="verify-title">Check DevTools Console for errors</div>
+        <div class="verify-desc">Press <strong>F12</strong> → Console tab. A working page should have zero red errors. Warnings (yellow) are usually fine. A red error often points directly to the broken file or line.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common issues -->
+  <div class="section">
+    <h2><span class="ico red">!</span> Common Issues &amp; Fixes</h2>
+
+    <!-- Issue 1: 404 -->
+    <div class="issue-card">
+      <div class="issue-header">
+        <div class="issue-symptom">The site shows a 404 "File not found" error</div>
+        <span class="issue-tag">MOST COMMON</span>
+      </div>
+      <div class="issue-body">
+        <div class="issue-cause"><strong>Possible cause 1:</strong> Pages is still building. Wait 60–90 seconds and refresh.</div>
+        <div class="issue-cause"><strong>Possible cause 2:</strong> Your <code>index.html</code> is missing from the root of the repository. GitHub Pages specifically looks for a file named <code>index.html</code> in the root (or <code>/docs</code> folder if you chose that).</div>
+        <div class="fix-label">Fix</div>
+        <div class="step-row" style="margin-top:8px"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">1</div><div class="step-text">Check your repository on GitHub — is <code>index.html</code> listed in the file browser? If not, your project folder may have a different file name or be inside a subfolder.</div></div>
+        <div class="step-row"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">2</div><div class="step-text">If <code>index.html</code> is inside a folder, go to Step 5 and change the folder setting to match that subfolder, OR move the file to the root and push again.</div></div>
+      </div>
+    </div>
+
+    <!-- Issue 2: wrong branch -->
+    <div class="issue-card">
+      <div class="issue-header">
+        <div class="issue-symptom">Pages is configured but the site is still not live</div>
+        <span class="issue-tag">BRANCH ISSUE</span>
+      </div>
+      <div class="issue-body">
+        <div class="issue-cause"><strong>Cause:</strong> Pages is set to the <code>main</code> branch but your commits are on <code>master</code> (or vice versa).</div>
+        <div class="fix-label">Fix</div>
+        <div class="step-row" style="margin-top:8px"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">1</div><div class="step-text">Check the branch name in your local terminal:</div></div>
+        <div class="code-block" style="margin:6px 0 10px">
+          <span class="line"><span class="cmd">git branch</span></span>
+          <span class="line"><span class="out">* main</span></span>
+        </div>
+        <div class="step-row"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">2</div><div class="step-text">If the branch is <code>master</code>, rename it: <code>git branch -M main</code> then <code>git push -u origin main</code>.</div></div>
+        <div class="step-row"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">3</div><div class="step-text">In Settings → Pages, confirm the branch is set to <code>main</code>.</div></div>
+      </div>
+    </div>
+
+    <!-- Issue 3: relative paths -->
+    <div class="issue-card">
+      <div class="issue-header">
+        <div class="issue-symptom">Page loads but CSS/images are missing or broken</div>
+        <span class="issue-tag">PATH ISSUE</span>
+      </div>
+      <div class="issue-body">
+        <div class="issue-cause"><strong>Cause:</strong> You used an absolute path like <code>/style.css</code> (starts with <code>/</code>). On GitHub Pages the base URL is <code>/webpro-booksearch/</code>, so <code>/style.css</code> resolves to the wrong location.</div>
+        <div class="fix-label">Fix — use relative paths everywhere</div>
+        <div class="code-block" style="margin:10px 0">
+          <span class="line"><span class="cmt">&lt;!-- WRONG — absolute path --&gt;</span></span>
+          <span class="line" style="color:#f87171">&lt;link rel="stylesheet" href="/style.css"&gt;</span>
+          <span class="line"></span>
+          <span class="line"><span class="cmt">&lt;!-- CORRECT — relative path --&gt;</span></span>
+          <span class="line"><span class="str">&lt;link rel="stylesheet" href="style.css"&gt;</span></span>
+          <span class="line"><span class="str">&lt;link rel="stylesheet" href="./style.css"&gt;</span></span>
+        </div>
+        <div class="step-row" style="margin-top:8px"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">1</div><div class="step-text">Open <code>index.html</code> locally, fix all <code>href</code> and <code>src</code> values that start with <code>/</code>.</div></div>
+        <div class="step-row"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">2</div><div class="step-text">Save, then run: <code>git add .</code> → <code>git commit -m "fix relative paths"</code> → <code>git push</code>. Wait 60 seconds.</div></div>
+      </div>
+    </div>
+
+    <!-- Issue 4: API blocked -->
+    <div class="issue-card">
+      <div class="issue-header">
+        <div class="issue-symptom">Book search returns no results or a network error</div>
+        <span class="issue-tag">API / CORS</span>
+      </div>
+      <div class="issue-body">
+        <div class="issue-cause"><strong>Cause:</strong> Open Library is an external API. Open DevTools → Network tab and look for a red request. Common problems: wrong URL in the fetch call, or a mixed-content error (your code uses <code>http://</code> instead of <code>https://</code>).</div>
+        <div class="fix-label">Fix</div>
+        <div class="step-row" style="margin-top:8px"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">1</div><div class="step-text">Make sure your fetch URL starts with <code>https://</code> — GitHub Pages is served over HTTPS, so any <code>http://</code> requests are blocked by the browser.</div></div>
+        <div class="code-block" style="margin:6px 0 10px">
+          <span class="line"><span class="cmt">// WRONG</span></span>
+          <span class="line" style="color:#f87171">fetch('http://openlibrary.org/search.json?q=...')</span>
+          <span class="line"></span>
+          <span class="line"><span class="cmt">// CORRECT</span></span>
+          <span class="line"><span class="str">fetch('https://openlibrary.org/search.json?q=...')</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issue 5: case sensitivity -->
+    <div class="issue-card">
+      <div class="issue-header">
+        <div class="issue-symptom">Works on Windows/Mac locally but 404 on GitHub Pages</div>
+        <span class="issue-tag">CASE SENSITIVITY</span>
+      </div>
+      <div class="issue-body">
+        <div class="issue-cause"><strong>Cause:</strong> Windows and macOS file systems are case-insensitive. GitHub Pages runs on Linux, which IS case-sensitive. A file named <code>Style.css</code> is NOT the same as <code>style.css</code> on Linux.</div>
+        <div class="fix-label">Fix</div>
+        <div class="step-row" style="margin-top:8px"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">1</div><div class="step-text">Use all-lowercase filenames: <code>style.css</code>, <code>script.js</code>, <code>index.html</code>.</div></div>
+        <div class="step-row"><div class="step-num" style="width:22px;height:22px;font-size:11px;background:#16a34a">2</div><div class="step-text">Make sure all <code>href</code> and <code>src</code> attributes match the exact filename case.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update workflow -->
+  <div class="section">
+    <h2><span class="ico">&#x21bb;</span> Updating Your Site After Changes</h2>
+    <p>Any time you edit your project and want the live site to update, run these three commands:</p>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># 1. Stage your changes</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git add .</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># 2. Commit with a descriptive message</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git commit -m </span><span class="str">"improve search result cards"</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># 3. Push to GitHub — Pages rebuilds automatically</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git push</span></span>
+    </div>
+    <div class="info">Wait about 60 seconds after pushing, then hard-refresh your browser (<strong>Ctrl+Shift+R</strong> / <strong>Cmd+Shift+R</strong>) to clear the cache and see the updated site.</div>
+  </div>
+
+  <!-- Final checklist -->
+  <div class="try-box">
+    <h3>Final checklist — you are done when all of these are true</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">My Book Search App is live at <code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">https://username.github.io/webpro-booksearch</code></label></li>
+      <li><input type="checkbox" id="c2"><label for="c2">The page loads correctly in an incognito window (no cached version)</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3">Searching for a book returns real results from the Open Library API</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4">DevTools Console shows no red errors</label></li>
+      <li><input type="checkbox" id="c5"><label for="c5">I know how to update the site: <code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">git add . → git commit → git push</code></label></li>
+    </ul>
+  </div>
+
+  <div class="success" style="margin-top:20px;text-align:center;font-size:15px;padding:20px 24px">
+    <strong>You did it!</strong> Your Book Search App is deployed to the internet using Git and GitHub Pages. You now know the complete workflow for shipping a static web app.
+  </div>
+
+  <div class="nav">
+    <a class="prev" href="step5.html">&larr; Step 5: Enable Pages</a>
+    <a class="next" href="solution.html">Full Command Reference &rarr;</a>
+  </div>
+
+</div>
+</body>
+</html>

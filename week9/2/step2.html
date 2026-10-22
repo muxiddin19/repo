@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 2 — Initialize Your Repository</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--accent-hover:#1447b3;
+  --bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;
+  --text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;
+  --code-bg:#1e293b;--code-text:#e2e8f0;
+  --cmd:#93c5fd;--comment:#64748b;--string:#86efac;--output:#f1f5f9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--dark);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:14px;max-width:520px;margin:0 auto;line-height:1.6}
+.wrap{max-width:820px;margin:32px auto;padding:0 20px 32px;flex:1;width:100%}
+.section{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:22px}
+.section h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section h2 .ico{background:var(--accent);color:#fff;width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.section p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px}
+.section p:last-child{margin-bottom:0}
+.section a{color:var(--accent);text-decoration:none}
+.section a:hover{text-decoration:underline}
+.code-block{background:var(--code-bg);border-radius:10px;padding:18px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;overflow-x:auto;position:relative}
+.code-block .line{display:block}
+.code-block .cmd{color:var(--cmd)}
+.code-block .cmt{color:var(--comment)}
+.code-block .str{color:var(--string)}
+.code-block .out{color:var(--output)}
+.code-block .prompt{color:#64748b;user-select:none}
+.copy-hint{position:absolute;top:10px;right:12px;font-size:10px;color:#475569;font-family:Inter,sans-serif;letter-spacing:.05em}
+.step-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step-num{background:var(--accent);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;color:var(--text);line-height:1.7;flex:1}
+.step-text code{background:#eef2ff;color:var(--accent);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.note{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;line-height:1.6;margin:12px 0}
+.note strong{color:#92400e}
+.info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;font-size:13px;color:#1e40af;line-height:1.6;margin:12px 0}
+.explain-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:14px 0}
+.explain-box h4{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text)}
+.explain-row{display:flex;gap:12px;margin-bottom:8px;font-size:13px;line-height:1.5}
+.explain-row:last-child{margin-bottom:0}
+.explain-cmd{font-family:'JetBrains Mono',monospace;color:var(--accent);background:#eef2ff;padding:2px 8px;border-radius:4px;white-space:nowrap;font-size:.9em;align-self:flex-start;flex-shrink:0}
+.explain-desc{color:var(--muted)}
+.checklist{list-style:none;margin-top:8px}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);line-height:1.5}
+.checklist li:last-child{border-bottom:none}
+.checklist input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;margin-top:1px;flex-shrink:0}
+.checklist label{cursor:pointer}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)}
+.nav a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,color .15s}
+.nav .prev{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.nav .prev:hover{background:var(--border)}
+.nav .next{background:var(--accent);color:#fff}
+.nav .next:hover{background:var(--accent-hover)}
+.try-box{background:linear-gradient(135deg,#eef2ff,#f0fdf4);border:1px solid #c7d2fe;border-radius:12px;padding:22px 24px}
+.try-box h3{font-size:14px;font-weight:700;margin-bottom:14px;color:#1e1b4b}
+.status-diagram{display:flex;flex-direction:column;gap:4px;margin:14px 0}
+.status-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px}
+.status-row.green{background:#dcfce7;color:#166534}
+.status-row.red{background:#fee2e2;color:#991b1b}
+.status-row.gray{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-row.green .status-dot{background:#16a34a}
+.status-row.red .status-dot{background:#dc2626}
+.status-row.gray .status-dot{background:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">STEP 2 OF 6</div>
+  <h1>Initialize Your Local Repository</h1>
+  <p>Turn your Book Search project folder into a Git repository, stage all files, and make your first commit.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- Navigate to folder -->
+  <div class="section">
+    <h2><span class="ico">A</span> Open a Terminal in Your Project Folder</h2>
+    <p>You need a terminal (Command Prompt, PowerShell, or Terminal) pointed at the folder where your <code>index.html</code> lives.</p>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Windows:</strong> Open File Explorer, navigate to your project folder, click the address bar, type <code>cmd</code>, and press Enter. A Command Prompt opens at that location.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Mac:</strong> Right-click the project folder in Finder → <em>New Terminal at Folder</em>. Or use <code>cd</code> to navigate there.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text">Confirm you are in the right place — list the files:</div>
+    </div>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="cmt"># Windows</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">dir</span></span>
+      <span class="line"><span class="out">index.html    style.css    script.js</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="cmt"># Mac / Linux</span></span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">ls</span></span>
+      <span class="line"><span class="out">index.html    style.css    script.js</span></span>
+    </div>
+    <div class="note"><strong>index.html must be visible in this listing.</strong> If not, use <code>cd foldername</code> to go deeper into the correct directory.</div>
+  </div>
+
+  <!-- git init -->
+  <div class="section">
+    <h2><span class="ico">B</span> Initialize the Git Repository</h2>
+    <p>This creates a hidden <code>.git</code> folder inside your project that Git uses to track all changes.</p>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git init</span></span>
+      <span class="line"><span class="out">Initialized empty Git repository in /path/to/your/project/.git/</span></span>
+    </div>
+    <div class="info">This only needs to be done <strong>once per project</strong>. The .git folder stores all of the version history — never delete it.</div>
+  </div>
+
+  <!-- git add -->
+  <div class="section">
+    <h2><span class="ico">C</span> Stage All Your Files</h2>
+    <p>Staging means telling Git which files to include in the next commit. The <code>.</code> means "everything in this folder".</p>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git add .</span></span>
+    </div>
+    <p>Check what is staged:</p>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git status</span></span>
+      <span class="line"><span class="out">On branch master</span></span>
+      <span class="line"><span class="out">Changes to be committed:</span></span>
+      <span class="line"><span class="string">  new file:   index.html</span></span>
+      <span class="line"><span class="string">  new file:   style.css</span></span>
+      <span class="line"><span class="string">  new file:   script.js</span></span>
+    </div>
+    <div class="explain-box">
+      <h4>What these status colors mean:</h4>
+      <div class="status-diagram">
+        <div class="status-row green"><div class="status-dot"></div>new file: &nbsp; index.html — staged and ready to commit</div>
+        <div class="status-row red"><div class="status-dot"></div>modified: &nbsp; index.html — changed but NOT yet staged (run git add again)</div>
+        <div class="status-row gray"><div class="status-dot"></div>?? index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— untracked (not staged yet)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- git commit -->
+  <div class="section">
+    <h2><span class="ico">D</span> Make Your First Commit</h2>
+    <p>A commit is a permanent snapshot of your staged files. The <code>-m</code> flag lets you write the message inline.</p>
+    <div class="code-block">
+      <span class="copy-hint">terminal</span>
+      <span class="line"><span class="prompt">$ </span><span class="cmd">git commit -m </span><span class="str">"first commit: add Book Search App"</span></span>
+      <span class="line"><span class="out">[master (root-commit) a1b2c3d] first commit: add Book Search App</span></span>
+      <span class="line"><span class="out"> 3 files changed, 87 insertions(+)</span></span>
+      <span class="line"><span class="out"> create mode 100644 index.html</span></span>
+      <span class="line"><span class="out"> create mode 100644 script.js</span></span>
+      <span class="line"><span class="out"> create mode 100644 style.css</span></span>
+    </div>
+
+    <div class="explain-box">
+      <h4>The three-step Git workflow (you will repeat this every time):</h4>
+      <div class="explain-row"><span class="explain-cmd">git add .</span><span class="explain-desc">Stage changes — tell Git what to include</span></div>
+      <div class="explain-row"><span class="explain-cmd">git commit -m "..."</span><span class="explain-desc">Snapshot the staged state with a message</span></div>
+      <div class="explain-row"><span class="explain-cmd">git push</span><span class="explain-desc">Upload commits to GitHub (we do this in Step 4)</span></div>
+    </div>
+
+    <div class="note"><strong>Write good commit messages.</strong> Describe what changed and why — "fixed search button" is better than "update". Your future self will thank you.</div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="try-box">
+    <h3>Try it yourself — checklist</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">My terminal is open inside my Book Search project folder (index.html is visible with <code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">dir</code> or <code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">ls</code>)</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2"><code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">git init</code> ran without errors</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">git status</code> shows my files listed in green</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><code style="background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em">git commit -m "first commit: add Book Search App"</code> completed and showed files changed</label></li>
+    </ul>
+  </div>
+
+  <div class="nav">
+    <a class="prev" href="step1.html">&larr; Step 1: Setup Git</a>
+    <a class="next" href="step3.html">Step 3: Create GitHub Repo &rarr;</a>
+  </div>
+
+</div>
+</body>
+</html>
