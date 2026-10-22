@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 9 — Practical Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--jsyel:#f7df1e;--bg:#f0f4ff;--surf:#fff;--ac:#1a56db;--text:#1a2340;--sub:#5a6a8a;--bdr:#c8d4f0;--green:#16a34a;--greenl:#dcfce7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--jsyel);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--jsyel);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:26px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:14px;max-width:560px;margin:0 auto}
+.wrap{max-width:900px;margin:32px auto;padding:0 20px 60px}
+.intro{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:22px 24px;margin-bottom:28px;line-height:1.7;font-size:14px;color:var(--sub)}
+.intro strong{color:var(--text)}
+.intro code{background:#eef2ff;color:var(--ac);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.section-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:13px;background:var(--ac);border-radius:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:32px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:8px;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,37,64,.12)}
+.card-step{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--sub)}
+.card h2{font-size:15px;font-weight:700}
+.card p{font-size:13px;color:var(--sub);line-height:1.6;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--ac)}
+.tag.green{background:var(--greenl);color:#166534}
+.card.solution{border-color:#6366f1;border-style:dashed}
+.card.solution .card-step{color:#6366f1}
+.goal-box{background:#1a2540;border-radius:12px;padding:22px 24px;color:#94a3b8;font-size:13px;line-height:1.8;margin-bottom:28px}
+.goal-box h3{color:#fff;font-size:15px;font-weight:700;margin-bottom:10px}
+.goal-box code{background:rgba(255,255,255,.08);color:#f7df1e;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">WEEK 9 &middot; FRIDAY &middot; PRACTICAL LAB</div>
+  <h1>Student Registration Form Validation</h1>
+  <p>Build a fully validated student registration form — HTML5 attrs &middot; CSS pseudo-classes &middot; JS validation &middot; Accessibility</p>
+</div>
+
+<div class="wrap">
+
+  <div class="goal-box">
+    <h3>What you will build</h3>
+    A <code>Student Registration Form</code> that validates all fields in real time before allowing submission — student ID format, email, password strength, confirm-password match, and team selection.<br><br>
+    You will build it in <strong style="color:#f7df1e">6 guided steps</strong>, adding one layer at a time: HTML structure &rarr; CSS &rarr; basic JS &rarr; live feedback &rarr; regex validation &rarr; accessibility.
+    Each step file is <strong style="color:#f7df1e">already saved on your computer</strong> — open it, read the task comment at the top, then add the code.
+  </div>
+
+  <div class="section-title">Guided Steps &mdash; work through these in order</div>
+  <div class="grid">
+    <a class="card" href="step1_html.html">
+      <div class="card-step">STEP 1</div>
+      <h2>HTML Structure</h2>
+      <p>Write the registration form skeleton: fieldsets, labels, inputs, select, and submit button. No CSS yet.</p>
+      <div class="card-tags">
+        <span class="tag">fieldset</span>
+        <span class="tag">label/input</span>
+        <span class="tag">select</span>
+      </div>
+    </a>
+    <a class="card" href="step2_css.html">
+      <div class="card-step">STEP 2</div>
+      <h2>CSS Styling</h2>
+      <p>Style the form with CSS variables. Use <code>:valid</code> and <code>:invalid</code> pseudo-classes for live color feedback.</p>
+      <div class="card-tags">
+        <span class="tag">CSS Variables</span>
+        <span class="tag">:valid/:invalid</span>
+        <span class="tag">:focus</span>
+      </div>
+    </a>
+    <a class="card" href="step3_dom.html">
+      <div class="card-step">STEP 3</div>
+      <h2>JS Basic Validation</h2>
+      <p>Intercept the submit event with <code>e.preventDefault()</code>. Read field values and show them in an alert.</p>
+      <div class="card-tags">
+        <span class="tag">addEventListener</span>
+        <span class="tag">preventDefault</span>
+        <span class="tag">.value</span>
+      </div>
+    </a>
+    <a class="card" href="step4_feedback.html">
+      <div class="card-step">STEP 4</div>
+      <h2>Real-time Feedback</h2>
+      <p>Show error messages as the user types using <code>'input'</code> events. Clear errors when the field becomes valid.</p>
+      <div class="card-tags">
+        <span class="tag">input event</span>
+        <span class="tag">textContent</span>
+        <span class="tag">display:none</span>
+      </div>
+    </a>
+    <a class="card" href="step5_advanced.html">
+      <div class="card-step">STEP 5</div>
+      <h2>Advanced Validation</h2>
+      <p>Add regex for student ID (9 digits), email format, and password-confirm match check.</p>
+      <div class="card-tags">
+        <span class="tag">RegExp.test()</span>
+        <span class="tag">password match</span>
+        <span class="tag">pattern</span>
+      </div>
+    </a>
+    <a class="card" href="step6_accessibility.html">
+      <div class="card-step">STEP 6 &middot; BONUS</div>
+      <h2>Accessibility</h2>
+      <p>Wire <code>aria-describedby</code>, <code>aria-invalid</code>, and <code>role="alert"</code> so screen readers announce errors.</p>
+      <div class="card-tags">
+        <span class="tag">aria-describedby</span>
+        <span class="tag">aria-invalid</span>
+        <span class="tag">role=alert</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-title">Reference</div>
+  <div class="grid">
+    <a class="card solution" href="solution.html">
+      <div class="card-step">COMPLETE SOLUTION</div>
+      <h2>Finished Registration Form</h2>
+      <p>The fully working, validated registration form with accessibility. Only look after attempting each step yourself!</p>
+      <div class="card-tags">
+        <span class="tag green">All steps combined</span>
+      </div>
+    </a>
+    <a class="card solution" href="validation_cheatsheet.html">
+      <div class="card-step">CHEAT SHEET</div>
+      <h2>HTML5 Validation API</h2>
+      <p>Quick reference card: all HTML5 validation attributes, CSS pseudo-classes, and key JS Constraint Validation API methods.</p>
+      <div class="card-tags">
+        <span class="tag">required</span>
+        <span class="tag">pattern</span>
+        <span class="tag">minlength</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="intro">
+    <strong>Key concepts this week:</strong> <code>required</code>, <code>pattern</code>, <code>minlength</code>, <code>type="email"</code> &mdash; HTML5 built-in validation &mdash;
+    plus <code>e.preventDefault()</code> on submit to run your own JS checks before allowing the form to go through.<br><br>
+    Error spans are hidden by default (<code>display:none</code>) and revealed by JS setting <code>textContent</code> and toggling a class.
+    The submit button is disabled until every field passes validation.
+  </div>
+
+</div>
+</body>
+</html>

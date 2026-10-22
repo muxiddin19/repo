@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 2 — CSS Styling</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  STEP 2 — CSS Styling                                   ║
+  ║                                                          ║
+  ║  The form HTML below is COMPLETE (from Step 1).         ║
+  ║  YOUR TASK: write CSS inside the <style> tag so         ║
+  ║  the page looks polished and shows validation colors.   ║
+  ║                                                          ║
+  ║  ── PART A: CSS Custom Properties on :root ───────────  ║
+  ║    --dark   #1a2540   (dark navy — header bg)           ║
+  ║    --yel    #f7df1e   (yellow — accent stripe)          ║
+  ║    --blue   #1a56db   (blue — button, focus ring)       ║
+  ║    --bg     #f0f4ff   (light blue — page background)    ║
+  ║    --surf   #ffffff   (white — card/form surface)       ║
+  ║    --bdr    #c8d4f0   (border color)                    ║
+  ║    --text   #1a2340   (body text)                       ║
+  ║    --sub    #5a6a8a   (secondary/muted text)            ║
+  ║    --green  #16a34a   (valid state green)               ║
+  ║    --red    #dc2626   (invalid/error red)               ║
+  ║    --redl   #fee2e2   (light red — error bg tint)       ║
+  ║                                                          ║
+  ║  ── PART B: Page layout ──────────────────────────────  ║
+  ║    body:                                                ║
+  ║      font-family: Inter, sans-serif                     ║
+  ║      background: var(--bg)                              ║
+  ║      color: var(--text)                                 ║
+  ║      min-height: 100vh                                  ║
+  ║                                                          ║
+  ║    .header:                                             ║
+  ║      background: var(--dark)                            ║
+  ║      border-bottom: 4px solid var(--yel)               ║
+  ║      padding: 32px 24px                                 ║
+  ║      text-align: center                                 ║
+  ║      h1: color white, font-size 22px, font-weight 800  ║
+  ║      p: color #94a3b8, font-size 14px, margin-top 6px  ║
+  ║                                                          ║
+  ║    .form-wrap:                                          ║
+  ║      max-width: 520px                                   ║
+  ║      margin: 36px auto                                  ║
+  ║      padding: 0 20px 60px                               ║
+  ║                                                          ║
+  ║  ── PART C: Form card ────────────────────────────────  ║
+  ║    #reg-form:                                           ║
+  ║      background: var(--surf)                            ║
+  ║      border: 1px solid var(--bdr)                       ║
+  ║      border-radius: 16px                                ║
+  ║      padding: 32px                                      ║
+  ║      display: flex, flex-direction: column, gap: 24px   ║
+  ║                                                          ║
+  ║    fieldset:                                            ║
+  ║      border: none, padding: 0, margin: 0               ║
+  ║      display: flex, flex-direction: column, gap: 16px   ║
+  ║                                                          ║
+  ║    legend:                                              ║
+  ║      font-size: 11px, font-weight: 700                  ║
+  ║      letter-spacing: .08em, text-transform: uppercase   ║
+  ║      color: var(--sub), margin-bottom: 8px             ║
+  ║                                                          ║
+  ║  ── PART D: Field (label + input + error span) ───────  ║
+  ║    .field:                                              ║
+  ║      display: flex, flex-direction: column, gap: 4px    ║
+  ║                                                          ║
+  ║    label:                                               ║
+  ║      font-size: 13px, font-weight: 600, color: var(--text)║
+  ║                                                          ║
+  ║    input, select:                                       ║
+  ║      padding: 10px 14px                                 ║
+  ║      border: 1.5px solid var(--bdr)                    ║
+  ║      border-radius: 8px                                 ║
+  ║      font-size: 14px, font-family: inherit             ║
+  ║      outline: none                                      ║
+  ║      transition: border-color .2s, box-shadow .2s      ║
+  ║                                                          ║
+  ║    input:focus, select:focus:                           ║
+  ║      border-color: var(--blue)                          ║
+  ║      box-shadow: 0 0 0 3px rgba(26,86,219,.15)         ║
+  ║                                                          ║
+  ║  ── PART E: Validation pseudo-classes ────────────────  ║
+  ║    /* Only color AFTER the user has interacted — use   ║
+  ║       the :not(:placeholder-shown) trick so we don't  ║
+  ║       paint red before the user types anything */      ║
+  ║                                                          ║
+  ║    input:not(:placeholder-shown):valid,                 ║
+  ║    select:valid:not([value=""]) {                       ║
+  ║      border-color: var(--green);                        ║
+  ║    }                                                     ║
+  ║                                                          ║
+  ║    input:not(:placeholder-shown):invalid {              ║
+  ║      border-color: var(--red);                          ║
+  ║      background: var(--redl);                           ║
+  ║    }                                                     ║
+  ║                                                          ║
+  ║  ── PART F: Error spans ───────────────────────────────  ║
+  ║    .error:                                              ║
+  ║      display: none   ← hidden by default               ║
+  ║      font-size: 12px                                    ║
+  ║      color: var(--red)                                  ║
+  ║      font-weight: 500                                   ║
+  ║                                                          ║
+  ║    .error.visible:                                      ║
+  ║      display: block  ← JS adds/removes .visible        ║
+  ║                                                          ║
+  ║  ── PART G: Submit button ────────────────────────────  ║
+  ║    button[type="submit"]:                               ║
+  ║      width: 100%                                        ║
+  ║      background: var(--blue)                            ║
+  ║      color: white                                       ║
+  ║      border: none, border-radius: 8px                  ║
+  ║      padding: 13px                                      ║
+  ║      font-size: 15px, font-weight: 700                  ║
+  ║      cursor: pointer                                    ║
+  ║      transition: background .2s                        ║
+  ║    button:hover: background #1447b3                     ║
+  ║                                                          ║
+  ║  DONE? Open in browser — the form should look polished.║
+  ║  Try typing in the student-id field — it should turn   ║
+  ║  red (invalid) while empty and green when valid.       ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+
+<style>
+/* ── Write your CSS here ── */
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Student Registration</h1>
+  <p>K0126002 &middot; Web Programming &middot; Gachon University</p>
+</div>
+
+<div class="form-wrap">
+  <form id="reg-form" novalidate>
+
+    <fieldset>
+      <legend>Student Information</legend>
+
+      <div class="field">
+        <label for="student-id">&#xD559;&#xBC88; (Student ID)</label>
+        <input type="text" id="student-id" name="student-id"
+               placeholder="e.g. 202312345" required>
+        <span class="error" id="student-id-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name"
+               placeholder="Your full name" required>
+        <span class="error" id="full-name-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email"
+               placeholder="you@gachon.ac.kr" required>
+        <span class="error" id="email-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Password</legend>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Min 8 characters" minlength="8" required>
+        <span class="error" id="password-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password"
+               placeholder="Repeat your password" required>
+        <span class="error" id="confirm-password-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Team</legend>
+
+      <div class="field">
+        <label for="team">Team</label>
+        <select id="team" name="team" required>
+          <option value="">&#x2014; Select your team &#x2014;</option>
+          <option value="Team 01">Team 01</option>
+          <option value="Team 02">Team 02</option>
+          <option value="Team 03">Team 03</option>
+          <option value="Team 04">Team 04</option>
+          <option value="Team 05">Team 05</option>
+          <option value="Team 06">Team 06</option>
+          <option value="Team 07">Team 07</option>
+          <option value="Team 08">Team 08</option>
+          <option value="Team 09">Team 09</option>
+          <option value="Team 10">Team 10</option>
+          <option value="Team 11">Team 11</option>
+          <option value="Team 12">Team 12</option>
+          <option value="Team 13">Team 13</option>
+          <option value="Team 14">Team 14</option>
+          <option value="Team 15">Team 15</option>
+          <option value="Team 16">Team 16</option>
+          <option value="Team 17">Team 17</option>
+          <option value="Team 18">Team 18</option>
+          <option value="Team 19">Team 19</option>
+          <option value="Team 20">Team 20</option>
+          <option value="Team 21">Team 21</option>
+          <option value="Team 22">Team 22</option>
+          <option value="Team 23">Team 23</option>
+          <option value="Team 24">Team 24</option>
+        </select>
+        <span class="error" id="team-error"></span>
+      </div>
+    </fieldset>
+
+    <button type="submit">Register</button>
+
+  </form>
+</div>
+
+</body>
+</html>

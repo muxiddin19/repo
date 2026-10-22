@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form Validation Cheat Sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--yel:#f7df1e;--blue:#1a56db;--bg:#f0f4ff;--surf:#fff;--bdr:#c8d4f0;--text:#1a2340;--sub:#5a6a8a;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;--purple:#7c3aed;--purplel:#ede9fe}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--yel);padding:32px 24px 24px;text-align:center}
+.badge{display:inline-block;background:var(--yel);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.header h1{color:#fff;font-size:22px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:13px}
+.wrap{max-width:960px;margin:32px auto;padding:0 20px 80px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.wrap{grid-template-columns:1fr}}
+.section{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.section.full{grid-column:1/-1}
+.section-hd{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--sub);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.section-hd::before{content:'';display:block;width:3px;height:13px;border-radius:2px}
+.section-hd.blue::before{background:var(--blue)}
+.section-hd.green::before{background:var(--green)}
+.section-hd.red::before{background:var(--red)}
+.section-hd.purple::before{background:var(--purple)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;background:var(--bg);color:var(--sub);font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid var(--bdr)}
+td{padding:9px 10px;border-bottom:1px solid var(--bdr);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:#eef2ff;color:var(--blue);padding:1px 5px;border-radius:4px;white-space:nowrap}
+code.green{background:var(--greenl);color:var(--green)}
+code.red{background:var(--redl);color:var(--red)}
+code.purple{background:var(--purplel);color:var(--purple)}
+.note{font-size:12px;color:var(--sub);line-height:1.7;background:var(--bg);border-left:3px solid var(--blue);padding:10px 14px;border-radius:0 8px 8px 0}
+.note strong{color:var(--text)}
+pre{font-family:'JetBrains Mono',monospace;font-size:12px;background:#1a2540;color:#e2e8f0;padding:16px;border-radius:10px;overflow-x:auto;line-height:1.7;white-space:pre}
+.hl-yel{color:#f7df1e}
+.hl-grn{color:#4ade80}
+.hl-blu{color:#60a5fa}
+.hl-red{color:#f87171}
+.hl-gray{color:#94a3b8}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">WEEK 9 &middot; REFERENCE CARD</div>
+  <h1>HTML5 Form Validation Cheat Sheet</h1>
+  <p>K0126002 Web Programming &middot; Gachon University 2026 Fall</p>
+</div>
+
+<div class="wrap">
+
+  <!-- ── Section 1: HTML5 Attributes ── -->
+  <div class="section full">
+    <div class="section-hd blue">HTML5 Validation Attributes</div>
+    <table>
+      <tr>
+        <th style="width:22%">Attribute</th>
+        <th style="width:30%">Example</th>
+        <th>What it does</th>
+      </tr>
+      <tr>
+        <td><code>required</code></td>
+        <td><code>&lt;input required&gt;</code></td>
+        <td>Field cannot be empty. Browser blocks submit and shows a tooltip.</td>
+      </tr>
+      <tr>
+        <td><code>type="email"</code></td>
+        <td><code>&lt;input type="email"&gt;</code></td>
+        <td>Browser validates basic email format (must contain @). Mobile shows email keyboard.</td>
+      </tr>
+      <tr>
+        <td><code>type="number"</code></td>
+        <td><code>&lt;input type="number" min="1" max="100"&gt;</code></td>
+        <td>Accepts only numbers. <code>min</code> / <code>max</code> constrain the range.</td>
+      </tr>
+      <tr>
+        <td><code>minlength</code></td>
+        <td><code>&lt;input minlength="8"&gt;</code></td>
+        <td>Minimum number of characters required.</td>
+      </tr>
+      <tr>
+        <td><code>maxlength</code></td>
+        <td><code>&lt;input maxlength="50"&gt;</code></td>
+        <td>Maximum characters allowed (blocks typing past the limit).</td>
+      </tr>
+      <tr>
+        <td><code>pattern</code></td>
+        <td><code>&lt;input pattern="\d{9}"&gt;</code></td>
+        <td>Regex that the entire value must match. Write the pattern <em>without</em> the <code>/&nbsp;/</code> delimiters.</td>
+      </tr>
+      <tr>
+        <td><code>min</code> / <code>max</code></td>
+        <td><code>&lt;input type="date" min="2024-01-01"&gt;</code></td>
+        <td>Works on number, date, range. Prevents values outside the range.</td>
+      </tr>
+      <tr>
+        <td><code>step</code></td>
+        <td><code>&lt;input type="number" step="0.01"&gt;</code></td>
+        <td>Only multiples of this value are valid (e.g., cents for a price).</td>
+      </tr>
+      <tr>
+        <td><code>novalidate</code></td>
+        <td><code>&lt;form novalidate&gt;</code></td>
+        <td>Turns OFF browser's built-in validation on the form. Use when you want to handle everything with JS.</td>
+      </tr>
+    </table>
+    <div class="note"><strong>Tip:</strong> <code>pattern</code> on <code>&lt;input type="text"&gt;</code> for student ID: <code>pattern="\d{9}"</code> — but you still need JS to show a custom error message, because the browser tooltip is hard to style.</div>
+  </div>
+
+  <!-- ── Section 2: CSS Pseudo-classes ── -->
+  <div class="section">
+    <div class="section-hd green">CSS Pseudo-classes</div>
+    <table>
+      <tr>
+        <th>Selector</th>
+        <th>Matches when</th>
+      </tr>
+      <tr>
+        <td><code class="green">:valid</code></td>
+        <td>Input passes all its validation constraints</td>
+      </tr>
+      <tr>
+        <td><code class="red">:invalid</code></td>
+        <td>Input fails one or more constraints</td>
+      </tr>
+      <tr>
+        <td><code>:required</code></td>
+        <td>Input has the <code>required</code> attribute</td>
+      </tr>
+      <tr>
+        <td><code>:optional</code></td>
+        <td>Input does NOT have <code>required</code></td>
+      </tr>
+      <tr>
+        <td><code>:focus</code></td>
+        <td>Input currently has keyboard focus</td>
+      </tr>
+      <tr>
+        <td><code>:placeholder-shown</code></td>
+        <td>Placeholder text is visible (field is empty)</td>
+      </tr>
+      <tr>
+        <td><code>:not(:placeholder-shown)</code></td>
+        <td>User has typed something (field is not empty)</td>
+      </tr>
+      <tr>
+        <td><code>:disabled</code></td>
+        <td>Input has the <code>disabled</code> attribute</td>
+      </tr>
+    </table>
+    <div class="note"><strong>Pattern:</strong> Avoid painting red before the user types. Use<br><code>input:not(:placeholder-shown):invalid { border-color: red; }</code></div>
+  </div>
+
+  <!-- ── Section 3: JS Validation API ── -->
+  <div class="section">
+    <div class="section-hd purple">JS Constraint Validation API</div>
+    <table>
+      <tr>
+        <th>Property / Method</th>
+        <th>Returns / Does</th>
+      </tr>
+      <tr>
+        <td><code class="purple">input.validity</code></td>
+        <td>ValidityState object with boolean flags</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.validity.valid</code></td>
+        <td><code>true</code> if all constraints pass</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.validity.valueMissing</code></td>
+        <td><code>true</code> if <code>required</code> and empty</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.validity.tooShort</code></td>
+        <td><code>true</code> if below <code>minlength</code></td>
+      </tr>
+      <tr>
+        <td><code class="purple">.validity.patternMismatch</code></td>
+        <td><code>true</code> if value fails <code>pattern</code></td>
+      </tr>
+      <tr>
+        <td><code class="purple">.validity.typeMismatch</code></td>
+        <td><code>true</code> if type=email/url format fails</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.checkValidity()</code></td>
+        <td>Returns <code>true/false</code>, fires <code>invalid</code> event</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.reportValidity()</code></td>
+        <td>Same as checkValidity + shows browser tooltip</td>
+      </tr>
+      <tr>
+        <td><code class="purple">.setCustomValidity(msg)</code></td>
+        <td>Set custom error message (<code>""</code> to clear)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ── Section 4: Key JS Patterns ── -->
+  <div class="section full">
+    <div class="section-hd blue">Key JavaScript Patterns</div>
+<pre><span class="hl-gray">// 1. Prevent default submit &amp; read values</span>
+<span class="hl-yel">form</span>.addEventListener(<span class="hl-grn">'submit'</span>, <span class="hl-blu">function</span>(e) {
+  e.preventDefault();                        <span class="hl-gray">// stop page reload</span>
+  <span class="hl-blu">const</span> val = input.value.trim();
+});
+
+<span class="hl-gray">// 2. Real-time feedback on every keystroke</span>
+<span class="hl-yel">input</span>.addEventListener(<span class="hl-grn">'input'</span>, <span class="hl-blu">function</span>() {
+  <span class="hl-blu">const</span> val = input.value.trim();
+  <span class="hl-blu">if</span> (val === <span class="hl-grn">''</span>) { showError(<span class="hl-grn">'Required'</span>); }
+  <span class="hl-blu">else</span>            { clearError(); }
+});
+
+<span class="hl-gray">// 3. Regex — student ID (exactly 9 digits)</span>
+<span class="hl-blu">const</span> STUDENT_ID_RE = <span class="hl-red">/^\d{9}$/</span>;
+<span class="hl-blu">if</span> (!STUDENT_ID_RE.test(val)) { showError(<span class="hl-grn">'Must be 9 digits'</span>); }
+
+<span class="hl-gray">// 4. Regex — email format</span>
+<span class="hl-blu">const</span> EMAIL_RE = <span class="hl-red">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>;
+<span class="hl-blu">if</span> (!EMAIL_RE.test(val)) { showError(<span class="hl-grn">'Invalid email'</span>); }
+
+<span class="hl-gray">// 5. Password match check</span>
+<span class="hl-blu">if</span> (pw2Input.value !== pwInput.value) {
+  showError(<span class="hl-grn">'Passwords do not match'</span>);
+}
+
+<span class="hl-gray">// 6. Show / hide error helper</span>
+<span class="hl-blu">function</span> <span class="hl-yel">showError</span>(input, spanId, msg) {
+  document.getElementById(spanId).textContent = msg;
+  document.getElementById(spanId).classList.add(<span class="hl-grn">'visible'</span>);
+  input.setAttribute(<span class="hl-grn">'aria-invalid'</span>, <span class="hl-grn">'true'</span>);
+}
+<span class="hl-blu">function</span> <span class="hl-yel">clearError</span>(input, spanId) {
+  document.getElementById(spanId).textContent = <span class="hl-grn">''</span>;
+  document.getElementById(spanId).classList.remove(<span class="hl-grn">'visible'</span>);
+  input.setAttribute(<span class="hl-grn">'aria-invalid'</span>, <span class="hl-grn">'false'</span>);
+}</pre>
+  </div>
+
+  <!-- ── Section 5: ARIA Accessibility ── -->
+  <div class="section full">
+    <div class="section-hd red">Accessibility Attributes</div>
+    <table>
+      <tr>
+        <th style="width:30%">Attribute / Role</th>
+        <th style="width:35%">Example</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td><code>aria-describedby</code></td>
+        <td><code>&lt;input aria-describedby="id-error"&gt;</code></td>
+        <td>Links input to its error span. Screen reader reads the error text after the label.</td>
+      </tr>
+      <tr>
+        <td><code>aria-invalid</code></td>
+        <td><code>input.setAttribute('aria-invalid','true')</code></td>
+        <td>Signals to AT that the field has a validation error.</td>
+      </tr>
+      <tr>
+        <td><code>role="alert"</code></td>
+        <td><code>&lt;span role="alert"&gt;&lt;/span&gt;</code></td>
+        <td>Any new text injected into this element is immediately announced by the screen reader.</td>
+      </tr>
+      <tr>
+        <td><code>aria-live="polite"</code></td>
+        <td><code>&lt;div aria-live="polite"&gt;</code></td>
+        <td>Alternative to role="alert". Announces changes politely (waits for current speech to finish).</td>
+      </tr>
+      <tr>
+        <td><code>aria-required="true"</code></td>
+        <td><code>&lt;input aria-required="true"&gt;</code></td>
+        <td>Tells AT the field is required (redundant when <code>required</code> is present, but explicit).</td>
+      </tr>
+      <tr>
+        <td><code>element.focus()</code></td>
+        <td><code>firstInvalidEl.focus()</code></td>
+        <td>On invalid submit, move keyboard focus to the first invalid field so users don't have to find it.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ── Section 6: Quick Regex Reference ── -->
+  <div class="section full">
+    <div class="section-hd purple">Regex Quick Reference</div>
+    <table>
+      <tr>
+        <th style="width:25%">Pattern</th>
+        <th style="width:30%">Matches</th>
+        <th>Use case</th>
+      </tr>
+      <tr>
+        <td><code class="purple">/^\d{9}$/</code></td>
+        <td>Exactly 9 digits (0-9)</td>
+        <td>Student ID (학번)</td>
+      </tr>
+      <tr>
+        <td><code class="purple">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code></td>
+        <td>Basic email: x@y.z</td>
+        <td>Email validation</td>
+      </tr>
+      <tr>
+        <td><code class="purple">/^.{8,}$/</code></td>
+        <td>Any 8+ characters</td>
+        <td>Minimum password length</td>
+      </tr>
+      <tr>
+        <td><code class="purple">/^[A-Za-z\s]+$/</code></td>
+        <td>Letters and spaces only</td>
+        <td>Name fields (ASCII only)</td>
+      </tr>
+      <tr>
+        <td><code class="purple">/^\d{10,11}$/</code></td>
+        <td>10 or 11 digits</td>
+        <td>Korean phone numbers</td>
+      </tr>
+      <tr>
+        <td><code class="purple">/^(?=.*[A-Z])(?=.*\d).{8,}$/</code></td>
+        <td>8+ chars, 1 uppercase, 1 digit</td>
+        <td>Strong password</td>
+      </tr>
+    </table>
+    <div class="note">
+      <strong>Regex syntax reminder:</strong>
+      <code>^</code> = start of string &nbsp;&bull;&nbsp;
+      <code>$</code> = end of string &nbsp;&bull;&nbsp;
+      <code>\d</code> = any digit &nbsp;&bull;&nbsp;
+      <code>{n}</code> = exactly n times &nbsp;&bull;&nbsp;
+      <code>[^\s@]</code> = any char that is NOT a space or @ &nbsp;&bull;&nbsp;
+      <code>+</code> = one or more &nbsp;&bull;&nbsp;
+      Use <code>regex.test(value)</code> to check if a string matches.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

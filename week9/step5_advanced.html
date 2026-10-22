@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 5 — Advanced Validation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--yel:#f7df1e;--blue:#1a56db;--bg:#f0f4ff;--surf:#fff;--bdr:#c8d4f0;--text:#1a2340;--sub:#5a6a8a;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--yel);padding:32px 24px;text-align:center}
+.header h1{color:#fff;font-size:22px;font-weight:800}
+.header p{color:#94a3b8;font-size:14px;margin-top:6px}
+.form-wrap{max-width:520px;margin:36px auto;padding:0 20px 60px}
+#reg-form{background:var(--surf);border:1px solid var(--bdr);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:24px}
+fieldset{border:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
+legend{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:4px}
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:13px;font-weight:600;color:var(--text)}
+input,select{padding:10px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
+input.valid-field,select.valid-field{border-color:var(--green);background:var(--greenl)}
+input.invalid-field,select.invalid-field{border-color:var(--red);background:var(--redl)}
+.error{display:none;font-size:12px;color:var(--red);font-weight:500;margin-top:2px}
+.error.visible{display:block}
+button[type="submit"]{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+button[type="submit"]:hover{background:#1447b3}
+button[type="submit"]:disabled{opacity:.5;cursor:not-allowed;background:var(--sub)}
+.hint{font-size:11px;color:var(--sub);font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Student Registration</h1>
+  <p>K0126002 &middot; Web Programming &middot; Gachon University</p>
+</div>
+
+<div class="form-wrap">
+  <form id="reg-form" novalidate>
+
+    <fieldset>
+      <legend>Student Information</legend>
+      <div class="field">
+        <label for="student-id">&#xD559;&#xBC88; (Student ID)</label>
+        <input type="text" id="student-id" name="student-id" placeholder="e.g. 202312345" required>
+        <span class="hint">Must be exactly 9 digits</span>
+        <span class="error" id="student-id-error"></span>
+      </div>
+      <div class="field">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name" placeholder="Your full name" required>
+        <span class="error" id="full-name-error"></span>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@gachon.ac.kr" required>
+        <span class="error" id="email-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Password</legend>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Min 8 characters" minlength="8" required>
+        <span class="error" id="password-error"></span>
+      </div>
+      <div class="field">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat your password" required>
+        <span class="error" id="confirm-password-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Team</legend>
+      <div class="field">
+        <label for="team">Team</label>
+        <select id="team" name="team" required>
+          <option value="">&#x2014; Select your team &#x2014;</option>
+          <option value="Team 01">Team 01</option>
+          <option value="Team 02">Team 02</option>
+          <option value="Team 03">Team 03</option>
+          <option value="Team 04">Team 04</option>
+          <option value="Team 05">Team 05</option>
+          <option value="Team 06">Team 06</option>
+          <option value="Team 07">Team 07</option>
+          <option value="Team 08">Team 08</option>
+          <option value="Team 09">Team 09</option>
+          <option value="Team 10">Team 10</option>
+          <option value="Team 11">Team 11</option>
+          <option value="Team 12">Team 12</option>
+          <option value="Team 13">Team 13</option>
+          <option value="Team 14">Team 14</option>
+          <option value="Team 15">Team 15</option>
+          <option value="Team 16">Team 16</option>
+          <option value="Team 17">Team 17</option>
+          <option value="Team 18">Team 18</option>
+          <option value="Team 19">Team 19</option>
+          <option value="Team 20">Team 20</option>
+          <option value="Team 21">Team 21</option>
+          <option value="Team 22">Team 22</option>
+          <option value="Team 23">Team 23</option>
+          <option value="Team 24">Team 24</option>
+        </select>
+        <span class="error" id="team-error"></span>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-btn">Register</button>
+
+  </form>
+</div>
+
+<script>
+/*
+  ╔══════════════════════════════════════════════════════════╗
+  ║  STEP 5 — Advanced Validation                           ║
+  ║                                                          ║
+  ║  The HTML and CSS above are COMPLETE.                   ║
+  ║  The helper functions below are given to you.           ║
+  ║  YOUR TASK: fill in the three TODO blocks with regex    ║
+  ║  checks and the password-match check.                   ║
+  ╚══════════════════════════════════════════════════════════╝
+*/
+
+// ── DOM references ────────────────────────────────────────
+const form      = document.getElementById('reg-form');
+const idInput   = document.getElementById('student-id');
+const nameInput = document.getElementById('full-name');
+const emailInput= document.getElementById('email');
+const pwInput   = document.getElementById('password');
+const pw2Input  = document.getElementById('confirm-password');
+const teamSel   = document.getElementById('team');
+const submitBtn = document.getElementById('submit-btn');
+
+// ── Helpers ───────────────────────────────────────────────
+function showError(input, errorId, message) {
+  const span = document.getElementById(errorId);
+  span.textContent = message;
+  span.classList.add('visible');
+  input.classList.add('invalid-field');
+  input.classList.remove('valid-field');
+}
+
+function clearError(input, errorId) {
+  const span = document.getElementById(errorId);
+  span.textContent = '';
+  span.classList.remove('visible');
+  input.classList.remove('invalid-field');
+  input.classList.add('valid-field');
+}
+
+// ── Validate student ID ───────────────────────────────────
+function validateStudentId() {
+  const val = idInput.value.trim();
+
+  // TODO 1: Use a regex to check the student ID format.
+  //
+  //   A valid student ID is EXACTLY 9 digits (0-9).
+  //   The regex to test: /^\d{9}$/
+  //
+  //   Steps:
+  //     if (val === '') → showError(..., 'Student ID is required')
+  //     else if (!/^\d{9}$/.test(val)) → showError(...,
+  //                'Student ID must be exactly 9 digits')
+  //     else → clearError(...)
+  //
+  // YOUR CODE HERE:
+
+}
+
+// ── Validate email ────────────────────────────────────────
+function validateEmail() {
+  const val = emailInput.value.trim();
+
+  // TODO 2: Use a regex to check email format.
+  //
+  //   A simple email regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  //   This checks:  something @ something . something
+  //   (no spaces, no @, no @ before the dot)
+  //
+  //   Steps:
+  //     if (val === '') → showError(..., 'Email is required')
+  //     else if (regex fails) → showError(...,
+  //                'Please enter a valid email address')
+  //     else → clearError(...)
+  //
+  // YOUR CODE HERE:
+
+}
+
+// ── Validate password ─────────────────────────────────────
+function validatePassword() {
+  const val = pwInput.value;
+  if (val === '') {
+    showError(pwInput, 'password-error', 'Password is required');
+  } else if (val.length < 8) {
+    showError(pwInput, 'password-error', 'Password must be at least 8 characters');
+  } else {
+    clearError(pwInput, 'password-error');
+  }
+  // Re-check confirm password whenever password changes
+  if (pw2Input.value !== '') validateConfirm();
+}
+
+// ── Validate confirm password ─────────────────────────────
+function validateConfirm() {
+  const val  = pw2Input.value;
+  const pass = pwInput.value;
+
+  // TODO 3: Check that the two passwords match.
+  //
+  //   If val === '' → show "Please confirm your password"
+  //   else if val !== pass → show "Passwords do not match"
+  //   else → clearError(...)
+  //
+  // YOUR CODE HERE:
+
+}
+
+// ── Validate full name ────────────────────────────────────
+function validateName() {
+  const val = nameInput.value.trim();
+  if (val === '') {
+    showError(nameInput, 'full-name-error', 'Full name is required');
+  } else {
+    clearError(nameInput, 'full-name-error');
+  }
+}
+
+// ── Validate team ─────────────────────────────────────────
+function validateTeam() {
+  if (teamSel.value === '') {
+    showError(teamSel, 'team-error', 'Please select your team');
+  } else {
+    clearError(teamSel, 'team-error');
+  }
+}
+
+// ── Attach real-time listeners ────────────────────────────
+idInput.addEventListener('input', validateStudentId);
+nameInput.addEventListener('input', validateName);
+emailInput.addEventListener('input', validateEmail);
+pwInput.addEventListener('input', validatePassword);
+pw2Input.addEventListener('input', validateConfirm);
+teamSel.addEventListener('change', validateTeam);
+
+// ── Submit handler ────────────────────────────────────────
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  // Run all validators on submit to catch untouched fields
+  validateStudentId();
+  validateName();
+  validateEmail();
+  validatePassword();
+  validateConfirm();
+  validateTeam();
+
+  // Check if any error spans are visible
+  const hasErrors = form.querySelectorAll('.error.visible').length > 0;
+  if (hasErrors) return;
+
+  alert(
+    'Registration submitted!\n\n' +
+    'Student ID: ' + idInput.value.trim()   + '\n' +
+    'Name: '       + nameInput.value.trim() + '\n' +
+    'Email: '      + emailInput.value.trim()+ '\n' +
+    'Team: '       + teamSel.value
+  );
+});
+</script>
+</body>
+</html>

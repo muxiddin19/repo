@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 6 — Accessibility</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--dark:#1a2540;--yel:#f7df1e;--blue:#1a56db;--bg:#f0f4ff;--surf:#fff;--bdr:#c8d4f0;--text:#1a2340;--sub:#5a6a8a;--green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);border-bottom:4px solid var(--yel);padding:32px 24px;text-align:center}
+.header h1{color:#fff;font-size:22px;font-weight:800}
+.header p{color:#94a3b8;font-size:14px;margin-top:6px}
+.form-wrap{max-width:520px;margin:36px auto;padding:0 20px 60px}
+#reg-form{background:var(--surf);border:1px solid var(--bdr);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:24px}
+fieldset{border:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
+legend{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:4px}
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:13px;font-weight:600;color:var(--text)}
+input,select{padding:10px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
+input.valid-field,select.valid-field{border-color:var(--green);background:var(--greenl)}
+input.invalid-field,select.invalid-field{border-color:var(--red);background:var(--redl)}
+.error{display:none;font-size:12px;color:var(--red);font-weight:500;margin-top:2px}
+.error.visible{display:block}
+button[type="submit"]{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+button[type="submit"]:hover{background:#1447b3}
+button[type="submit"]:disabled{opacity:.5;cursor:not-allowed;background:var(--sub)}
+.hint{font-size:11px;color:var(--sub);font-family:'JetBrains Mono',monospace}
+/* Accessibility highlight for TODO areas */
+.a11y-todo{outline:2px dashed #f59e0b;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Student Registration — Accessibility</h1>
+  <p>K0126002 &middot; Web Programming &middot; Gachon University &middot; Bonus Step</p>
+</div>
+
+<div class="form-wrap">
+
+  <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  STEP 6 — Accessibility (BONUS)                         ║
+    ║                                                          ║
+    ║  The form below is the Step 5 solution with three      ║
+    ║  accessibility TODOs marked [A11Y TODO].               ║
+    ║                                                          ║
+    ║  ── TODO 1: aria-describedby ─────────────────────────  ║
+    ║                                                          ║
+    ║  Each input should tell screen readers which element    ║
+    ║  describes it (the error span).                         ║
+    ║                                                          ║
+    ║  Add the attribute to every <input> and <select>:      ║
+    ║    aria-describedby="<error-span-id>"                   ║
+    ║                                                          ║
+    ║  Example for student ID:                                ║
+    ║    <input ... aria-describedby="student-id-error">     ║
+    ║                                                          ║
+    ║  Then add to every error <span>:                        ║
+    ║    role="alert"                                         ║
+    ║                                                          ║
+    ║  WHY: when the screen reader reads the input it also    ║
+    ║  reads the linked span. role="alert" makes it           ║
+    ║  interrupt and announce any new text immediately.       ║
+    ║                                                          ║
+    ║  ── TODO 2: aria-invalid ─────────────────────────────  ║
+    ║                                                          ║
+    ║  In the showError() helper below, also set:            ║
+    ║    input.setAttribute('aria-invalid', 'true');          ║
+    ║                                                          ║
+    ║  In clearError(), remove it:                            ║
+    ║    input.removeAttribute('aria-invalid');               ║
+    ║    or input.setAttribute('aria-invalid', 'false');      ║
+    ║                                                          ║
+    ║  WHY: aria-invalid signals to AT that the field has    ║
+    ║  a problem even before the error text is read.          ║
+    ║                                                          ║
+    ║  ── TODO 3: Focus management ─────────────────────────  ║
+    ║                                                          ║
+    ║  When the user submits an invalid form, move focus to   ║
+    ║  the first invalid field so keyboard users don't have   ║
+    ║  to hunt for it.                                        ║
+    ║                                                          ║
+    ║  In the submit handler, after running all validators:   ║
+    ║    const firstInvalid = form.querySelector('.invalid-field');
+    ║    if (firstInvalid) firstInvalid.focus();             ║
+    ║                                                          ║
+    ║  ── HOW TO TEST ───────────────────────────────────────  ║
+    ║                                                          ║
+    ║  Windows: enable Narrator (Win+Ctrl+Enter)             ║
+    ║  Mac: enable VoiceOver (Cmd+F5)                        ║
+    ║  Tab through the form — the screen reader should       ║
+    ║  say the label AND the error description for each      ║
+    ║  field. Trigger an error and it should announce it.    ║
+    ║                                                          ║
+    ║  Chrome DevTools > Accessibility tree (Elements panel) ║
+    ║  lets you inspect ARIA attributes without a screen     ║
+    ║  reader.                                               ║
+    ╚══════════════════════════════════════════════════════════╝
+  -->
+
+  <form id="reg-form" novalidate>
+
+    <fieldset>
+      <legend>Student Information</legend>
+
+      <div class="field">
+        <label for="student-id">&#xD559;&#xBC88; (Student ID)</label>
+        <!-- [A11Y TODO 1] add aria-describedby="student-id-error" -->
+        <input type="text" id="student-id" name="student-id"
+               placeholder="e.g. 202312345" required
+               class="a11y-todo">
+        <span class="hint">Must be exactly 9 digits</span>
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="student-id-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="full-name">Full Name</label>
+        <!-- [A11Y TODO 1] add aria-describedby="full-name-error" -->
+        <input type="text" id="full-name" name="full-name"
+               placeholder="Your full name" required
+               class="a11y-todo">
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="full-name-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <!-- [A11Y TODO 1] add aria-describedby="email-error" -->
+        <input type="email" id="email" name="email"
+               placeholder="you@gachon.ac.kr" required
+               class="a11y-todo">
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="email-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Password</legend>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <!-- [A11Y TODO 1] add aria-describedby="password-error" -->
+        <input type="password" id="password" name="password"
+               placeholder="Min 8 characters" minlength="8" required
+               class="a11y-todo">
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="password-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Confirm Password</label>
+        <!-- [A11Y TODO 1] add aria-describedby="confirm-password-error" -->
+        <input type="password" id="confirm-password" name="confirm-password"
+               placeholder="Repeat your password" required
+               class="a11y-todo">
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="confirm-password-error"></span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Team</legend>
+      <div class="field">
+        <label for="team">Team</label>
+        <!-- [A11Y TODO 1] add aria-describedby="team-error" -->
+        <select id="team" name="team" required class="a11y-todo">
+          <option value="">&#x2014; Select your team &#x2014;</option>
+          <option value="Team 01">Team 01</option>
+          <option value="Team 02">Team 02</option>
+          <option value="Team 03">Team 03</option>
+          <option value="Team 04">Team 04</option>
+          <option value="Team 05">Team 05</option>
+          <option value="Team 06">Team 06</option>
+          <option value="Team 07">Team 07</option>
+          <option value="Team 08">Team 08</option>
+          <option value="Team 09">Team 09</option>
+          <option value="Team 10">Team 10</option>
+          <option value="Team 11">Team 11</option>
+          <option value="Team 12">Team 12</option>
+          <option value="Team 13">Team 13</option>
+          <option value="Team 14">Team 14</option>
+          <option value="Team 15">Team 15</option>
+          <option value="Team 16">Team 16</option>
+          <option value="Team 17">Team 17</option>
+          <option value="Team 18">Team 18</option>
+          <option value="Team 19">Team 19</option>
+          <option value="Team 20">Team 20</option>
+          <option value="Team 21">Team 21</option>
+          <option value="Team 22">Team 22</option>
+          <option value="Team 23">Team 23</option>
+          <option value="Team 24">Team 24</option>
+        </select>
+        <!-- [A11Y TODO 1] add role="alert" to this span -->
+        <span class="error a11y-todo" id="team-error"></span>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-btn">Register</button>
+
+  </form>
+</div>
+
+<script>
+// ── DOM references ────────────────────────────────────────
+const form      = document.getElementById('reg-form');
+const idInput   = document.getElementById('student-id');
+const nameInput = document.getElementById('full-name');
+const emailInput= document.getElementById('email');
+const pwInput   = document.getElementById('password');
+const pw2Input  = document.getElementById('confirm-password');
+const teamSel   = document.getElementById('team');
+
+// ── Helpers ───────────────────────────────────────────────
+// [A11Y TODO 2]: add  input.setAttribute('aria-invalid', 'true')  inside showError
+// [A11Y TODO 2]: add  input.removeAttribute('aria-invalid')        inside clearError
+
+function showError(input, errorId, message) {
+  const span = document.getElementById(errorId);
+  span.textContent = message;
+  span.classList.add('visible');
+  input.classList.add('invalid-field');
+  input.classList.remove('valid-field');
+  // TODO 2: input.setAttribute('aria-invalid', 'true');
+}
+
+function clearError(input, errorId) {
+  const span = document.getElementById(errorId);
+  span.textContent = '';
+  span.classList.remove('visible');
+  input.classList.remove('invalid-field');
+  input.classList.add('valid-field');
+  // TODO 2: input.removeAttribute('aria-invalid');
+}
+
+// ── Validators ────────────────────────────────────────────
+function validateStudentId() {
+  const val = idInput.value.trim();
+  if (val === '') {
+    showError(idInput, 'student-id-error', 'Student ID is required');
+  } else if (!/^\d{9}$/.test(val)) {
+    showError(idInput, 'student-id-error', 'Student ID must be exactly 9 digits');
+  } else {
+    clearError(idInput, 'student-id-error');
+  }
+}
+
+function validateName() {
+  const val = nameInput.value.trim();
+  if (val === '') {
+    showError(nameInput, 'full-name-error', 'Full name is required');
+  } else {
+    clearError(nameInput, 'full-name-error');
+  }
+}
+
+function validateEmail() {
+  const val = emailInput.value.trim();
+  if (val === '') {
+    showError(emailInput, 'email-error', 'Email is required');
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+    showError(emailInput, 'email-error', 'Please enter a valid email address');
+  } else {
+    clearError(emailInput, 'email-error');
+  }
+}
+
+function validatePassword() {
+  const val = pwInput.value;
+  if (val === '') {
+    showError(pwInput, 'password-error', 'Password is required');
+  } else if (val.length < 8) {
+    showError(pwInput, 'password-error', 'Password must be at least 8 characters');
+  } else {
+    clearError(pwInput, 'password-error');
+  }
+  if (pw2Input.value !== '') validateConfirm();
+}
+
+function validateConfirm() {
+  const val  = pw2Input.value;
+  const pass = pwInput.value;
+  if (val === '') {
+    showError(pw2Input, 'confirm-password-error', 'Please confirm your password');
+  } else if (val !== pass) {
+    showError(pw2Input, 'confirm-password-error', 'Passwords do not match');
+  } else {
+    clearError(pw2Input, 'confirm-password-error');
+  }
+}
+
+function validateTeam() {
+  if (teamSel.value === '') {
+    showError(teamSel, 'team-error', 'Please select your team');
+  } else {
+    clearError(teamSel, 'team-error');
+  }
+}
+
+// ── Attach listeners ──────────────────────────────────────
+idInput.addEventListener('input', validateStudentId);
+nameInput.addEventListener('input', validateName);
+emailInput.addEventListener('input', validateEmail);
+pwInput.addEventListener('input', validatePassword);
+pw2Input.addEventListener('input', validateConfirm);
+teamSel.addEventListener('change', validateTeam);
+
+// ── Submit ────────────────────────────────────────────────
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  validateStudentId();
+  validateName();
+  validateEmail();
+  validatePassword();
+  validateConfirm();
+  validateTeam();
+
+  const hasErrors = form.querySelectorAll('.error.visible').length > 0;
+  if (hasErrors) {
+    // [A11Y TODO 3]: move focus to the first invalid field
+    // const firstInvalid = form.querySelector('.invalid-field');
+    // if (firstInvalid) firstInvalid.focus();
+    return;
+  }
+
+  alert(
+    'Registration submitted!\n\n' +
+    'Student ID: ' + idInput.value.trim()   + '\n' +
+    'Name: '       + nameInput.value.trim() + '\n' +
+    'Email: '      + emailInput.value.trim()+ '\n' +
+    'Team: '       + teamSel.value
+  );
+});
+</script>
+</body>
+</html>

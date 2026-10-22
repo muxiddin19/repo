@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 1 — HTML Structure</title>
+<style>
+/* Minimal reset so you can see the structure clearly */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+fieldset { border: 1px solid #ccc; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+legend { font-weight: bold; padding: 0 6px; }
+label { display: block; margin-bottom: 4px; font-size: 14px; }
+input, select { display: block; width: 100%; padding: 8px; margin-bottom: 12px; font-size: 14px; }
+button { padding: 10px 24px; font-size: 15px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  STEP 1 — HTML Structure                                ║
+  ║                                                          ║
+  ║  TASK: Complete the registration form below.            ║
+  ║  No CSS styling yet — structure and semantics only.     ║
+  ║                                                          ║
+  ║  The form needs THREE <fieldset> groups:                ║
+  ║                                                          ║
+  ║  FIELDSET 1 — "Student Information"                     ║
+  ║    Field A: 학번 (Student ID)                           ║
+  ║      · <label for="student-id">학번 (Student ID)</label>║
+  ║      · <input type="text"                               ║
+  ║               id="student-id"                           ║
+  ║               name="student-id"                         ║
+  ║               placeholder="e.g. 202312345"              ║
+  ║               required>                                 ║
+  ║      · <span class="error" id="student-id-error"></span>║
+  ║                                                          ║
+  ║    Field B: Full Name                                   ║
+  ║      · <label for="full-name">Full Name</label>         ║
+  ║      · <input type="text"                               ║
+  ║               id="full-name" name="full-name"           ║
+  ║               placeholder="Your full name" required>    ║
+  ║      · <span class="error" id="full-name-error"></span> ║
+  ║                                                          ║
+  ║    Field C: Email                                       ║
+  ║      · <label for="email">Email</label>                 ║
+  ║      · <input type="email"                              ║
+  ║               id="email" name="email"                   ║
+  ║               placeholder="you@gachon.ac.kr" required>  ║
+  ║      · <span class="error" id="email-error"></span>     ║
+  ║                                                          ║
+  ║  FIELDSET 2 — "Password"                               ║
+  ║    Field D: Password                                    ║
+  ║      · <label for="password">Password</label>           ║
+  ║      · <input type="password"                           ║
+  ║               id="password" name="password"             ║
+  ║               placeholder="Min 8 characters"            ║
+  ║               minlength="8" required>                   ║
+  ║      · <span class="error" id="password-error"></span>  ║
+  ║                                                          ║
+  ║    Field E: Confirm Password                            ║
+  ║      · <label for="confirm-password">                   ║
+  ║            Confirm Password</label>                     ║
+  ║      · <input type="password"                           ║
+  ║               id="confirm-password"                     ║
+  ║               name="confirm-password"                   ║
+  ║               placeholder="Repeat your password"        ║
+  ║               required>                                 ║
+  ║      · <span class="error"                              ║
+  ║               id="confirm-password-error"></span>       ║
+  ║                                                          ║
+  ║  FIELDSET 3 — "Team"                                   ║
+  ║    Field F: Team (dropdown)                             ║
+  ║      · <label for="team">Team</label>                   ║
+  ║      · <select id="team" name="team" required>          ║
+  ║            <option value="">— Select your team —</option>║
+  ║            <option value="Team 01">Team 01</option>     ║
+  ║            ... (continue up to Team 24)                 ║
+  ║            <option value="Team 24">Team 24</option>     ║
+  ║        </select>                                        ║
+  ║      · <span class="error" id="team-error"></span>      ║
+  ║                                                          ║
+  ║  SUBMIT BUTTON (after all fieldsets, inside the form):  ║
+  ║      · <button type="submit">Register</button>          ║
+  ║                                                          ║
+  ║  WHY these elements?                                    ║
+  ║   · <fieldset> + <legend> groups related fields for     ║
+  ║     screen readers and visual clarity                   ║
+  ║   · <label for="..."> links to input via id —          ║
+  ║     clicking the label focuses the input                ║
+  ║   · type="email" gives built-in format checking         ║
+  ║   · minlength="8" triggers browser validation           ║
+  ║   · required prevents submit on empty fields            ║
+  ║   · <span class="error"> is where JS will put messages  ║
+  ║                                                          ║
+  ║  DONE? Open in browser. You should see a plain form    ║
+  ║  with three grouped sections and a Register button.    ║
+  ╚══════════════════════════════════════════════════════════╝
+
+  Complete the form below this comment:
+-->
+
+<h1>Student Registration</h1>
+<p>K0126002 · Web Programming · Gachon University</p>
+
+<form id="reg-form" novalidate>
+
+  <fieldset>
+    <legend>Student Information</legend>
+
+    <!-- FIELD A: Student ID — YOUR CODE HERE -->
+
+    <!-- FIELD B: Full Name — YOUR CODE HERE -->
+
+    <!-- FIELD C: Email — YOUR CODE HERE -->
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Password</legend>
+
+    <!-- FIELD D: Password — YOUR CODE HERE -->
+
+    <!-- FIELD E: Confirm Password — YOUR CODE HERE -->
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Team</legend>
+
+    <!-- FIELD F: Team dropdown — YOUR CODE HERE -->
+    <!--  Hint: generate options Team 01 through Team 24  -->
+
+  </fieldset>
+
+  <!-- SUBMIT BUTTON — YOUR CODE HERE -->
+
+</form>
+
+</body>
+</html>
