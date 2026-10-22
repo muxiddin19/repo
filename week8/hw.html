@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+  body { font-family: system-ui; padding: 24px; max-width: 400px; }
+  label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 14px; }
+  input, select {
+    width: 100%; padding: 10px 14px; font-size: 14px;
+    border: 2px solid #c8d4f0; border-radius: 8px;
+    outline: none; transition: all 0.2s;
+    box-sizing: border-box;
+  }
+  button { margin-top: 16px; background: #1a56db; color: white; border: none;
+    padding: 11px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; }
+  input:focus, select:focus {
+    border-color: #1a56db;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, .15);
+  }
+  input:valid:not(:placeholder-shown) {
+    border-color: #16a34a;
+    background: #f0fdf4;
+  }
+  input:invalid:not(:placeholder-shown) {
+    border-color: #dc2626;
+    background: #fef2f2;
+  }
+  select:valid   { border-color: #16a34a; background: #f0fdf4; }
+  select:invalid { border-color: #dc2626; background: #fef2f2; }
+
+  /* Bonus: range slider */
+  .range-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  input[type="range"] {
+    flex: 1; border: none; background: none;
+    box-shadow: none; padding: 0;
+  }
+  .range-val { font-weight: 700; color: #1a56db; min-width: 1.5em; }
+
+  /* Checkbox inline with label */
+  .check-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+  .check-row input[type="checkbox"] {
+    width: 18px; min-width: 18px; height: 18px; padding: 0;
+    border: 2px solid #c8d4f0; border-radius: 4px;
+  }
+  .check-row label { margin: 0; }
+</style>
+</head><body>
+<h2>Student Registration Form</h2>
+<!-- FIX 1: method="post" (was "get") -->
+<form action="/register" method="post">
+
+  <fieldset>
+    <legend>Personal Information</legend>
+
+    <label for="fname">Full Name</label>
+    <input type="text" id="fname" name="fname" required placeholder="Your full name">
+
+    <!-- FIX 2: type="text" — pattern attribute is ignored on type="number" -->
+    <label for="sid">Student ID</label>
+    <input type="text" id="sid" name="sid" required pattern="\d{9}" placeholder="9-digit number">
+
+    <label for="birth">Date of Birth</label>
+    <input type="date" id="birth" name="birth" required>
+
+    <!-- FIX 3: <select> with 4 options (was <input type="major"> — invalid) -->
+    <label for="major">Major</label>
+    <select id="major" name="major" required>
+      <option value="">-- Select your major --</option>
+      <option>Computer Science</option>
+      <option>Software Engineering</option>
+      <option>Information Technology</option>
+      <option>Electrical Engineering</option>
+    </select>
+  </fieldset>
+
+  <br><hr><br>
+
+  <fieldset>
+    <legend>Account Info</legend>
+
+    <!-- FIX 4: added name attributes so values are submitted with the form -->
+    <label for="v-email">Email (required)</label>
+    <input type="email" id="v-email" name="email" required placeholder="name@example.com">
+
+    <label for="v-pw">Password (min 8 chars)</label>
+    <input type="password" id="v-pw" name="password" required minlength="8" placeholder="At least 8 characters">
+
+    <!-- FIX 5: typo "Telephon" → "Telephone"; added placeholder -->
+    <label for="tel">Telephone</label>
+    <input type="text" id="tel" name="tel" required pattern="\d{3}-\d{4}-\d{4}" placeholder="010-1234-5678">
+
+    <!-- BONUS: range slider with live JS value display -->
+    <label for="exp">Years of Coding Experience (0–10)</label>
+    <div class="range-row">
+      <input type="range" id="exp" name="exp" min="0" max="10" value="0">
+      <span class="range-val" id="exp-val">0</span> yrs
+    </div>
+  </fieldset>
+
+  <!-- FIX 6: "term" → "terms"; checkbox placed inline with its label -->
+  <div class="check-row">
+    <input type="checkbox" id="agree" name="agree" required>
+    <label for="agree">I agree to the terms</label>
+  </div>
+
+  <button type="submit">Check Validation</button>
+</form>
+
+<script>
+  const slider = document.getElementById('exp');
+  const display = document.getElementById('exp-val');
+  slider.addEventListener('input', () => display.textContent = slider.value);
+</script>
+</body></html>

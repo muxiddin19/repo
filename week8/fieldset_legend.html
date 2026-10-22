@@ -1,0 +1,21 @@
+<form method="post" action="/register">
+    <fieldset>
+        <legend>Personal information</legend>
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname" required minlength="1" maxlength="50"><br><br>
+
+        <label for="lname">Last name: </label>
+        <input type="lname" id="lname" name="lname" required><br>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>Account Details</legend>
+        <label for="reg-email">Email</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="reg-pw">Password</label>
+        <input type="password" id="reg-pw" name="reg-pw" required><br>
+
+    </fieldset>
+<button type="submit">Register</button>
+</form>

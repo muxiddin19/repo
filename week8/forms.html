@@ -1,0 +1,49 @@
+<form
+action="/login"
+method="post"
+novalidate>
+
+<label for="text">Full name   </label>
+<input type="text"  id="text" name="text" required   placeholder="Full name" minlength="5" maxlength="50"><br><br>
+<label for="sid">Student ID</label>
+<input type="number" id="sid" name="sid" pattern="\d{9}" title="Type your 9-digit student ID" required><br><br>
+
+<label for="email">Email</label>
+<input type="email" id="email" name="email"  required pattern="{*@*.*}" placeholder="name@email.com"><br><br>
+<label for="password">Password</label>
+<input type="password" id="password" name="password" required placeholder="Secret..."><br><br>
+
+<label for="number">Age</label>
+<input type="number"  id="number" name="number" required min="18" max="99" step="5"><br><br>
+<label for="birth">Date of Birth</label>
+<input type="date"><br><br>
+<label for="level">Your level of occupancy</label>
+<input type="range"   min="0" max="100"><br><br>
+<p>Your insterests:</p>
+<label for="hobby">Soccer</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<label for="hobby">Jogging</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<label for="hobby">Driving</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<label for="hobby">Hiking</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<label for="hobby">Listening music</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<label for="hobby">Watching movies</label>
+<input type="checkbox" id="hobby" name="hobby"><br><br>
+<p>Are you agree for using your data?</p>
+<label for="hobby">Agree</label>
+<input type="radio"   name="gender" value="m"><br><br>
+<label for="hobby">No Agree</label>
+<input type="radio"   name="gender" value="m"><br><br>
+<p>Please select your Department, major:</p>
+<select name="major">
+  <option value="">-- Select --</option>
+  <option value="cs">Computer Science</option>
+   <option value="cs">Computer Engineering</option>
+    <option value="cs">Informaton Technology</option>
+     <option value="cs">AI</option>
+     </select><br><br>
+     <button type="submit">Submit</button>
+     </form>

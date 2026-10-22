@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CSS Pseudo-classes for forms</title>
+        <style>
+             /* Green border ehen valid */
+            input:valid {
+                border: 2px solid #27C93F;
+            }
+            /*Red border + icon when invalid */
+            input:invalid {
+                border: 2px solid #ff5f56;
+                background: url("x.svg")
+                no-repeat right 0.5rem center;
+            }
+            /* Focus ring for keyboard nav */
+            input:focus {
+                outline: 3px solid #F7DF1E;
+                outline-offset: 2px;
+            }
+            /* Hide error until touched */
+            input:placeholder-shown {border: none;}
+        </style>
+    </head>
+    <body>
+       <form action="/register" method="POST"
+       id="reg-form" novalidate>
+       <fieldset>
+        <legend>Student information</legend>
+        <label for="sname">Full name</label>
+        <input type="text" id="sname" name="sname" required minlength="2" maxlength="50">
+
+        <label for="sid">Student ID</label>
+        <input type="number" id="sid" name="sid" required
+        pattern="\d{9}"
+        title="9-digit number">
+
+        <label for="semail">Student email</label>
+        <input type="email" id="email" name="email" required>
+       </fieldset>
+    <button type="submit">Submit</button>
+    </form>
+    </body>
+</html>
