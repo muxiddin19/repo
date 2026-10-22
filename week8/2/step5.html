@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 5 — Form Accessibility · Week 7 Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;
+  --border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;
+  --purple:#6366f1;--purplel:#eef2ff;--yellow:#f59e0b;--yellowl:#fef9c3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);padding:28px 24px 22px;text-align:center}
+.step-badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:10px}
+.header h1{color:#fff;font-size:24px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:13px;max-width:560px;margin:0 auto}
+.progress{display:flex;gap:4px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.p-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);color:#94a3b8;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .15s}
+.p-dot.active{background:var(--accent);color:#fff}
+.p-dot:hover:not(.active){background:rgba(255,255,255,.2);color:#fff}
+.wrap{max-width:980px;margin:28px auto;padding:0 20px 60px}
+.intro-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:24px}
+@media(max-width:640px){.intro-row{grid-template-columns:1fr}}
+.intro-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.intro-card h2{font-size:15px;font-weight:700;margin-bottom:8px}
+.intro-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.score-card{background:var(--dark);border-radius:12px;padding:18px 22px;min-width:200px;text-align:center}
+.score-label{font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.06em;margin-bottom:10px}
+.score-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.score-num{font-size:22px;font-weight:800}
+.score-num.bad{color:#f87171}
+.score-num.good{color:#4ade80}
+.score-arrow{color:#94a3b8;font-size:18px}
+.score-note{font-size:11px;color:#94a3b8}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+.code-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.code-compare{grid-template-columns:1fr}}
+.code-block{border-radius:10px;overflow:hidden;font-size:12.5px}
+.code-header{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em}
+.code-header.before{background:#7f1d1d;color:#fca5a5}
+.code-header.after{background:#14532d;color:#86efac}
+.code-body{background:#0d1117;color:#e6edf3;padding:16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;line-height:1.65;tab-size:2}
+.code-body .hl-bad{color:#f87171}
+.code-body .hl-good{color:#4ade80}
+.code-body .hl-tag{color:#79c0ff}
+.code-body .hl-attr{color:#ffa657}
+.code-body .hl-val{color:#a5d6ff}
+.code-body .hl-cmt{color:#8b949e;font-style:italic}
+
+/* Live demo forms */
+.form-demo-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.form-demo-row{grid-template-columns:1fr}}
+.form-panel{border-radius:10px;overflow:hidden}
+.form-panel-header{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:.06em}
+.form-panel-header.before{background:#7f1d1d;color:#fca5a5}
+.form-panel-header.after{background:#14532d;color:#86efac}
+.form-panel-body{background:var(--surf);border:1px solid var(--border);border-top:none;padding:20px}
+.fp-group{margin-bottom:14px}
+.fp-label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.fp-input{display:block;width:100%;padding:9px 12px;border:2px solid var(--border);border-radius:6px;font-size:14px;font-family:Inter,sans-serif}
+.fp-input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.fp-error{font-size:12px;color:var(--red);margin-top:4px}
+.fp-hint{font-size:11px;color:var(--muted);margin-top:4px}
+.fp-btn{background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif}
+
+.explain{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.8}
+.explain h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+.explain code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.explain ul{padding-left:20px;margin-top:6px}
+.explain ul li{margin-bottom:6px}
+.tip-box{background:var(--yellowl);border:1px solid #fde68a;border-radius:10px;padding:14px 18px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:24px}
+.tip-box strong{color:#451a03}
+.checklist-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.checklist-card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.checklist-card h3::before{content:'✔';font-size:12px;color:var(--green)}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.5}
+.check-item input[type=checkbox]{width:16px;height:16px;margin-top:1px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.check-item label{cursor:pointer;color:var(--text)}
+.check-item code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.nav-bar{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:background .15s,transform .12s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover{transform:translateY(-1px)}
+.nav-btn.prev{background:var(--surf);border:1px solid var(--border);color:var(--text)}
+.nav-btn.prev:hover{background:#e8edf8}
+.nav-btn.next{background:var(--accent);color:#fff}
+.nav-btn.next:hover{background:#1447b3}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="step-badge">STEP 5 OF 7 &middot; ACCESSIBILITY &middot; MONDAY</div>
+  <h1>Form Accessibility — Labels &amp; Error Messages</h1>
+  <p>Three inputs have no <code style="background:rgba(255,255,255,.1);color:#93c5fd;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">&lt;label&gt;</code>. Add labels and wire up error messages with <code style="background:rgba(255,255,255,.1);color:#93c5fd;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">aria-describedby</code> so screen readers announce them automatically.</p>
+  <div class="progress">
+    <a class="p-dot" href="step1.html" title="Step 1">1</a>
+    <a class="p-dot" href="step2.html" title="Step 2">2</a>
+    <a class="p-dot" href="step3.html" title="Step 3">3</a>
+    <a class="p-dot" href="step4.html" title="Step 4">4</a>
+    <a class="p-dot active" href="step5.html" title="Step 5">5</a>
+    <a class="p-dot" href="step6.html" title="Step 6">6</a>
+    <a class="p-dot" href="step7.html" title="Step 7">7</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro-row">
+    <div class="intro-card">
+      <h2>What you are fixing</h2>
+      <p>The broken page has a search input and two newsletter inputs (name and email) with no <code>&lt;label&gt;</code> elements. The placeholder text disappears as soon as the user starts typing — leaving them with no hint about what to enter. A screen reader user hears "edit text" with no further context. This step also adds an error message connected by <code>aria-describedby</code> so it is read aloud automatically.</p>
+    </div>
+    <div class="score-card">
+      <div class="score-label">ACCESSIBILITY SCORE</div>
+      <div class="score-row">
+        <span class="score-num bad">85</span>
+        <span class="score-arrow">&#8594;</span>
+        <span class="score-num good">97</span>
+      </div>
+      <div class="score-note">Estimated after this step</div>
+    </div>
+  </div>
+
+  <div class="section-title">Live demo — try both forms</div>
+  <div class="form-demo-row">
+    <div class="form-panel">
+      <div class="form-panel-header before">&#10007; BEFORE — no labels (broken)</div>
+      <div class="form-panel-body">
+        <p style="font-size:12px;color:var(--red);margin-bottom:12px">Click inside the input, then click away. The placeholder disappears — what was I supposed to type?</p>
+        <!-- Deliberately no label — demonstrating the broken pattern -->
+        <div class="fp-group">
+          <input class="fp-input" type="text" placeholder="Your name" aria-label="broken example - no visible label">
+        </div>
+        <div class="fp-group">
+          <input class="fp-input" type="email" placeholder="Your email address" aria-label="broken example - no visible label">
+        </div>
+        <button class="fp-btn" type="button" disabled>Subscribe Now</button>
+      </div>
+    </div>
+    <div class="form-panel">
+      <div class="form-panel-header after">&#10003; AFTER — labels + error message (fixed)</div>
+      <div class="form-panel-body">
+        <p style="font-size:12px;color:var(--green);margin-bottom:12px">Labels stay visible even while typing. The error message is linked by aria-describedby.</p>
+        <div class="fp-group">
+          <label class="fp-label" for="demo-name">Your name</label>
+          <input class="fp-input" type="text" id="demo-name" placeholder="e.g. Ji-won Lee"
+            aria-describedby="demo-name-hint">
+          <div class="fp-hint" id="demo-name-hint">First and last name</div>
+        </div>
+        <div class="fp-group">
+          <label class="fp-label" for="demo-email">Email address</label>
+          <input class="fp-input" type="email" id="demo-email" placeholder="you@example.com"
+            aria-describedby="demo-email-err" aria-invalid="false">
+          <div class="fp-error" id="demo-email-err" role="alert" style="display:none">Please enter a valid email address.</div>
+        </div>
+        <button class="fp-btn" type="submit">Subscribe Now</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Before &amp; After — Code</div>
+  <div class="code-compare">
+    <div class="code-block">
+      <div class="code-header before">&#10007; BEFORE — missing labels</div>
+      <pre class="code-body"><span class="hl-cmt">&lt;!-- [A5] Search: no label.
+     Screen reader says "edit text" --&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">class</span>=<span class="hl-val">"search-wrap"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-bad">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"text"</span>
+    <span class="hl-attr">placeholder</span>=<span class="hl-val">"Search movies..."</span><span class="hl-bad">&gt;</span>
+<span class="hl-tag">&lt;/div&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Newsletter: no labels --&gt;</span>
+<span class="hl-bad">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"text"</span>
+  <span class="hl-attr">placeholder</span>=<span class="hl-val">"Your name"</span><span class="hl-bad">&gt;</span>
+<span class="hl-bad">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"email"</span>
+  <span class="hl-attr">placeholder</span>=<span class="hl-val">"Your email address"</span><span class="hl-bad">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- No error message. When
+     validation fails, user doesn't
+     know what went wrong. --&gt;</span></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-header after">&#10003; AFTER — labels + aria-describedby</div>
+      <pre class="code-body"><span class="hl-cmt">&lt;!-- [FIX A5] Search: visible label
+     hidden off-screen if needed --&gt;</span>
+<span class="hl-tag">&lt;form</span> <span class="hl-attr">role</span>=<span class="hl-val">"search"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-good">&lt;label</span> <span class="hl-attr">for</span>=<span class="hl-val">"movie-search"</span><span class="hl-good">&gt;</span>
+    Search movies
+  <span class="hl-good">&lt;/label&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"search"</span>
+    <span class="hl-good">id</span>=<span class="hl-val">"movie-search"</span>
+    <span class="hl-attr">placeholder</span>=<span class="hl-val">"e.g. The Last Harbor"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Search<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Newsletter: labels + error --&gt;</span>
+<span class="hl-good">&lt;label</span> <span class="hl-attr">for</span>=<span class="hl-val">"nl-name"</span><span class="hl-good">&gt;</span>Your name<span class="hl-good">&lt;/label&gt;</span>
+<span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"text"</span> <span class="hl-good">id</span>=<span class="hl-val">"nl-name"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-good">&lt;label</span> <span class="hl-attr">for</span>=<span class="hl-val">"nl-email"</span><span class="hl-good">&gt;</span>Email<span class="hl-good">&lt;/label&gt;</span>
+<span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"email"</span> <span class="hl-good">id</span>=<span class="hl-val">"nl-email"</span>
+  <span class="hl-good">aria-describedby</span>=<span class="hl-val">"email-err"</span>
+  <span class="hl-good">aria-invalid</span>=<span class="hl-val">"false"</span><span class="hl-tag">&gt;</span>
+<span class="hl-good">&lt;span</span> <span class="hl-good">id</span>=<span class="hl-val">"email-err"</span>
+  <span class="hl-attr">role</span>=<span class="hl-val">"alert"</span> <span class="hl-attr">style</span>=<span class="hl-val">"display:none"</span><span class="hl-good">&gt;</span>
+  Please enter a valid email.
+<span class="hl-good">&lt;/span&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="section-title">Why this matters</div>
+  <div class="explain">
+    <h3>The label is the input's name — always visible, always connected</h3>
+    <p>A <code>&lt;label for="id"&gt;</code> paired with an <code>id</code> on the input does three things: it gives screen readers a name to announce, it makes the label clickable to focus the input (helpful on mobile), and it stays visible after the user starts typing (unlike a placeholder, which vanishes).</p>
+    <p style="margin-top:10px"><strong>Placeholder is not a label.</strong> WCAG 1.3.5 requires inputs to be programmatically determinable. A placeholder only appears before the user types. It also commonly has low contrast (fails Step 4). Never rely on placeholder alone.</p>
+    <h3 style="margin-top:16px">aria-describedby links extra information to an input</h3>
+    <ul>
+      <li>Give the error message span an <code>id</code>: e.g., <code>id="email-err"</code></li>
+      <li>Add <code>aria-describedby="email-err"</code> to the input</li>
+      <li>When the screen reader focuses the input, it reads the label first, then the describedby text</li>
+      <li>Add <code>role="alert"</code> to the error span so it is also announced immediately when it becomes visible</li>
+      <li>Toggle <code>aria-invalid="true"</code> on the input when validation fails</li>
+    </ul>
+  </div>
+
+  <div class="tip-box">
+    <strong>Visually hiding a label:</strong> Sometimes designers don't want a visible label (e.g., a search bar in a nav). In that case, use a CSS class instead of <code>display:none</code> — hidden labels are not announced. A common visually-hidden class: <code>.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }</code>
+  </div>
+
+  <div class="section-title">Try it yourself</div>
+  <div class="checklist-card">
+    <h3>Step 5 Checklist</h3>
+    <div class="check-item">
+      <input type="checkbox" id="c5-1">
+      <label for="c5-1">Add <code>id="movie-search"</code> to the search input. Add <code>&lt;label for="movie-search"&gt;Search movies&lt;/label&gt;</code> above it (or use <code>class="sr-only"</code> if you want it visually hidden).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-2">
+      <label for="c5-2">Add <code>id="nl-name"</code> to the name input. Add a visible <code>&lt;label for="nl-name"&gt;Your name&lt;/label&gt;</code> above it.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-3">
+      <label for="c5-3">Add <code>id="nl-email"</code> to the email input. Add a visible <code>&lt;label for="nl-email"&gt;Email address&lt;/label&gt;</code> above it.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-4">
+      <label for="c5-4">Add an error message span below the email input: <code>&lt;span id="nl-email-err" role="alert" style="display:none;color:red"&gt;Please enter a valid email address.&lt;/span&gt;</code></label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-5">
+      <label for="c5-5">Link the error to the input: add <code>aria-describedby="nl-email-err"</code> and <code>aria-invalid="false"</code> to the email input.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-6">
+      <label for="c5-6">Test it: click each label and confirm the matching input receives focus. Then open DevTools &rarr; Elements &rarr; Accessibility tab and verify the input's "Name" field shows the label text.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c5-7">
+      <label for="c5-7">Re-run Lighthouse. The "Form elements must have labels" audit should now pass. Your Accessibility score should reach ~97.</label>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <a class="nav-btn prev" href="step4.html">&#8592; Step 4: Color Contrast</a>
+    <a class="nav-btn next" href="step6.html">Step 6: Image Performance &#8594;</a>
+  </div>
+
+</div>
+</body>
+</html>

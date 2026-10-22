@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 7 — Accessibility &amp; Performance Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--accent-hover:#1447b3;
+  --bg:#f0f4ff;--surf:#fff;--border:#c8d4f0;
+  --text:#1a2340;--muted:#5a6a8a;--green:#16a34a;
+  --greenl:#dcfce7;--yellow:#f59e0b;--red:#dc2626;
+  --redl:#fee2e2;--purple:#6366f1;--purplel:#eef2ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.header{background:var(--dark);padding:36px 24px 28px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-weight:700;font-size:11px;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:14px}
+.header h1{color:#fff;font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px;max-width:600px;margin:0 auto;line-height:1.6}
+.header-meta{display:flex;justify-content:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#94a3b8;font-size:12px;padding:4px 14px;border-radius:20px}
+
+.wrap{max-width:960px;margin:36px auto;padding:0 20px 60px}
+
+.goal-box{background:var(--dark);border-radius:12px;padding:24px 28px;color:#94a3b8;font-size:14px;line-height:1.8;margin-bottom:32px}
+.goal-box h3{color:#fff;font-size:16px;font-weight:700;margin-bottom:12px}
+.goal-box .item{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.goal-box .num{background:var(--accent);color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.goal-box code{background:rgba(255,255,255,.1);color:#93c5fd;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.83em}
+
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+
+.progress-bar{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap}
+.prog-step{flex:1;min-width:90px;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;transition:background .15s,border-color .15s}
+.prog-step:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.prog-step .pnum{display:block;font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px}
+.prog-step:hover .pnum{color:#fff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:32px}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:22px;text-decoration:none;color:var(--text);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:8px}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,27,45,.12)}
+.card-step{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.card h2{font-size:15px;font-weight:700}
+.card p{font-size:13px;color:var(--muted);line-height:1.6;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
+.tag.blue{background:var(--purplel);color:var(--accent)}
+.tag.green{background:var(--greenl);color:#166534}
+.tag.red{background:var(--redl);color:var(--red)}
+.tag.dark{background:var(--dark);color:#93c5fd}
+.card.broken{border-color:var(--red);border-style:dashed}
+.card.broken .card-step{color:var(--red)}
+.card.solution{border-color:var(--purple);border-style:dashed}
+.card.solution .card-step{color:var(--purple)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+
+.score-banner{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.score-banner h3{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.scores{display:flex;gap:20px;flex-wrap:wrap}
+.score-item{flex:1;min-width:120px}
+.score-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.score-track{background:#e5e7eb;border-radius:20px;height:8px;margin-bottom:4px;overflow:hidden}
+.score-fill{height:100%;border-radius:20px}
+.score-fill.bad{background:#ef4444}
+.score-fill.ok{background:#f59e0b}
+.score-fill.good{background:#22c55e}
+
+.info-box{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:28px}
+.info-box strong{color:var(--text)}
+.info-box code{background:#eef2ff;color:var(--accent);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+
+.bug-list{background:var(--redl);border:1px solid #fecaca;border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.bug-list h3{font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.bug-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#7f1d1d;margin-bottom:6px;line-height:1.5}
+.bug-label{background:#dc2626;color:#fff;font-weight:700;font-size:11px;padding:1px 6px;border-radius:3px;flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">WEEK 7 &middot; ACCESSIBILITY &amp; PERFORMANCE &middot; LAB</div>
+  <h1>Fix the Broken Website</h1>
+  <p>You have inherited a client's movie review site. It works — barely — but it fails every accessibility audit and loads too slowly. Your job is to fix it, step by step.</p>
+  <div class="header-meta">
+    <span class="meta-pill">Monday: Web Accessibility (Steps 1–5)</span>
+    <span class="meta-pill">Friday: Performance Optimization (Steps 6–7)</span>
+    <span class="meta-pill">~60 min total</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="goal-box">
+    <h3>What you will fix today</h3>
+    <div class="item"><span class="num">1</span><span>Replace every <code>&lt;div&gt;</code> with proper semantic HTML5 elements — <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code></span></div>
+    <div class="item"><span class="num">2</span><span>Replace fake <code>&lt;div onclick&gt;</code> buttons with real <code>&lt;button&gt;</code> elements that keyboard and screen reader users can reach</span></div>
+    <div class="item"><span class="num">3</span><span>Add meaningful <code>alt</code> text to every content image; use <code>alt=""</code> for decorative ones so screen readers skip them</span></div>
+    <div class="item"><span class="num">4</span><span>Fix five color contrast failures using browser DevTools — raise every ratio to at least <strong style="color:#fff">4.5:1</strong></span></div>
+    <div class="item"><span class="num">5</span><span>Connect every form input to a <code>&lt;label for="id"&gt;</code>; add <code>aria-describedby</code> so error messages are announced</span></div>
+    <div class="item"><span class="num">6</span><span>Add <code>loading="lazy"</code> plus explicit <code>width</code> and <code>height</code> to below-fold images to prevent layout shift (CLS)</span></div>
+    <div class="item"><span class="num">7</span><span>Move all <code>&lt;script&gt;</code> tags to the end of <code>&lt;body&gt;</code> and add <code>defer</code> so they never block HTML parsing</span></div>
+  </div>
+
+  <div class="bug-list">
+    <h3>All bugs in broken.html at a glance</h3>
+    <div class="bug-item"><span class="bug-label">A1</span><span>Entire page uses <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">&lt;div&gt;</code> wrappers — no semantic landmarks for screen readers</span></div>
+    <div class="bug-item"><span class="bug-label">A2</span><span>Search bar, movie card buttons, and newsletter submit use <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">&lt;div onclick&gt;</code> — not keyboard-operable</span></div>
+    <div class="bug-item"><span class="bug-label">A3</span><span>Four images: blank <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">alt=""</code> on content image, missing alt, <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">alt="img"</code>, and filename as alt</span></div>
+    <div class="bug-item"><span class="bug-label">A4</span><span>Five color pairs fail WCAG AA — worst is #aaa on #eee (ratio 1.6:1 vs. required 4.5:1)</span></div>
+    <div class="bug-item"><span class="bug-label">A5</span><span>Search input and both newsletter inputs have no <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">&lt;label&gt;</code></span></div>
+    <div class="bug-item"><span class="bug-label">A6</span><span>Three links read "Click here" — meaningless when a screen reader lists all links</span></div>
+    <div class="bug-item"><span class="bug-label">P1</span><span>No <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">width</code>/<code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">height</code> on images; below-fold images load eagerly (wastes bandwidth)</span></div>
+    <div class="bug-item"><span class="bug-label">P2</span><span>Two <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">&lt;script&gt;</code> tags in <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">&lt;head&gt;</code> with no <code style="background:rgba(220,38,38,.1);color:#991b1b;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em">defer</code> — block HTML parsing and delay first paint</span></div>
+  </div>
+
+  <div class="score-banner">
+    <h3>Lighthouse scores — broken.html vs. solution.html</h3>
+    <div class="scores">
+      <div class="score-item">
+        <div class="score-label">Accessibility — broken</div>
+        <div class="score-track"><div class="score-fill bad" style="width:30%"></div></div>
+        <div style="font-size:12px;font-weight:700;color:var(--red)">30 / 100</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">Accessibility — fixed</div>
+        <div class="score-track"><div class="score-fill good" style="width:97%"></div></div>
+        <div style="font-size:12px;font-weight:700;color:var(--green)">97 / 100</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">Performance — broken</div>
+        <div class="score-track"><div class="score-fill bad" style="width:45%"></div></div>
+        <div style="font-size:12px;font-weight:700;color:var(--red)">45 / 100</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">Performance — fixed</div>
+        <div class="score-track"><div class="score-fill good" style="width:88%"></div></div>
+        <div style="font-size:12px;font-weight:700;color:var(--green)">88 / 100</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Start here — open the broken page first</div>
+  <div class="grid">
+    <a class="card broken" href="broken.html" target="_blank">
+      <div class="card-step">Starter file — do not edit</div>
+      <h2>broken.html — Open and audit in Chrome</h2>
+      <p>Open this in Chrome, then run a Lighthouse audit (DevTools &rarr; Lighthouse tab). See your starting score. Keep this tab open while you work through each step.</p>
+      <div class="card-tags"><span class="tag red">8 bugs inside</span><span class="tag red">A11y: 30, Perf: 45</span></div>
+    </a>
+  </div>
+
+  <div class="section-title">Monday session — Accessibility (Steps 1 – 5)</div>
+  <div class="progress-bar">
+    <a class="prog-step" href="step1.html"><span class="pnum">1</span>Semantic HTML</a>
+    <a class="prog-step" href="step2.html"><span class="pnum">2</span>Buttons &amp; Links</a>
+    <a class="prog-step" href="step3.html"><span class="pnum">3</span>Alt Text</a>
+    <a class="prog-step" href="step4.html"><span class="pnum">4</span>Contrast</a>
+    <a class="prog-step" href="step5.html"><span class="pnum">5</span>Form Labels</a>
+  </div>
+
+  <div class="section-title">Friday session — Performance (Steps 6 – 7)</div>
+  <div class="progress-bar">
+    <a class="prog-step" href="step6.html"><span class="pnum">6</span>Lazy Images</a>
+    <a class="prog-step" href="step7.html"><span class="pnum">7</span>Defer Scripts</a>
+  </div>
+
+  <div class="section-title">All steps</div>
+  <div class="two-col">
+    <a class="card" href="step1.html">
+      <div class="card-step">Step 1 &middot; Accessibility &middot; Monday</div>
+      <h2>Semantic HTML</h2>
+      <p>Replace all generic <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">&lt;div&gt;</code> wrappers with HTML5 landmark elements. Screen readers use these to let users jump directly to the content they want.</p>
+      <div class="card-tags"><span class="tag dark">header</span><span class="tag dark">nav</span><span class="tag dark">main</span><span class="tag dark">footer</span><span class="tag dark">article</span></div>
+    </a>
+    <a class="card" href="step2.html">
+      <div class="card-step">Step 2 &middot; Accessibility &middot; Monday</div>
+      <h2>Buttons &amp; Descriptive Links</h2>
+      <p>Every <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">&lt;div onclick&gt;</code> must become a <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">&lt;button&gt;</code>. Every "click here" link must say what it opens.</p>
+      <div class="card-tags"><span class="tag blue">keyboard nav</span><span class="tag blue">focus ring</span></div>
+    </a>
+    <a class="card" href="step3.html">
+      <div class="card-step">Step 3 &middot; Accessibility &middot; Monday</div>
+      <h2>Alt Text for Images</h2>
+      <p>Learn the difference between content images (need a description) and decorative images (need <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">alt=""</code>). Fix all four broken images.</p>
+      <div class="card-tags"><span class="tag blue">screen reader</span><span class="tag dark">alt=""</span></div>
+    </a>
+    <a class="card" href="step4.html">
+      <div class="card-step">Step 4 &middot; Accessibility &middot; Monday</div>
+      <h2>Color Contrast</h2>
+      <p>Use DevTools to find and fix every text/background pair that falls below the WCAG AA minimum of 4.5:1 (normal text) or 3:1 (large text).</p>
+      <div class="card-tags"><span class="tag blue">WCAG AA</span><span class="tag blue">4.5:1 ratio</span></div>
+    </a>
+    <a class="card" href="step5.html">
+      <div class="card-step">Step 5 &middot; Accessibility &middot; Monday</div>
+      <h2>Form Accessibility</h2>
+      <p>Pair every input with a visible <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">&lt;label&gt;</code>. Add an error message linked by <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">aria-describedby</code> so it is announced automatically.</p>
+      <div class="card-tags"><span class="tag blue">label</span><span class="tag dark">aria-describedby</span></div>
+    </a>
+    <a class="card" href="step6.html">
+      <div class="card-step">Step 6 &middot; Performance &middot; Friday</div>
+      <h2>Optimize Images</h2>
+      <p>Add <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">loading="lazy"</code> to below-fold images. Add <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">width</code> and <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">height</code> to every image to eliminate Cumulative Layout Shift.</p>
+      <div class="card-tags"><span class="tag green">lazy loading</span><span class="tag green">CLS fix</span></div>
+    </a>
+    <a class="card" href="step7.html">
+      <div class="card-step">Step 7 &middot; Performance &middot; Friday</div>
+      <h2>JavaScript Loading Strategy</h2>
+      <p>Two scripts in <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">&lt;head&gt;</code> are blocking the page. Move them to end of body and add <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.83em">defer</code> to slash LCP time.</p>
+      <div class="card-tags"><span class="tag green">defer</span><span class="tag green">LCP</span><span class="tag green">FCP</span></div>
+    </a>
+  </div>
+
+  <div class="section-title">Reference</div>
+  <div class="grid">
+    <a class="card solution" href="solution.html">
+      <div class="card-step">Complete solution — check your work here</div>
+      <h2>solution.html — all issues fixed</h2>
+      <p>The fully corrected CineReview page. Every fix applied, well-commented, with a before/after score comparison at the top. Use this after you have tried each step yourself.</p>
+      <div class="card-tags"><span class="tag green">A11y: 97 / 100</span><span class="tag green">Perf: 88 / 100</span></div>
+    </a>
+  </div>
+
+  <div class="info-box">
+    <strong>How to run a Lighthouse audit:</strong> Open <code>broken.html</code> in Chrome &rarr; press F12 to open DevTools &rarr; click the <em>Lighthouse</em> tab &rarr; check <em>Accessibility</em> and <em>Performance</em> &rarr; click <em>Analyze page load</em>. After each step, re-run the audit to see your score improve.<br><br>
+    <strong>How to check color contrast (Step 4):</strong> DevTools &rarr; Elements panel &rarr; click a text element &rarr; Styles panel &rarr; click the color swatch next to <code>color:</code> &rarr; the contrast ratio appears at the bottom of the color picker with a pass/fail badge.<br><br>
+    <strong>What you need:</strong> Chrome browser (for Lighthouse), a text editor (VS Code recommended), and the <code>broken.html</code> file open in both your editor and browser.
+  </div>
+
+</div>
+</body>
+</html>

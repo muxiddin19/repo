@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3 — Alt Text · Week 7 Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;
+  --border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;
+  --purple:#6366f1;--purplel:#eef2ff;--yellow:#f59e0b;--yellowl:#fef9c3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);padding:28px 24px 22px;text-align:center}
+.step-badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:10px}
+.header h1{color:#fff;font-size:24px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:13px;max-width:560px;margin:0 auto}
+.progress{display:flex;gap:4px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.p-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);color:#94a3b8;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .15s}
+.p-dot.active{background:var(--accent);color:#fff}
+.p-dot:hover:not(.active){background:rgba(255,255,255,.2);color:#fff}
+.wrap{max-width:980px;margin:28px auto;padding:0 20px 60px}
+.intro-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:24px}
+@media(max-width:640px){.intro-row{grid-template-columns:1fr}}
+.intro-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.intro-card h2{font-size:15px;font-weight:700;margin-bottom:8px}
+.intro-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.score-card{background:var(--dark);border-radius:12px;padding:18px 22px;min-width:200px;text-align:center}
+.score-label{font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.06em;margin-bottom:10px}
+.score-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.score-num{font-size:22px;font-weight:800}
+.score-num.bad{color:#f87171}
+.score-num.good{color:#4ade80}
+.score-arrow{color:#94a3b8;font-size:18px}
+.score-note{font-size:11px;color:#94a3b8}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+.code-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.code-compare{grid-template-columns:1fr}}
+.code-block{border-radius:10px;overflow:hidden;font-size:12.5px}
+.code-header{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em}
+.code-header.before{background:#7f1d1d;color:#fca5a5}
+.code-header.after{background:#14532d;color:#86efac}
+.code-body{background:#0d1117;color:#e6edf3;padding:16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;line-height:1.65;tab-size:2}
+.code-body .hl-bad{color:#f87171}
+.code-body .hl-good{color:#4ade80}
+.code-body .hl-tag{color:#79c0ff}
+.code-body .hl-attr{color:#ffa657}
+.code-body .hl-val{color:#a5d6ff}
+.code-body .hl-cmt{color:#8b949e;font-style:italic}
+.explain{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.8}
+.explain h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+.explain code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.explain ul{padding-left:20px;margin-top:6px}
+.explain ul li{margin-bottom:6px}
+.tip-box{background:var(--yellowl);border:1px solid #fde68a;border-radius:10px;padding:14px 18px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:24px}
+.tip-box strong{color:#451a03}
+.bug-table{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px}
+.bug-table-header{display:grid;grid-template-columns:1fr 1fr 1.5fr;background:var(--dark);color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:.06em;padding:10px 16px;gap:12px}
+.bug-row{display:grid;grid-template-columns:1fr 1fr 1.5fr;padding:12px 16px;gap:12px;font-size:12.5px;border-bottom:1px solid var(--border);align-items:start}
+.bug-row:last-child{border-bottom:none}
+.bug-row:nth-child(odd){background:#f8faff}
+.bug-row code{background:#eef2ff;color:var(--accent);padding:1px 4px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.bug-row .bad{color:var(--red);font-weight:600}
+.bug-row .good{color:var(--green);font-weight:600}
+.checklist-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.checklist-card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.checklist-card h3::before{content:'✔';font-size:12px;color:var(--green)}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.5}
+.check-item input[type=checkbox]{width:16px;height:16px;margin-top:1px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.check-item label{cursor:pointer;color:var(--text)}
+.check-item code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.nav-bar{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:background .15s,transform .12s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover{transform:translateY(-1px)}
+.nav-btn.prev{background:var(--surf);border:1px solid var(--border);color:var(--text)}
+.nav-btn.prev:hover{background:#e8edf8}
+.nav-btn.next{background:var(--accent);color:#fff}
+.nav-btn.next:hover{background:#1447b3}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="step-badge">STEP 3 OF 7 &middot; ACCESSIBILITY &middot; MONDAY</div>
+  <h1>Alt Text — Make Images Accessible</h1>
+  <p>Four images in the broken page have wrong or missing <code style="background:rgba(255,255,255,.1);color:#93c5fd;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">alt</code> text. Learn the difference between content images and decorative images, then fix each one.</p>
+  <div class="progress">
+    <a class="p-dot" href="step1.html" title="Step 1">1</a>
+    <a class="p-dot" href="step2.html" title="Step 2">2</a>
+    <a class="p-dot active" href="step3.html" title="Step 3">3</a>
+    <a class="p-dot" href="step4.html" title="Step 4">4</a>
+    <a class="p-dot" href="step5.html" title="Step 5">5</a>
+    <a class="p-dot" href="step6.html" title="Step 6">6</a>
+    <a class="p-dot" href="step7.html" title="Step 7">7</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro-row">
+    <div class="intro-card">
+      <h2>What you are fixing</h2>
+      <p>The four movie poster images and one editorial image all have broken alt text. Screen readers either skip the image entirely, announce "image" with no context, or read out a URL fragment. A person using a screen reader gets zero information about the movies shown. Additionally, one decorative image has a long wrong description that interrupts reading flow.</p>
+    </div>
+    <div class="score-card">
+      <div class="score-label">ACCESSIBILITY SCORE</div>
+      <div class="score-row">
+        <span class="score-num bad">55</span>
+        <span class="score-arrow">&#8594;</span>
+        <span class="score-num good">72</span>
+      </div>
+      <div class="score-note">Estimated after this step</div>
+    </div>
+  </div>
+
+  <div class="section-title">All four image bugs at a glance</div>
+  <div class="bug-table">
+    <div class="bug-table-header">
+      <span>Image</span><span class="bad">Broken alt</span><span class="good">Fixed alt</span>
+    </div>
+    <div class="bug-row">
+      <span>Echoes of Tomorrow poster</span>
+      <span class="bad"><code>alt=""</code><br>(content image — screen reader silently skips it)</span>
+      <span class="good"><code>alt="Movie poster for Echoes of Tomorrow (2024)"</code></span>
+    </div>
+    <div class="bug-row">
+      <span>The Last Harbor poster</span>
+      <span class="bad">No alt attribute at all — invalid HTML, announced as filename</span>
+      <span class="good"><code>alt="Movie poster for The Last Harbor (2024)"</code></span>
+    </div>
+    <div class="bug-row">
+      <span>Crimson Horizon poster</span>
+      <span class="bad"><code>alt="img"</code><br>(meaningless single word)</span>
+      <span class="good"><code>alt="Movie poster for Crimson Horizon (2023)"</code></span>
+    </div>
+    <div class="bug-row">
+      <span>Hollow Forest poster</span>
+      <span class="bad"><code>alt="picsum photos movie4"</code><br>(URL fragment leaked into alt)</span>
+      <span class="good"><code>alt="Movie poster for Hollow Forest (2023)"</code></span>
+    </div>
+    <div class="bug-row">
+      <span>Editor's Pick image (decorative)</span>
+      <span class="bad"><code>alt="decorative image of a movie"</code><br>(wrong — decorative images should be silent)</span>
+      <span class="good"><code>alt=""</code><br>(empty string = screen reader skips it)</span>
+    </div>
+  </div>
+
+  <div class="section-title">Before &amp; After — Code</div>
+  <div class="code-compare">
+    <div class="code-block">
+      <div class="code-header before">&#10007; BEFORE — broken alt text</div>
+      <pre class="code-body"><span class="hl-cmt">&lt;!-- [A3] Bug 1: alt="" on a
+     content image (poster).
+     Screen reader says nothing. --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie1..."</span>
+     <span class="hl-bad">alt=""</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Bug 2: Missing alt entirely.
+     Announced as the filename. --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie2..."</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Bug 3: alt="img" — useless --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie3..."</span>
+     <span class="hl-bad">alt="img"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Bug 4: URL fragment as alt --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie4..."</span>
+     <span class="hl-bad">alt="picsum photos movie4"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Bug 5: Decorative image with
+     wrong long alt text --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...featured..."</span>
+     <span class="hl-bad">alt="decorative image of a movie"</span><span class="hl-tag">&gt;</span></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-header after">&#10003; AFTER — correct alt text</div>
+      <pre class="code-body"><span class="hl-cmt">&lt;!-- [FIX A3] Content images:
+     describe what the image shows
+     and why it is there --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie1..."</span>
+     <span class="hl-good">alt="Movie poster for Echoes of Tomorrow (2024)"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie2..."</span>
+     <span class="hl-good">alt="Movie poster for The Last Harbor (2024)"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie3..."</span>
+     <span class="hl-good">alt="Movie poster for Crimson Horizon (2023)"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...movie4..."</span>
+     <span class="hl-good">alt="Movie poster for Hollow Forest (2023)"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Decorative image: empty alt
+     tells screen reader to skip.
+     Do NOT omit alt entirely. --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"...featured..."</span>
+     <span class="hl-good">alt=""</span>
+     <span class="hl-good">role="presentation"</span><span class="hl-tag">&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="section-title">The two rules of alt text</div>
+  <div class="explain">
+    <h3>Rule 1 — Content images need a description that replaces the image</h3>
+    <p>Ask yourself: if the image was replaced by this text, would the user lose information? A movie poster is a content image — it identifies which movie the card is about. A good alt for a poster is <code>"Movie poster for Echoes of Tomorrow (2024)"</code>. Bad examples:</p>
+    <ul>
+      <li><code>alt=""</code> on a content image — user gets nothing (screen reader skips silently)</li>
+      <li><code>alt="image"</code> or <code>alt="img"</code> — just says "image" with no content</li>
+      <li><code>alt="picsum photos movie4"</code> — leaks implementation details, not useful</li>
+      <li>Missing <code>alt</code> entirely — browser announces the filename (often a UUID or URL)</li>
+    </ul>
+    <h3 style="margin-top:16px">Rule 2 — Decorative images need <code>alt=""</code> (empty, not missing)</h3>
+    <p>The featured section's editorial photo is purely aesthetic — it duplicates the visual style but carries no unique information. Use <code>alt=""</code> to tell the screen reader to skip it. You can also add <code>role="presentation"</code> for extra safety.</p>
+    <p style="margin-top:10px"><strong>Never omit alt entirely on a decorative image</strong> — a missing alt causes the browser to fall back to announcing the filename, which interrupts the reading flow.</p>
+  </div>
+
+  <div class="tip-box">
+    <strong>Writing good alt text — practical rules:</strong> Keep it under 100 characters. Don't start with "Image of" or "Photo of" — screen readers already say "image". Describe the content and function, not the visual style. For a chart or graph, describe the key finding. For a logo, write the company name. For a button image (an icon), write what the button does, not what the icon looks like.
+  </div>
+
+  <div class="section-title">Try it yourself</div>
+  <div class="checklist-card">
+    <h3>Step 3 Checklist</h3>
+    <div class="check-item">
+      <input type="checkbox" id="c3-1">
+      <label for="c3-1">Find the first movie card image and change its <code>alt=""</code> to <code>alt="Movie poster for Echoes of Tomorrow (2024)"</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-2">
+      <label for="c3-2">Find the second movie card image (no alt attribute at all) and add <code>alt="Movie poster for The Last Harbor (2024)"</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-3">
+      <label for="c3-3">Find the third movie card image with <code>alt="img"</code> and change it to <code>alt="Movie poster for Crimson Horizon (2023)"</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-4">
+      <label for="c3-4">Find the fourth movie card image with <code>alt="picsum photos movie4"</code> and change it to <code>alt="Movie poster for Hollow Forest (2023)"</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-5">
+      <label for="c3-5">Find the featured (Editor's Pick) image with <code>alt="decorative image of a movie"</code>. Change it to <code>alt=""</code> and add <code>role="presentation"</code> — this image is decorative and should be silently skipped.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-6">
+      <label for="c3-6">Test with a screen reader (or the Chrome accessibility tree): open DevTools &rarr; Elements panel &rarr; Accessibility tab. Click each image and confirm the "Name" field shows your alt text (or nothing for the decorative one).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c3-7">
+      <label for="c3-7">Re-run Lighthouse. The "Images have alt attributes" audit should now show 0 failing items.</label>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <a class="nav-btn prev" href="step2.html">&#8592; Step 2: Buttons &amp; Links</a>
+    <a class="nav-btn next" href="step4.html">Step 4: Color Contrast &#8594;</a>
+  </div>
+
+</div>
+</body>
+</html>

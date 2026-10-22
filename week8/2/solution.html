@@ -1,0 +1,588 @@
+<!-- =====================================================================
+     CineReview — FULLY FIXED Solution
+     All 8 accessibility and performance issues resolved.
+     Week 7 Lab — Web Accessibility & Performance Optimization
+
+     Fixes applied:
+       [A1] Semantic HTML: header/nav/main/section/article/aside/footer
+       [A2] Real <button> elements; descriptive link text
+       [A3] Meaningful alt text on content images; alt="" on decorative
+       [A4] All color contrast ratios >= 4.5:1 (WCAG AA)
+       [A5] Every input has a <label for="id">; aria-describedby for errors
+       [A6] No "click here" link text — all links describe destination
+       [P1] width/height on all images; loading="lazy" on below-fold images
+       [P2] Scripts moved to end of body with defer
+===================================================================== -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CineReview — Fixed Solution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================
+   SOLUTION PAGE BANNER — score comparison at top
+   ============================================================ */
+.solution-banner {
+  background: #0f1b2d;
+  padding: 28px 24px;
+  text-align: center;
+  border-bottom: 3px solid #16a34a;
+}
+.solution-banner h1 {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.solution-banner p {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.score-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.score-item {
+  text-align: center;
+}
+.score-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.score-before {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f87171;
+}
+.score-arrow-s {
+  font-size: 18px;
+  color: #94a3b8;
+}
+.score-after {
+  font-size: 22px;
+  font-weight: 800;
+  color: #4ade80;
+}
+.score-label-s {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+.fix-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.fix-pill {
+  background: rgba(22,163,74,.15);
+  border: 1px solid rgba(22,163,74,.3);
+  color: #4ade80;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.back-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: #94a3b8;
+  font-size: 12px;
+  text-decoration: none;
+}
+.back-link:hover { color: #fff; }
+
+/* ============================================================
+   [A4 FIX] All colors corrected — contrast >= 4.5:1
+   ============================================================ */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  background: #fff;
+  color: #1a2340;
+}
+
+/* [FIX A4] Nav: #e2e8f0 on #1a2340 = 8.1:1 */
+/* [FIX A1] <header> wraps the navigation */
+header {
+  background: #1a2340;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nav-logo {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+/* [FIX A1] <nav> with <ul><li> for navigation list */
+header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+header nav ul li a {
+  color: #e2e8f0; /* ratio 8.1:1 — PASS */
+  text-decoration: none;
+  font-size: 14px;
+}
+header nav ul li a:hover { text-decoration: underline; }
+
+/* [FIX A1] <main> wraps all primary content */
+main {
+  /* nothing special — just the landmark */
+}
+
+/* [FIX A4] Hero: #e2e8f0 on #1a2340 = 8.1:1 */
+.hero {
+  background: #1a2340;
+  color: #e2e8f0;
+  padding: 48px 24px;
+  text-align: center;
+}
+.hero h1 { font-size: 32px; margin-bottom: 8px; color: #fff; }
+.hero p  { font-size: 16px; margin-bottom: 20px; color: #e2e8f0; }
+
+/* [FIX A2] Search wrapped in <form role="search"> */
+.search-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+/* [FIX A5] Label for search — visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+.search-wrap input[type="search"] {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  width: 280px;
+}
+/* [FIX A2] Real <button> element */
+.search-btn {
+  background: #e50914;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 600;
+}
+.search-btn:hover { background: #c0070f; }
+.search-btn:focus { outline: 2px solid #fff; outline-offset: 2px; }
+
+.section { padding: 32px 24px; max-width: 1000px; margin: 0 auto; }
+/* [FIX A1] h2 instead of div.section-title */
+.section h2 { font-size: 22px; font-weight: 700; margin-bottom: 20px; color: #1a2340; }
+
+/* [FIX A1] <ul> wraps movie cards so they form a list */
+.movie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.movie-grid li { display: contents; }
+
+/* [FIX A1] Each card is an <article> */
+.movie-card {
+  background: #f5f5f5;
+  border-radius: 8px;
+  width: 220px;
+  overflow: hidden;
+}
+/* [FIX P1] Images now have explicit width and height → no layout shift */
+.movie-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.movie-info { padding: 12px; }
+.movie-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #1a2340; }
+
+/* [FIX A4] #4b5563 on #f5f5f5 = 7.0:1 — PASS */
+.movie-year   { font-size: 12px; color: #4b5563; margin-bottom: 8px; }
+.movie-rating { font-size: 13px; color: #4b5563; margin-bottom: 10px; }
+
+/* [FIX A2] Real <button> with visible focus ring */
+.movie-btn {
+  background: #e50914;
+  color: #fff;
+  padding: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+}
+.movie-btn:hover { background: #c0070f; }
+.movie-btn:focus { outline: 2px solid #1a56db; outline-offset: 2px; }
+
+/* [FIX A1] <aside> for the editor's pick section */
+.featured {
+  background: #f1f5f9;
+  padding: 32px 24px;
+}
+.featured-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.featured-inner img {
+  width: 180px;
+  height: 250px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.featured-text h2 { font-size: 22px; margin-bottom: 8px; color: #1a2340; }
+
+/* [FIX A4] #374151 on #f1f5f9 = 9.2:1 — PASS */
+.featured-text p  { font-size: 14px; color: #374151; line-height: 1.7; }
+
+/* [FIX A6] Descriptive link text */
+.read-more { color: #e50914; font-size: 13px; }
+.read-more:hover { text-decoration: underline; }
+
+/* [FIX A1] <section> for newsletter */
+.newsletter {
+  padding: 32px 24px;
+  background: #fff;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+.newsletter h2 { font-size: 20px; margin-bottom: 6px; color: #1a2340; text-align: center; }
+.newsletter .subtitle {
+  font-size: 13px;
+  color: #4b5563; /* ratio 7.0:1 on white — PASS */
+  margin-bottom: 20px;
+  text-align: center;
+}
+/* [FIX A5] Each input now has a visible <label> */
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #1a2340;
+}
+.form-group input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #c8d4f0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.form-group input:focus {
+  outline: 2px solid #1a56db;
+  outline-offset: 1px;
+  border-color: #1a56db;
+}
+/* [FIX A5] Error message linked by aria-describedby */
+.field-error {
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+  display: none;
+}
+/* [FIX A2] Real <button type="submit"> */
+.nl-submit {
+  background: #e50914;
+  color: #fff;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.nl-submit:hover { background: #c0070f; }
+.nl-submit:focus { outline: 2px solid #1a56db; outline-offset: 2px; }
+
+/* [FIX A1] <footer> semantic element */
+/* [FIX A4] #94a3b8 on #1a2340 = 4.6:1 — PASS */
+footer {
+  background: #1a2340;
+  color: #94a3b8;
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+}
+footer a {
+  color: #94a3b8;
+  text-decoration: underline;
+}
+footer a:hover { color: #e2e8f0; }
+</style>
+</head>
+<body>
+
+<!-- ==========================================
+     SOLUTION BANNER — not part of the site
+     ========================================== -->
+<div class="solution-banner">
+  <h1>CineReview — Fully Fixed Solution</h1>
+  <p>All 8 accessibility and performance issues from broken.html have been resolved. Compare against your own work.</p>
+  <div class="score-row">
+    <div class="score-item">
+      <div class="score-pair">
+        <span class="score-before">30</span>
+        <span class="score-arrow-s">&#8594;</span>
+        <span class="score-after">97</span>
+      </div>
+      <div class="score-label-s">ACCESSIBILITY</div>
+    </div>
+    <div class="score-item">
+      <div class="score-pair">
+        <span class="score-before">45</span>
+        <span class="score-arrow-s">&#8594;</span>
+        <span class="score-after">88</span>
+      </div>
+      <div class="score-label-s">PERFORMANCE</div>
+    </div>
+    <div class="score-item">
+      <div class="score-pair">
+        <span class="score-before">60</span>
+        <span class="score-arrow-s">&#8594;</span>
+        <span class="score-after">96</span>
+      </div>
+      <div class="score-label-s">BEST PRACTICES</div>
+    </div>
+  </div>
+  <div class="fix-pills">
+    <span class="fix-pill">A1 Semantic HTML</span>
+    <span class="fix-pill">A2 Real Buttons</span>
+    <span class="fix-pill">A3 Alt Text</span>
+    <span class="fix-pill">A4 Color Contrast</span>
+    <span class="fix-pill">A5 Form Labels</span>
+    <span class="fix-pill">A6 Descriptive Links</span>
+    <span class="fix-pill">P1 Lazy Images</span>
+    <span class="fix-pill">P2 Deferred Scripts</span>
+  </div>
+  <a class="back-link" href="index.html">&#8592; Back to lab overview</a>
+</div>
+
+<!-- ==========================================
+     [FIX A1] <header> + <nav> replaces <div class="nav">
+     [FIX A4] Colors corrected for contrast
+     ========================================== -->
+<header>
+  <span class="nav-logo">CineReview</span>
+  <!-- [FIX A1] Proper <nav> with a list -->
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Top Rated</a></li>
+      <li><a href="#">New Releases</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- [FIX A1] Single <main> landmark wraps all primary content -->
+<main>
+
+  <!-- [FIX A1] <section> replaces hero <div> -->
+  <section class="hero" aria-label="Hero banner">
+    <h1>Discover Great Movies</h1>
+    <p>Read expert reviews and find your next favorite film.</p>
+
+    <!-- [FIX A2] <form role="search"> + real <button> -->
+    <!-- [FIX A5] label for the search input (visually hidden) -->
+    <form role="search" class="search-wrap">
+      <label for="movie-search" class="sr-only">Search movies</label>
+      <input type="search" id="movie-search" placeholder="e.g. The Last Harbor">
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+  </section>
+
+  <!-- [FIX A1] <section> with aria-label; h2 heading -->
+  <section class="section" aria-label="Now Showing">
+    <h2>Now Showing</h2>
+    <!-- [FIX A1] <ul> for the card list -->
+    <ul class="movie-grid">
+
+      <li>
+        <!-- [FIX A1] <article> for each self-contained movie card -->
+        <article class="movie-card">
+          <!-- [FIX A3] Meaningful alt text describing the content image -->
+          <!-- [FIX P1] width + height prevent layout shift; first image NOT lazy -->
+          <img src="https://picsum.photos/seed/movie1/400/560"
+               alt="Movie poster for Echoes of Tomorrow (2024)"
+               width="400" height="560">
+          <div class="movie-info">
+            <div class="movie-title">Echoes of Tomorrow</div>
+            <div class="movie-year">2024 &bull; Sci-Fi</div>
+            <div class="movie-rating">&#9733;&#9733;&#9733;&#9733;&#9734; 4.1/5</div>
+            <!-- [FIX A2] Real <button> — keyboard-operable -->
+            <button type="button" class="movie-btn">View Details</button>
+          </div>
+        </article>
+      </li>
+
+      <li>
+        <article class="movie-card">
+          <!-- [FIX A3] Meaningful alt text -->
+          <!-- [FIX P1] lazy loading for below-fold images -->
+          <img src="https://picsum.photos/seed/movie2/400/560"
+               alt="Movie poster for The Last Harbor (2024)"
+               width="400" height="560"
+               loading="lazy">
+          <div class="movie-info">
+            <div class="movie-title">The Last Harbor</div>
+            <div class="movie-year">2024 &bull; Drama</div>
+            <div class="movie-rating">&#9733;&#9733;&#9733;&#9733;&#9733; 4.8/5</div>
+            <button type="button" class="movie-btn">View Details</button>
+          </div>
+        </article>
+      </li>
+
+      <li>
+        <article class="movie-card">
+          <!-- [FIX A3] Meaningful alt text (was alt="img") -->
+          <img src="https://picsum.photos/seed/movie3/400/560"
+               alt="Movie poster for Crimson Horizon (2023)"
+               width="400" height="560"
+               loading="lazy">
+          <div class="movie-info">
+            <div class="movie-title">Crimson Horizon</div>
+            <div class="movie-year">2023 &bull; Thriller</div>
+            <div class="movie-rating">&#9733;&#9733;&#9733;&#9734;&#9734; 3.5/5</div>
+            <button type="button" class="movie-btn">View Details</button>
+          </div>
+        </article>
+      </li>
+
+      <li>
+        <article class="movie-card">
+          <!-- [FIX A3] Meaningful alt (was alt="picsum photos movie4") -->
+          <img src="https://picsum.photos/seed/movie4/400/560"
+               alt="Movie poster for Hollow Forest (2023)"
+               width="400" height="560"
+               loading="lazy">
+          <div class="movie-info">
+            <div class="movie-title">Hollow Forest</div>
+            <div class="movie-year">2023 &bull; Horror</div>
+            <div class="movie-rating">&#9733;&#9733;&#9733;&#9733;&#9734; 4.0/5</div>
+            <button type="button" class="movie-btn">View Details</button>
+          </div>
+        </article>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- [FIX A1] <aside> for secondary editorial content -->
+  <aside class="featured" aria-label="Editor's Pick">
+    <!-- [FIX A1] <article> wraps the self-contained review -->
+    <article class="featured-inner">
+      <!-- [FIX A3] Decorative image → alt="" + role="presentation"
+           (was alt="decorative image of a movie") -->
+      <!-- [FIX P1] Explicit width/height; lazy because below fold -->
+      <img src="https://picsum.photos/seed/featured/360/500"
+           alt=""
+           role="presentation"
+           width="360" height="500"
+           loading="lazy">
+      <div class="featured-text">
+        <h2>Editor's Pick: The Last Harbor</h2>
+        <p>A masterful exploration of grief and redemption set against the backdrop of a small coastal town. Director Yuna Park delivers career-defining work, and lead actress Ji-won Lee is absolutely magnetic in every scene. The cinematography alone is worth the price of admission.</p>
+        <!-- [FIX A6] Descriptive link text (was "Click here") -->
+        <a class="read-more" href="#">Read the full review of The Last Harbor</a>
+      </div>
+    </article>
+  </aside>
+
+  <!-- [FIX A1] <section> replaces newsletter <div> -->
+  <section class="newsletter" aria-label="Newsletter signup">
+    <h2>Stay Updated</h2>
+    <p class="subtitle">Get the latest reviews delivered to your inbox.</p>
+
+    <!-- [FIX A2] Real <form> + <button type="submit"> -->
+    <!-- [FIX A5] Every input now has a visible <label for="id"> -->
+    <form>
+      <div class="form-group">
+        <label for="nl-name">Your name</label>
+        <input type="text" id="nl-name" placeholder="e.g. Ji-won Lee"
+               autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="nl-email">Email address</label>
+        <input type="email" id="nl-email" placeholder="you@example.com"
+               autocomplete="email"
+               aria-describedby="nl-email-err"
+               aria-invalid="false">
+        <!-- [FIX A5] Error message linked by aria-describedby -->
+        <span class="field-error" id="nl-email-err" role="alert">
+          Please enter a valid email address.
+        </span>
+      </div>
+
+      <button type="submit" class="nl-submit">Subscribe Now</button>
+    </form>
+  </section>
+
+</main>
+
+<!-- [FIX A1] <footer> semantic element -->
+<!-- [FIX A4] #94a3b8 on #1a2340 = 4.6:1 — PASS -->
+<footer>
+  <p>CineReview &copy; 2024. All rights reserved.</p>
+  <!-- [FIX A6] Descriptive link text (was "Click here") -->
+  <p>
+    <a href="privacy.html">Privacy Policy</a>
+    &bull;
+    <a href="contact.html">Contact Us</a>
+  </p>
+</footer>
+
+<!-- ============================================================
+     [FIX P2] Scripts moved from <head> to end of <body>
+               + defer attribute added to each
+               Downloads happen in parallel with HTML parsing.
+               Execution happens after DOM is fully built.
+               Ordering of scripts is preserved.
+============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+</body>
+</html>

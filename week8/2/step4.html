@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 4 — Color Contrast · Week 7 Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;
+  --border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;
+  --purple:#6366f1;--purplel:#eef2ff;--yellow:#f59e0b;--yellowl:#fef9c3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);padding:28px 24px 22px;text-align:center}
+.step-badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:10px}
+.header h1{color:#fff;font-size:24px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:13px;max-width:560px;margin:0 auto}
+.progress{display:flex;gap:4px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.p-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);color:#94a3b8;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .15s}
+.p-dot.active{background:var(--accent);color:#fff}
+.p-dot:hover:not(.active){background:rgba(255,255,255,.2);color:#fff}
+.wrap{max-width:980px;margin:28px auto;padding:0 20px 60px}
+.intro-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:24px}
+@media(max-width:640px){.intro-row{grid-template-columns:1fr}}
+.intro-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.intro-card h2{font-size:15px;font-weight:700;margin-bottom:8px}
+.intro-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.score-card{background:var(--dark);border-radius:12px;padding:18px 22px;min-width:200px;text-align:center}
+.score-label{font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.06em;margin-bottom:10px}
+.score-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.score-num{font-size:22px;font-weight:800}
+.score-num.bad{color:#f87171}
+.score-num.good{color:#4ade80}
+.score-arrow{color:#94a3b8;font-size:18px}
+.score-note{font-size:11px;color:#94a3b8}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+.code-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.code-compare{grid-template-columns:1fr}}
+.code-block{border-radius:10px;overflow:hidden;font-size:12.5px}
+.code-header{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em}
+.code-header.before{background:#7f1d1d;color:#fca5a5}
+.code-header.after{background:#14532d;color:#86efac}
+.code-body{background:#0d1117;color:#e6edf3;padding:16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;line-height:1.65;tab-size:2}
+.code-body .hl-bad{color:#f87171}
+.code-body .hl-good{color:#4ade80}
+.code-body .hl-tag{color:#79c0ff}
+.code-body .hl-attr{color:#ffa657}
+.code-body .hl-val{color:#a5d6ff}
+.code-body .hl-cmt{color:#8b949e;font-style:italic}
+.explain{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.8}
+.explain h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+.explain code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.explain ul{padding-left:20px;margin-top:6px}
+.explain ul li{margin-bottom:6px}
+.tip-box{background:var(--yellowl);border:1px solid #fde68a;border-radius:10px;padding:14px 18px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:24px}
+.tip-box strong{color:#451a03}
+
+/* Contrast demo swatches */
+.contrast-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+.swatch{border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.swatch-demo{padding:18px 16px}
+.swatch-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;opacity:.6}
+.swatch-text{font-size:15px;font-weight:500;line-height:1.4}
+.swatch-meta{padding:10px 16px;background:var(--dark);display:flex;justify-content:space-between;align-items:center}
+.swatch-ratio{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.swatch-ratio.fail{color:#f87171}
+.swatch-ratio.pass{color:#4ade80}
+.swatch-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.swatch-badge.fail{background:#7f1d1d;color:#fca5a5}
+.swatch-badge.pass{background:#14532d;color:#86efac}
+.swatch-note{font-size:10px;color:#94a3b8;margin-top:2px}
+
+.checklist-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.checklist-card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.checklist-card h3::before{content:'✔';font-size:12px;color:var(--green)}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.5}
+.check-item input[type=checkbox]{width:16px;height:16px;margin-top:1px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.check-item label{cursor:pointer;color:var(--text)}
+.check-item code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.nav-bar{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:background .15s,transform .12s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover{transform:translateY(-1px)}
+.nav-btn.prev{background:var(--surf);border:1px solid var(--border);color:var(--text)}
+.nav-btn.prev:hover{background:#e8edf8}
+.nav-btn.next{background:var(--accent);color:#fff}
+.nav-btn.next:hover{background:#1447b3}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="step-badge">STEP 4 OF 7 &middot; ACCESSIBILITY &middot; MONDAY</div>
+  <h1>Color Contrast — Make Text Readable</h1>
+  <p>Five text/background color pairs in the broken page fail WCAG AA. Use Chrome DevTools to find them and fix each one to at least a <strong style="color:#fff">4.5:1</strong> ratio.</p>
+  <div class="progress">
+    <a class="p-dot" href="step1.html" title="Step 1">1</a>
+    <a class="p-dot" href="step2.html" title="Step 2">2</a>
+    <a class="p-dot" href="step3.html" title="Step 3">3</a>
+    <a class="p-dot active" href="step4.html" title="Step 4">4</a>
+    <a class="p-dot" href="step5.html" title="Step 5">5</a>
+    <a class="p-dot" href="step6.html" title="Step 6">6</a>
+    <a class="p-dot" href="step7.html" title="Step 7">7</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro-row">
+    <div class="intro-card">
+      <h2>What you are fixing</h2>
+      <p>Low contrast affects everyone in bright sunlight, on low-quality screens, and significantly hurts users with low vision. The broken page has five failing color pairs — the worst is <code>#aaaaaa</code> text on <code>#eeeeee</code> background (ratio 1.6:1, versus the required 4.5:1). This step teaches you to find these failures with DevTools and replace them with accessible colors.</p>
+    </div>
+    <div class="score-card">
+      <div class="score-label">ACCESSIBILITY SCORE</div>
+      <div class="score-row">
+        <span class="score-num bad">72</span>
+        <span class="score-arrow">&#8594;</span>
+        <span class="score-num good">85</span>
+      </div>
+      <div class="score-note">Estimated after this step</div>
+    </div>
+  </div>
+
+  <div class="section-title">Five contrast failures — see them side by side</div>
+  <div class="contrast-grid">
+
+    <div class="swatch">
+      <div class="swatch-demo" style="background:#666">
+        <div class="swatch-label" style="color:#ccc">Nav links</div>
+        <div class="swatch-text" style="color:#ccc">Home &middot; Top Rated &middot; New Releases</div>
+      </div>
+      <div class="swatch-meta">
+        <div>
+          <div class="swatch-ratio fail">#ccc on #666 &mdash; 3.1:1</div>
+          <div class="swatch-note">WCAG AA requires 4.5:1 for normal text</div>
+        </div>
+        <span class="swatch-badge fail">FAIL</span>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-demo" style="background:#333">
+        <div class="swatch-label" style="color:#777">Hero section</div>
+        <div class="swatch-text" style="color:#aaa">Read expert reviews and find your next favorite film.</div>
+      </div>
+      <div class="swatch-meta">
+        <div>
+          <div class="swatch-ratio fail">#aaa on #333 &mdash; 2.6:1</div>
+          <div class="swatch-note">Fails AA for normal text</div>
+        </div>
+        <span class="swatch-badge fail">FAIL</span>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-demo" style="background:#fff">
+        <div class="swatch-label" style="color:#bbb">Movie year &amp; rating</div>
+        <div class="swatch-text" style="color:#999">2024 &bull; Sci-Fi &nbsp;&nbsp; &#9733;&#9733;&#9733;&#9733;&#9734; 4.1/5</div>
+      </div>
+      <div class="swatch-meta">
+        <div>
+          <div class="swatch-ratio fail">#999 on #fff &mdash; 2.8:1</div>
+          <div class="swatch-note">Fails AA for normal text (12–13 px)</div>
+        </div>
+        <span class="swatch-badge fail">FAIL</span>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-demo" style="background:#eee">
+        <div class="swatch-label" style="color:#bbb">Featured description</div>
+        <div class="swatch-text" style="color:#aaa">A masterful exploration of grief and redemption set against the backdrop of a small coastal town...</div>
+      </div>
+      <div class="swatch-meta">
+        <div>
+          <div class="swatch-ratio fail">#aaa on #eee &mdash; 1.6:1</div>
+          <div class="swatch-note">Worst failure — nearly invisible</div>
+        </div>
+        <span class="swatch-badge fail">FAIL</span>
+      </div>
+    </div>
+
+    <div class="swatch">
+      <div class="swatch-demo" style="background:#222">
+        <div class="swatch-label" style="color:#555">Footer text</div>
+        <div class="swatch-text" style="color:#666">CineReview &copy; 2024. All rights reserved.</div>
+      </div>
+      <div class="swatch-meta">
+        <div>
+          <div class="swatch-ratio fail">#666 on #222 &mdash; 2.2:1</div>
+          <div class="swatch-note">Fails AA for normal text</div>
+        </div>
+        <span class="swatch-badge fail">FAIL</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Before &amp; After — CSS fixes</div>
+  <div class="code-compare">
+    <div class="code-block">
+      <div class="code-header before">&#10007; BEFORE — failing colors</div>
+      <pre class="code-body"><span class="hl-cmt">/* [A4] Five contrast failures */</span>
+
+<span class="hl-attr">.nav</span> {
+  background: #666;
+}
+<span class="hl-attr">.nav a</span> {
+  color: <span class="hl-bad">#ccc</span>; <span class="hl-cmt">/* 3.1:1 — FAIL */</span>
+}
+
+<span class="hl-attr">.hero</span> {
+  background: #333;
+  color: <span class="hl-bad">#aaa</span>; <span class="hl-cmt">/* 2.6:1 — FAIL */</span>
+}
+
+<span class="hl-attr">.movie-year,
+.movie-rating</span> {
+  color: <span class="hl-bad">#999</span>; <span class="hl-cmt">/* 2.8:1 — FAIL */</span>
+}
+
+<span class="hl-attr">.featured</span> {
+  background: #eee;
+}
+<span class="hl-attr">.featured-text p</span> {
+  color: <span class="hl-bad">#aaaaaa</span>; <span class="hl-cmt">/* 1.6:1 — FAIL */</span>
+}
+
+<span class="hl-attr">.footer</span> {
+  background: #222;
+  color: <span class="hl-bad">#666</span>; <span class="hl-cmt">/* 2.2:1 — FAIL */</span>
+}</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-header after">&#10003; AFTER — WCAG AA compliant</div>
+      <pre class="code-body"><span class="hl-cmt">/* [FIX A4] All ratios now &gt;=4.5:1 */</span>
+
+<span class="hl-attr">.nav</span> {
+  background: #1a2340; <span class="hl-cmt">/* darker bg */</span>
+}
+<span class="hl-attr">.nav a</span> {
+  color: <span class="hl-good">#e2e8f0</span>; <span class="hl-cmt">/* 8.1:1 — PASS */</span>
+}
+
+<span class="hl-attr">.hero</span> {
+  background: #1a2340;
+  color: <span class="hl-good">#e2e8f0</span>; <span class="hl-cmt">/* 8.1:1 — PASS */</span>
+}
+
+<span class="hl-attr">.movie-year,
+.movie-rating</span> {
+  color: <span class="hl-good">#4b5563</span>; <span class="hl-cmt">/* 7.0:1 — PASS */</span>
+}
+
+<span class="hl-attr">.featured</span> {
+  background: #f1f5f9;
+}
+<span class="hl-attr">.featured-text p</span> {
+  color: <span class="hl-good">#374151</span>; <span class="hl-cmt">/* 9.2:1 — PASS */</span>
+}
+
+<span class="hl-attr">.footer</span> {
+  background: #1a2340;
+  color: <span class="hl-good">#94a3b8</span>; <span class="hl-cmt">/* 4.6:1 — PASS */</span>
+}</pre>
+    </div>
+  </div>
+
+  <div class="section-title">How to check contrast in Chrome DevTools</div>
+  <div class="explain">
+    <h3>The DevTools color picker shows you the ratio</h3>
+    <p>You do not need an external tool. Chrome DevTools has a built-in contrast checker:</p>
+    <ul>
+      <li>Open DevTools (F12) and click the <strong>Elements</strong> panel</li>
+      <li>Click on a text element in the page — e.g., a movie year label</li>
+      <li>In the <strong>Styles</strong> panel on the right, find the <code>color:</code> property</li>
+      <li>Click the small <strong>color swatch</strong> next to the hex value</li>
+      <li>The color picker opens. Scroll to the bottom — it shows <strong>Contrast ratio: X.XX</strong> with a ✔ (AA) or ✘ indicator</li>
+      <li>Drag the color sliders or type a new hex value; the ratio updates live</li>
+    </ul>
+    <h3 style="margin-top:16px">WCAG AA minimum ratios</h3>
+    <ul>
+      <li><strong>Normal text</strong> (under 18pt / 14pt bold) — requires <strong>4.5:1</strong></li>
+      <li><strong>Large text</strong> (18pt+ / 14pt+ bold) — requires <strong>3:1</strong></li>
+      <li><strong>UI components and focus indicators</strong> — requires <strong>3:1</strong></li>
+    </ul>
+  </div>
+
+  <div class="tip-box">
+    <strong>Quick tool tip:</strong> If you prefer an online checker, try <strong>webaim.org/resources/contrastchecker</strong>. Enter the foreground and background hex codes and it tells you the ratio and which WCAG levels pass. You can also install the "axe DevTools" browser extension for a one-click audit of the whole page.
+  </div>
+
+  <div class="section-title">Try it yourself</div>
+  <div class="checklist-card">
+    <h3>Step 4 Checklist</h3>
+    <div class="check-item">
+      <input type="checkbox" id="c4-1">
+      <label for="c4-1">Open your fixed page in Chrome. Open DevTools (F12) and click a nav link. In Styles, click the color swatch and confirm the ratio shows. Note down the current ratio (should be ~3.1:1).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-2">
+      <label for="c4-2">In your CSS, change <code>.nav a { color: #ccc }</code> to <code>color: #e2e8f0</code>. The nav background is dark (<code>#1a2340</code>), so this pair gives 8.1:1. Save and reload.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-3">
+      <label for="c4-3">Change the hero section text from <code>color: #aaa</code> to <code>color: #e2e8f0</code> (also on dark background). Confirm ratio passes 4.5:1.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-4">
+      <label for="c4-4">Change <code>.movie-year, .movie-rating { color: #999 }</code> to <code>color: #4b5563</code> (dark gray on white — 7.0:1).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-5">
+      <label for="c4-5">Fix the worst failure: change <code>.featured-text p { color: #aaaaaa }</code> to <code>color: #374151</code> on a light <code>#f1f5f9</code> background. Verify the ratio exceeds 4.5:1.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-6">
+      <label for="c4-6">Fix the footer: change <code>.footer { color: #666 }</code> to <code>color: #94a3b8</code> on the dark <code>#1a2340</code> background (4.6:1).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c4-7">
+      <label for="c4-7">Re-run Lighthouse. The "Text elements must have sufficient color contrast" audit should now show 0 failing items. Accessibility score should reach ~85.</label>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <a class="nav-btn prev" href="step3.html">&#8592; Step 3: Alt Text</a>
+    <a class="nav-btn next" href="step5.html">Step 5: Form Accessibility &#8594;</a>
+  </div>
+
+</div>
+</body>
+</html>

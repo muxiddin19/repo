@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 7 — JavaScript Loading · Week 7 Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --dark:#0f1b2d;--accent:#1a56db;--bg:#f0f4ff;--surf:#fff;
+  --border:#c8d4f0;--text:#1a2340;--muted:#5a6a8a;
+  --green:#16a34a;--greenl:#dcfce7;--red:#dc2626;--redl:#fee2e2;
+  --purple:#6366f1;--purplel:#eef2ff;--yellow:#f59e0b;--yellowl:#fef9c3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:var(--dark);padding:28px 24px 22px;text-align:center}
+.step-badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;padding:3px 12px;border-radius:4px;margin-bottom:10px}
+.header h1{color:#fff;font-size:24px;font-weight:800;margin-bottom:6px}
+.header p{color:#94a3b8;font-size:13px;max-width:560px;margin:0 auto}
+.progress{display:flex;gap:4px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.p-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);color:#94a3b8;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .15s}
+.p-dot.active{background:var(--green);color:#fff}
+.p-dot:hover:not(.active){background:rgba(255,255,255,.2);color:#fff}
+.wrap{max-width:980px;margin:28px auto;padding:0 20px 60px}
+.intro-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:24px}
+@media(max-width:640px){.intro-row{grid-template-columns:1fr}}
+.intro-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.intro-card h2{font-size:15px;font-weight:700;margin-bottom:8px}
+.intro-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.score-card{background:var(--dark);border-radius:12px;padding:18px 22px;min-width:200px;text-align:center}
+.score-label{font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.06em;margin-bottom:10px}
+.score-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.score-num{font-size:22px;font-weight:800}
+.score-num.bad{color:#f87171}
+.score-num.ok{color:#fbbf24}
+.score-num.good{color:#4ade80}
+.score-arrow{color:#94a3b8;font-size:18px}
+.score-note{font-size:11px;color:#94a3b8}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--green);border-radius:2px}
+.code-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:700px){.code-compare{grid-template-columns:1fr}}
+.code-block{border-radius:10px;overflow:hidden;font-size:12.5px}
+.code-header{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em}
+.code-header.before{background:#7f1d1d;color:#fca5a5}
+.code-header.after{background:#14532d;color:#86efac}
+.code-body{background:#0d1117;color:#e6edf3;padding:16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;line-height:1.65;tab-size:2}
+.code-body .hl-bad{color:#f87171}
+.code-body .hl-good{color:#4ade80}
+.code-body .hl-tag{color:#79c0ff}
+.code-body .hl-attr{color:#ffa657}
+.code-body .hl-val{color:#a5d6ff}
+.code-body .hl-cmt{color:#8b949e;font-style:italic}
+.explain{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.8}
+.explain h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+.explain code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.85em}
+.explain ul{padding-left:20px;margin-top:6px}
+.explain ul li{margin-bottom:6px}
+.tip-box{background:var(--yellowl);border:1px solid #fde68a;border-radius:10px;padding:14px 18px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:24px}
+.tip-box strong{color:#451a03}
+
+/* Parse diagram */
+.parse-diagram{background:var(--dark);border-radius:12px;padding:20px 24px;margin-bottom:28px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e6edf3;overflow-x:auto}
+.parse-diagram h3{font-family:Inter,sans-serif;color:#fff;font-size:13px;font-weight:700;margin-bottom:14px}
+.parse-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;white-space:nowrap}
+.parse-label{color:#94a3b8;width:90px;flex-shrink:0;font-size:11px}
+.bar{height:24px;border-radius:4px;display:inline-flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;white-space:nowrap}
+.bar.html{background:#1a56db;color:#fff}
+.bar.block{background:#dc2626;color:#fff}
+.bar.js{background:#f59e0b;color:#0f1b2d}
+.bar.render{background:#16a34a;color:#fff}
+.bar.gap{background:rgba(255,255,255,.05);color:#555;border:1px dashed #333}
+.parse-note{font-size:11px;color:#94a3b8;margin-top:12px;font-family:Inter,sans-serif;line-height:1.6}
+
+.comparison-table{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px}
+.ct-header{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;background:var(--dark);color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:.06em;padding:10px 16px;gap:12px}
+.ct-row{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:12px 16px;gap:12px;font-size:12.5px;border-bottom:1px solid var(--border);align-items:center}
+.ct-row:last-child{border-bottom:none}
+.ct-row:nth-child(odd){background:#f8faff}
+.ct-row code{background:#eef2ff;color:var(--accent);padding:1px 4px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.ct-row .bad{color:var(--red)}
+.ct-row .good{color:var(--green)}
+.ct-row .ok{color:#d97706}
+.checklist-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.checklist-card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.checklist-card h3::before{content:'✔';font-size:12px;color:var(--green)}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.5}
+.check-item input[type=checkbox]{width:16px;height:16px;margin-top:1px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.check-item label{cursor:pointer;color:var(--text)}
+.check-item code{background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.82em}
+.done-card{background:var(--greenl);border:1px solid #86efac;border-radius:12px;padding:20px 24px;margin-bottom:28px;text-align:center}
+.done-card h3{font-size:18px;font-weight:800;color:#14532d;margin-bottom:8px}
+.done-card p{font-size:13px;color:#166534;line-height:1.7}
+.nav-bar{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.nav-btn{padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:background .15s,transform .12s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover{transform:translateY(-1px)}
+.nav-btn.prev{background:var(--surf);border:1px solid var(--border);color:var(--text)}
+.nav-btn.prev:hover{background:#e8edf8}
+.nav-btn.next{background:var(--purple);color:#fff}
+.nav-btn.next:hover{background:#4f46e5}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="step-badge">STEP 7 OF 7 &middot; PERFORMANCE &middot; FRIDAY</div>
+  <h1>JavaScript Loading — Stop Blocking the Page</h1>
+  <p>Two <code style="background:rgba(255,255,255,.1);color:#f87171;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">&lt;script&gt;</code> tags in <code style="background:rgba(255,255,255,.1);color:#f87171;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">&lt;head&gt;</code> pause HTML parsing. Move them to end of body and add <code style="background:rgba(255,255,255,.1);color:#4ade80;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace">defer</code> for the biggest performance win of the lab.</p>
+  <div class="progress">
+    <a class="p-dot" href="step1.html" title="Step 1">1</a>
+    <a class="p-dot" href="step2.html" title="Step 2">2</a>
+    <a class="p-dot" href="step3.html" title="Step 3">3</a>
+    <a class="p-dot" href="step4.html" title="Step 4">4</a>
+    <a class="p-dot" href="step5.html" title="Step 5">5</a>
+    <a class="p-dot" href="step6.html" title="Step 6">6</a>
+    <a class="p-dot active" href="step7.html" title="Step 7">7</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro-row">
+    <div class="intro-card">
+      <h2>What you are fixing</h2>
+      <p>In <code>broken.html</code>, jQuery and Bootstrap JS are loaded in <code>&lt;head&gt;</code> with no <code>defer</code> or <code>async</code>. Every time the browser's HTML parser reaches a <code>&lt;script&gt;</code>, it stops, downloads the file, executes it, and only then continues building the page. On a slow connection, the user stares at a blank white screen while 150 KB of JS loads. Moving scripts to end-of-body and adding <code>defer</code> lets the HTML render first.</p>
+    </div>
+    <div class="score-card">
+      <div class="score-label">PERFORMANCE SCORE</div>
+      <div class="score-row">
+        <span class="score-num ok">65</span>
+        <span class="score-arrow">&#8594;</span>
+        <span class="score-num good">88</span>
+      </div>
+      <div class="score-note">Estimated after this step</div>
+    </div>
+  </div>
+
+  <div class="section-title">How script loading works — parsing timeline</div>
+  <div class="parse-diagram">
+    <h3>Without defer (broken) — HTML parser blocks twice</h3>
+    <div class="parse-row">
+      <span class="parse-label">HTML parse:</span>
+      <div class="bar html" style="width:80px">HTML...</div>
+      <div class="bar gap" style="width:24px">&nbsp;</div>
+      <div class="bar html" style="width:40px">...</div>
+      <div class="bar gap" style="width:24px">&nbsp;</div>
+      <div class="bar html" style="width:120px">...rest of page</div>
+    </div>
+    <div class="parse-row">
+      <span class="parse-label">Network:</span>
+      <div class="bar gap" style="width:80px">&nbsp;</div>
+      <div class="bar block" style="width:60px">jquery</div>
+      <div class="bar gap" style="width:4px">&nbsp;</div>
+      <div class="bar block" style="width:60px">bootstrap</div>
+    </div>
+    <div class="parse-row">
+      <span class="parse-label">Render:</span>
+      <div class="bar gap" style="width:220px">waiting...</div>
+      <div class="bar render" style="width:100px">first paint</div>
+    </div>
+    <div class="parse-note">User sees nothing until both scripts finish downloading and executing (can be 1–3 seconds on mobile).</div>
+
+    <h3 style="margin-top:20px">With defer (fixed) — HTML parses immediately</h3>
+    <div class="parse-row">
+      <span class="parse-label">HTML parse:</span>
+      <div class="bar html" style="width:320px">HTML parses without interruption...</div>
+    </div>
+    <div class="parse-row">
+      <span class="parse-label">Network:</span>
+      <div class="bar js" style="width:60px">jquery</div>
+      <div class="bar gap" style="width:4px">&nbsp;</div>
+      <div class="bar js" style="width:60px">bootstrap</div>
+      <div class="bar cmt" style="color:#8b949e;font-style:italic;font-size:11px">&larr; downloads in parallel, silently</div>
+    </div>
+    <div class="parse-row">
+      <span class="parse-label">Render:</span>
+      <div class="bar render" style="width:160px">first paint (much earlier)</div>
+      <div class="bar js" style="width:80px">scripts run</div>
+    </div>
+    <div class="parse-note">User sees the page immediately. Scripts run after the DOM is fully built — which is exactly when they need it anyway.</div>
+  </div>
+
+  <div class="section-title">defer vs. async vs. neither — comparison</div>
+  <div class="comparison-table">
+    <div class="ct-header">
+      <span>Loading strategy</span><span>Downloads</span><span>When it executes</span><span>Order guaranteed?</span>
+    </div>
+    <div class="ct-row">
+      <span><code>&lt;script src&gt;</code> in head</span>
+      <span class="bad">Blocks HTML parse</span>
+      <span>Immediately (blocks)</span>
+      <span class="good">Yes</span>
+    </div>
+    <div class="ct-row">
+      <span><code>&lt;script src&gt;</code> end of body</span>
+      <span class="ok">After HTML parsed</span>
+      <span>After HTML ready</span>
+      <span class="good">Yes</span>
+    </div>
+    <div class="ct-row">
+      <span><code>&lt;script async&gt;</code></span>
+      <span class="good">In parallel</span>
+      <span class="bad">As soon as downloaded (may interrupt render)</span>
+      <span class="bad">No</span>
+    </div>
+    <div class="ct-row">
+      <span><code>&lt;script defer&gt;</code></span>
+      <span class="good">In parallel</span>
+      <span class="good">After HTML fully parsed</span>
+      <span class="good">Yes</span>
+    </div>
+    <div class="ct-row">
+      <span><code>&lt;script type="module"&gt;</code></span>
+      <span class="good">In parallel</span>
+      <span class="good">After HTML parsed (defer by default)</span>
+      <span class="good">Yes</span>
+    </div>
+  </div>
+
+  <div class="section-title">Before &amp; After — Code</div>
+  <div class="code-compare">
+    <div class="code-block">
+      <div class="code-header before">&#10007; BEFORE — render-blocking in &lt;head&gt;</div>
+      <pre class="code-body"><span class="hl-tag">&lt;head&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">charset</span>=<span class="hl-val">"utf-8"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;title&gt;</span>CineReview<span class="hl-tag">&lt;/title&gt;</span>
+
+  <span class="hl-cmt">&lt;!-- [P2] Render-blocking scripts
+       No defer, no async.
+       HTML parser stops here. --&gt;</span>
+  <span class="hl-bad">&lt;script</span>
+    <span class="hl-attr">src</span>=<span class="hl-val">"https://cdn.jsdelivr.net/npm/
+jquery@3.7.1/dist/jquery.min.js"</span>
+  <span class="hl-bad">&gt;&lt;/script&gt;</span>
+
+  <span class="hl-bad">&lt;script</span>
+    <span class="hl-attr">src</span>=<span class="hl-val">"https://cdn.jsdelivr.net/npm/
+bootstrap@5.3.3/dist/js/
+bootstrap.bundle.min.js"</span>
+  <span class="hl-bad">&gt;&lt;/script&gt;</span>
+
+  <span class="hl-tag">&lt;style&gt;</span>...styles...<span class="hl-tag">&lt;/style&gt;</span>
+<span class="hl-tag">&lt;/head&gt;</span>
+<span class="hl-tag">&lt;body&gt;</span>
+  ...page content...
+<span class="hl-tag">&lt;/body&gt;</span></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-header after">&#10003; AFTER — defer at end of body</div>
+      <pre class="code-body"><span class="hl-tag">&lt;head&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">charset</span>=<span class="hl-val">"utf-8"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;title&gt;</span>CineReview<span class="hl-tag">&lt;/title&gt;</span>
+  <span class="hl-cmt">&lt;!-- [FIX P2] Stylesheets stay in
+       &lt;head&gt; — they don't block parse --&gt;</span>
+  <span class="hl-tag">&lt;style&gt;</span>...styles...<span class="hl-tag">&lt;/style&gt;</span>
+<span class="hl-tag">&lt;/head&gt;</span>
+<span class="hl-tag">&lt;body&gt;</span>
+  ...page content...
+
+  <span class="hl-cmt">&lt;!-- Scripts at end of body + defer:
+       Download in parallel with HTML.
+       Execute after DOM is built.
+       Order of scripts preserved. --&gt;</span>
+  <span class="hl-good">&lt;script</span>
+    <span class="hl-attr">src</span>=<span class="hl-val">"https://cdn.jsdelivr.net/npm/
+jquery@3.7.1/dist/jquery.min.js"</span>
+    <span class="hl-good">defer</span>
+  <span class="hl-good">&gt;&lt;/script&gt;</span>
+
+  <span class="hl-good">&lt;script</span>
+    <span class="hl-attr">src</span>=<span class="hl-val">"https://cdn.jsdelivr.net/npm/
+bootstrap@5.3.3/dist/js/
+bootstrap.bundle.min.js"</span>
+    <span class="hl-good">defer</span>
+  <span class="hl-good">&gt;&lt;/script&gt;</span>
+<span class="hl-tag">&lt;/body&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="section-title">Try it yourself</div>
+  <div class="checklist-card">
+    <h3>Step 7 Checklist</h3>
+    <div class="check-item">
+      <input type="checkbox" id="c7-1">
+      <label for="c7-1">In your HTML, cut both <code>&lt;script&gt;</code> tags from inside <code>&lt;head&gt;</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c7-2">
+      <label for="c7-2">Paste them just before <code>&lt;/body&gt;</code> (the closing body tag at the very end of the file).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c7-3">
+      <label for="c7-3">Add the <code>defer</code> attribute to each script tag: <code>&lt;script src="..." defer&gt;&lt;/script&gt;</code>.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c7-4">
+      <label for="c7-4">Reload the page and confirm it still works (the page should look the same — defer doesn't break anything).</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c7-5">
+      <label for="c7-5">Open DevTools &rarr; <strong>Performance</strong> tab &rarr; click the record button, reload, then stop. Look at the timeline. The long red "Blocking" bar that was at the start should now be gone.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="c7-6">
+      <label for="c7-6">Re-run Lighthouse. The "Eliminate render-blocking resources" audit should now pass. Performance score should reach ~88.</label>
+    </div>
+  </div>
+
+  <div class="done-card">
+    <h3>You have completed all 7 steps!</h3>
+    <p>Your CineReview page now scores ~97 on Accessibility and ~88 on Performance — up from 30 and 45. These same techniques apply to every website you build. Check your work against the complete solution below.</p>
+  </div>
+
+  <div class="nav-bar">
+    <a class="nav-btn prev" href="step6.html">&#8592; Step 6: Image Performance</a>
+    <a class="nav-btn next" href="solution.html">View Full Solution &#8594;</a>
+  </div>
+
+</div>
+</body>
+</html>
