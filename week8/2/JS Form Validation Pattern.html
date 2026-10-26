@@ -1,0 +1,536 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS Form Validation Pattern</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --card:     #1c2128;
+    --border:   #30363d;
+    --text:     #e6edf3;
+    --muted:    #8b949e;
+    --yellow:   #f7df1e;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --blue:     #58a6ff;
+    --purple:   #bc8cff;
+    --step1:    #1e3a5f;
+    --step2:    #1a4040;
+    --step3:    #2d1b4e;
+    --step4:    #1a3a2a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 16px 64px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 48px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .page-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── 4-Step Pattern Cards ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto 48px;
+  }
+  .step-card {
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+  }
+  .step-card:nth-child(1) { background: var(--step1); }
+  .step-card:nth-child(2) { background: var(--step2); }
+  .step-card:nth-child(3) { background: var(--step3); }
+  .step-card:nth-child(4) { background: var(--step4); }
+  .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    opacity: .6;
+    margin-bottom: 6px;
+  }
+  .step-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--yellow);
+    margin-bottom: 4px;
+  }
+  .step-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── Main Layout ── */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    .main { grid-template-columns: 1fr; }
+  }
+
+  /* ── Form Panel ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-header .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .panel-body { padding: 20px; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 5px;
+    margin-top: 16px;
+    letter-spacing: .02em;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input, select {
+    width: 100%;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    padding: 10px 13px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  input:focus, select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(88,166,255,.15);
+  }
+  input[aria-invalid="true"] {
+    border-color: var(--red);
+    background: rgba(239,68,68,.08);
+  }
+  input[aria-invalid="false"]:not([value=""]) {
+    border-color: var(--green);
+    background: rgba(34,197,94,.08);
+  }
+  /* JS-driven green */
+  input.valid {
+    border-color: var(--green);
+    background: rgba(34,197,94,.08);
+  }
+
+  .err {
+    display: block;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 5px;
+    min-height: 16px;
+    line-height: 1.4;
+  }
+
+  button[type="submit"] {
+    margin-top: 20px;
+    width: 100%;
+    background: var(--yellow);
+    color: #000;
+    border: none;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+    font-family: 'Inter', sans-serif;
+  }
+  button[type="submit"]:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    transform: none;
+  }
+  button[type="submit"]:not(:disabled):hover { opacity: .88; }
+  button[type="submit"]:not(:disabled):active { transform: scale(.98); }
+
+  #success {
+    display: none;
+    background: rgba(34,197,94,.1);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 16px;
+  }
+  #success .icon { font-size: 2rem; margin-bottom: 6px; }
+  #success h3 { color: var(--green); font-size: 1rem; margin-bottom: 4px; }
+  #success p { font-size: 13px; color: var(--muted); }
+
+  /* ── Code Panel ── */
+  pre {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  pre:last-child { margin-bottom: 0; }
+  .cm  { color: var(--muted); }
+  .kw  { color: #ff7b72; }
+  .fn  { color: var(--blue); }
+  .str { color: #a5d6ff; }
+  .nm  { color: #ffa657; }
+  .lit { color: var(--purple); }
+  .hl  { color: var(--yellow); }
+
+  /* step indicators inside code blocks */
+  .step-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 1px 7px;
+    margin-bottom: 8px;
+    letter-spacing: .06em;
+  }
+  .s1 { background: var(--step1); color: #7ab3f5; }
+  .s2 { background: var(--step2); color: #6cd9c5; }
+  .s3 { background: var(--step3); color: #c49fff; }
+  .s4 { background: var(--step4); color: #6ee7a4; }
+
+  /* live region */
+  #live { position: absolute; left: -9999px; }
+
+  /* summary box */
+  .summary {
+    max-width: 900px;
+    margin: 32px auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+  .summary h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 600px) { .summary-grid { grid-template-columns: repeat(2,1fr); } }
+  .summary-item {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+  }
+  .summary-item .fn-name {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--yellow);
+    font-size: 11.5px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .summary-item p { color: var(--muted); line-height: 1.4; }
+</style>
+</head>
+<body>
+
+<div aria-live="polite" id="live"></div>
+
+<header class="page-header">
+  <div class="badge">Week 6 · Fri · JS Validation</div>
+  <h1>The 4-Step Validation Pattern</h1>
+  <p>Every field follows the same structure: shared helpers → per-field validator → real-time listener → submit gate.</p>
+</header>
+
+<!-- 4-step overview -->
+<div class="steps">
+  <div class="step-card">
+    <div class="step-num">Step 1</div>
+    <div class="step-title">markValid / markInvalid</div>
+    <div class="step-desc">Reusable helpers that update <code>aria-invalid</code> and the error span.</div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">Step 2</div>
+    <div class="step-title">validateX()</div>
+    <div class="step-desc">One function per field — calls the helpers and returns true/false.</div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">Step 3</div>
+    <div class="step-title">input listener</div>
+    <div class="step-desc">Runs validateX() on every keystroke for real-time feedback.</div>
+  </div>
+  <div class="step-card">
+    <div class="step-num">Step 4</div>
+    <div class="step-title">submit listener</div>
+    <div class="step-desc">Final gate: calls all validators, blocks submit if any fail.</div>
+  </div>
+</div>
+
+<!-- Main: form + code side by side -->
+<div class="main">
+
+  <!-- Left: live form -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="dot" style="background:#22c55e"></span>
+      Live Demo — try typing below
+    </div>
+    <div class="panel-body">
+      <form id="regForm" action="#" method="post" novalidate>
+
+        <label for="v-sid">Student ID</label>
+        <input type="text" id="v-sid" name="sid" required
+               pattern="\d{9}" placeholder="9-digit number"
+               aria-describedby="err-sid" aria-invalid="false">
+        <span class="err" id="err-sid" role="alert"></span>
+
+        <label for="v-email">Email</label>
+        <input type="email" id="v-email" name="email" required
+               placeholder="name@gachon.ac.kr"
+               aria-describedby="err-email" aria-invalid="false">
+        <span class="err" id="err-email" role="alert"></span>
+
+        <label for="v-pw">Password <span style="color:var(--muted);font-weight:400">(min 8 chars)</span></label>
+        <input type="password" id="v-pw" name="pw" required minlength="8"
+               placeholder="At least 8 characters"
+               aria-describedby="err-pw" aria-invalid="false">
+        <span class="err" id="err-pw" role="alert"></span>
+
+        <button type="submit" id="submit-btn" disabled>Submit</button>
+      </form>
+
+      <div id="success">
+        <div class="icon">✅</div>
+        <h3>Submitted!</h3>
+        <p>All 3 validators passed. The form would be sent to the server.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: code -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="dot" style="background:#f7df1e"></span>
+      Pattern Code
+    </div>
+    <div class="panel-body">
+
+      <!-- Step 1 -->
+      <pre><span class="step-tag s1">STEP 1 — Helpers</span>
+<span class="kw">function</span> <span class="fn">markValid</span>(input, span) {
+  input.<span class="fn">setAttribute</span>(<span class="str">'aria-invalid'</span>, <span class="str">'false'</span>);
+  span.textContent = <span class="str">''</span>;
+}
+<span class="kw">function</span> <span class="fn">markInvalid</span>(input, span, msg) {
+  input.<span class="fn">setAttribute</span>(<span class="str">'aria-invalid'</span>, <span class="str">'true'</span>);
+  span.textContent = msg;
+}</pre>
+
+      <!-- Step 2 -->
+      <pre><span class="step-tag s2">STEP 2 — Per-field validator</span>
+<span class="kw">function</span> <span class="fn">validateEmail</span>() {
+  <span class="kw">const</span> el  = <span class="nm">document</span>.<span class="fn">getElementById</span>(<span class="str">'v-email'</span>);
+  <span class="kw">const</span> err = <span class="nm">document</span>.<span class="fn">getElementById</span>(<span class="str">'err-email'</span>);
+  <span class="kw">if</span> (el.validity.valueMissing)
+    <span class="kw">return</span> <span class="fn">markInvalid</span>(el, err, <span class="str">'Required'</span>), <span class="lit">false</span>;
+  <span class="kw">if</span> (el.validity.typeMismatch)
+    <span class="kw">return</span> <span class="fn">markInvalid</span>(el, err, <span class="str">'Invalid email'</span>), <span class="lit">false</span>;
+  <span class="kw">return</span> <span class="fn">markValid</span>(el, err), <span class="lit">true</span>;
+}</pre>
+
+      <!-- Step 3 -->
+      <pre><span class="step-tag s3">STEP 3 — Real-time listener</span>
+<span class="nm">document</span>.<span class="fn">getElementById</span>(<span class="str">'v-email'</span>)
+  .<span class="fn">addEventListener</span>(<span class="str">'input'</span>, () => {
+    <span class="fn">validateEmail</span>();
+    submitBtn.disabled = !form.<span class="fn">checkValidity</span>();
+  });</pre>
+
+      <!-- Step 4 -->
+      <pre><span class="step-tag s4">STEP 4 — Submit gate</span>
+form.<span class="fn">addEventListener</span>(<span class="str">'submit'</span>, e => {
+  e.<span class="fn">preventDefault</span>();
+  <span class="kw">if</span> (<span class="fn">validateSid</span>()
+    &amp;&amp; <span class="fn">validateEmail</span>()
+    &amp;&amp; <span class="fn">validatePw</span>()) {
+      <span class="fn">showSuccess</span>();
+  }
+});</pre>
+
+    </div>
+  </div>
+</div>
+
+<!-- Pattern summary bar -->
+<div class="summary">
+  <h3>Pattern at a Glance</h3>
+  <div class="summary-grid">
+    <div class="summary-item">
+      <span class="fn-name">markValid(input, span)</span>
+      <p>aria-invalid="false", clears error text</p>
+    </div>
+    <div class="summary-item">
+      <span class="fn-name">markInvalid(input, span, msg)</span>
+      <p>aria-invalid="true", sets error message</p>
+    </div>
+    <div class="summary-item">
+      <span class="fn-name">validateX()</span>
+      <p>Checks one field, calls helpers, returns true/false</p>
+    </div>
+    <div class="summary-item">
+      <span class="fn-name">form.checkValidity()</span>
+      <p>Returns true only when all fields pass constraints</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form      = document.getElementById('regForm');
+  const submitBtn = document.getElementById('submit-btn');
+  const live      = document.getElementById('live');
+
+  // ── STEP 1: Helpers ─────────────────────────────────────────
+  function markValid(input, span) {
+    input.setAttribute('aria-invalid', 'false');
+    span.textContent = '';
+  }
+  function markInvalid(input, span, msg) {
+    input.setAttribute('aria-invalid', 'true');
+    span.textContent = msg;
+  }
+
+  // ── STEP 2: Per-field validators ─────────────────────────────
+  function validateSid() {
+    const el  = document.getElementById('v-sid');
+    const err = document.getElementById('err-sid');
+    if (el.validity.valueMissing)
+      return markInvalid(el, err, 'Student ID is required'), false;
+    if (!/^\d{9}$/.test(el.value.trim()))
+      return markInvalid(el, err, 'Must be exactly 9 digits'), false;
+    return markValid(el, err), true;
+  }
+
+  function validateEmail() {
+    const el  = document.getElementById('v-email');
+    const err = document.getElementById('err-email');
+    if (el.validity.valueMissing)
+      return markInvalid(el, err, 'Required'), false;
+    if (el.validity.typeMismatch)
+      return markInvalid(el, err, 'Invalid email'), false;
+    return markValid(el, err), true;
+  }
+
+  function validatePw() {
+    const el  = document.getElementById('v-pw');
+    const err = document.getElementById('err-pw');
+    if (el.validity.valueMissing)
+      return markInvalid(el, err, 'Password is required'), false;
+    if (el.validity.tooShort || el.value.length < 8)
+      return markInvalid(el, err, `Min 8 characters (${el.value.length} typed)`), false;
+    return markValid(el, err), true;
+  }
+
+  // ── STEP 3: Real-time listeners ───────────────────────────────
+  document.getElementById('v-sid').addEventListener('input', () => {
+    validateSid();
+    submitBtn.disabled = !form.checkValidity();
+  });
+  document.getElementById('v-email').addEventListener('input', () => {
+    validateEmail();
+    submitBtn.disabled = !form.checkValidity();
+  });
+  document.getElementById('v-pw').addEventListener('input', () => {
+    validatePw();
+    submitBtn.disabled = !form.checkValidity();
+  });
+
+  // ── STEP 4: Submit gate ───────────────────────────────────────
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (validateSid() && validateEmail() && validatePw()) {
+      form.style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      live.textContent = 'Form submitted successfully!';
+    } else {
+      const first = form.querySelector('[aria-invalid="true"]');
+      if (first) first.focus();
+      live.textContent = 'Please fix the highlighted fields.';
+    }
+  });
+</script>
+</body>
+</html>
+
+</body></html>

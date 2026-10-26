@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Username Validation</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 40px 24px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    h2 { font-size: 1.2rem; margin-bottom: 24px; }
+
+    .field-group { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 13px;
+      font-size: 14px;
+      border: 2px solid #c8d4f0;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color .2s, background .2s;
+    }
+    input:focus                 { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.15); }
+    input[aria-invalid="true"]  { border-color: #ef4444; background: #fef2f2; }
+    input[aria-invalid="false"]:not(:placeholder-shown) { border-color: #22c55e; background: #f0fdf4; }
+
+    .err {
+      display: block;
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: 5px;
+      min-height: 16px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 11px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    button[type="submit"]:hover    { background: #1d4ed8; }
+    button[type="submit"]:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #success {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #15803d;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Create Account</h2>
+
+<form id="regForm" action="#" method="post" novalidate>
+
+  <div class="field-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required
+      placeholder="At least 3 alphanumeric chars"
+      aria-describedby="username-err"
+      aria-invalid="false">
+    <span id="username-err" class="err" role="alert"></span>
+  </div>
+
+  <button type="submit" id="submit-btn" disabled>Create Account</button>
+</form>
+
+<div id="success">✅ Username accepted!</div>
+
+<script>
+  const form          = document.getElementById('regForm');
+  const submitBtn     = document.getElementById('submit-btn');
+  const usernameInput = document.getElementById('username');
+  const usernameErr   = document.getElementById('username-err');
+  const usernamePattern = /^[a-zA-Z0-9]{3,}$/;
+
+  // Reusable helpers (Step 1)
+  function markValid(input, errSpan) {
+    input.setAttribute('aria-invalid', 'false');
+    errSpan.textContent = '';
+  }
+  function markInvalid(input, errSpan, msg) {
+    input.setAttribute('aria-invalid', 'true');
+    errSpan.textContent = msg;
+  }
+
+  // Per-field validator (Step 2)
+  function validateUsername() {
+    if (usernameInput.validity.valueMissing) {
+      markInvalid(usernameInput, usernameErr, 'Username is required.');
+      return false;
+    }
+    if (!usernamePattern.test(usernameInput.value)) {
+      markInvalid(usernameInput, usernameErr, 'Min. 3 chars, letters and numbers only.');
+      return false;
+    }
+    markValid(usernameInput, usernameErr);
+    return true;
+  }
+
+  // Real-time listener (Step 3)
+  usernameInput.addEventListener('input', () => {
+    validateUsername();
+    submitBtn.disabled = !form.checkValidity();
+  });
+
+  // Submit gate (Step 4)
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (validateUsername()) {
+      form.style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

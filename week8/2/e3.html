@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+  body { font-family: system-ui; padding: 28px; max-width: 400px; }
+  label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 16px; }
+  input {
+    width: 100%; padding: 10px 14px; border: 2px solid #c8d4f0;
+    border-radius: 8px; font-size: 14px; outline: none; transition: all .2s;
+  }
+  input.ok  { border-color: #16a34a; }
+  input.err { border-color: #dc2626; }
+  .err-span { font-size: 12px; font-weight: 600; color: #dc2626; min-height: 18px; display: block; margin-top: 4px; }
+  button { margin-top: 18px; background: #1a56db; color: #fff; border: none;
+    padding: 11px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+</style>
+</head><body>
+<h2>Create Account</h2>
+<form id="pw-form">
+  <label for="pw">Password</label>
+  <input type="password" id="pw" required minlength="8"
+         aria-describedby="pw-err" aria-required="true"
+         placeholder="At least 8 characters">
+  <span id="pw-err" class="err-span" aria-live="polite"></span>
+
+  <label for="cfm">Confirm Password</label>
+  <input type="password" id="cfm" required
+         aria-describedby="cfm-err" aria-required="true"
+         placeholder="Repeat your password">
+  <span id="cfm-err" class="err-span" aria-live="polite"></span>
+
+  <button type="submit">Create Account</button>
+</form>
+
+<script>
+  const pw     = document.querySelector('#pw');
+  const cfm    = document.querySelector('#cfm');
+  const pwErr  = document.querySelector('#pw-err');
+  const cfmErr = document.querySelector('#cfm-err');
+  const form   = document.querySelector('#pw-form');
+
+  // YOUR CODE HERE:
+  // 1. pw 'input' listener: check length, update class + aria-invalid + pwErr
+  // 2. checkCfm() function: compare cfm.value to pw.value
+  //    - use setCustomValidity('') or setCustomValidity('Passwords do not match.')
+  //    - update class + aria-invalid + cfmErr
+  // 3. cfm 'input' listener: call checkCfm()
+  // 4. pw 'input' should also call checkCfm() if cfm.value !== ''
+  // 5. form 'submit' listener: preventDefault, check both valid, log "submitted"
+ pw.addEventListener('input', () => {
+  if (pw.validity.tooShort || pw.validity.valueMissing) {
+    pw.classList.add('err'); pw.classList.remove('ok');
+    pw.setAttribute('aria-invalid', 'true');
+    pwErr.textContent = 'Password must be at least 8 characters.';
+  } else {
+    pw.classList.add('ok'); pw.classList.remove('err');
+    pw.setAttribute('aria-invalid', 'false');
+    pwErr.textContent = '';
+  }
+  if (cfm.value) checkCfm();
+});
+
+function checkCfm() {
+  if (cfm.value !== pw.value) {
+    cfm.setCustomValidity('Passwords do not match.');
+    cfm.classList.add('err'); cfm.classList.remove('ok');
+    cfm.setAttribute('aria-invalid', 'true');
+    cfmErr.textContent = 'Passwords do not match.';
+  } else {
+    cfm.setCustomValidity('');
+    cfm.classList.add('ok'); cfm.classList.remove('err');
+    cfm.setAttribute('aria-invalid', 'false');
+    cfmErr.textContent = '';
+  }
+}
+cfm.addEventListener('input', checkCfm);
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (pw.validity.valid && cfm.validity.valid) {
+    alert('Account created successfully!');
+  }
+});
+</script>
+</body></html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Validation</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 40px 24px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    h2 { font-size: 1.2rem; margin-bottom: 24px; }
+
+    .field-group { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 13px;
+      font-size: 14px;
+      border: 2px solid #c8d4f0;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color .2s, background .2s;
+    }
+    input:focus                { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.15); }
+    input[aria-invalid="true"] { border-color: #ef4444; background: #fef2f2; }
+    input.valid                { border-color: #22c55e; background: #f0fdf4; }
+
+    .err {
+      display: block;
+      font-size: 12px;
+      margin-top: 5px;
+      min-height: 16px;
+      color: #dc2626;
+    }
+    .err.ok { color: #16a34a; font-weight: 600; }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 11px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    button[type="submit"]:hover    { background: #1d4ed8; }
+    button[type="submit"]:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #success {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #15803d;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Set Password</h2>
+
+<form id="regForm" action="#" method="post" novalidate>
+
+  <div class="field-group">
+    <label for="pw">Password</label>
+    <input type="password" id="pw" name="password"
+      required minlength="8"
+      placeholder="At least 8 characters"
+      aria-describedby="pw-err"
+      aria-invalid="false">
+    <span id="pw-err" class="err" role="alert"></span>
+  </div>
+
+  <div class="field-group">
+    <label for="confirm">Confirm Password</label>
+    <input type="password" id="confirm" name="confirm"
+      required
+      placeholder="Repeat your password"
+      aria-describedby="confirm-err"
+      aria-invalid="false">
+    <span id="confirm-err" class="err" role="alert"></span>
+  </div>
+
+  <button type="submit" id="submit-btn" disabled>Set Password</button>
+</form>
+
+<div id="success">✅ Password set successfully!</div>
+
+<script>
+  const form       = document.getElementById('regForm');
+  const submitBtn  = document.getElementById('submit-btn');
+  const pw         = document.getElementById('pw');
+  const confirmEl  = document.getElementById('confirm');
+  const pwErr      = document.getElementById('pw-err');
+  const confirmErr = document.getElementById('confirm-err');
+
+  // Step 1 — Helpers
+  function markValid(input, errSpan, msg = '') {
+    input.setAttribute('aria-invalid', 'false');
+    input.classList.add('valid');
+    errSpan.textContent = msg;
+    errSpan.className = msg ? 'err ok' : 'err';
+  }
+  function markInvalid(input, errSpan, msg) {
+    input.setAttribute('aria-invalid', 'true');
+    input.classList.remove('valid');
+    errSpan.textContent = msg;
+    errSpan.className = 'err';
+  }
+
+  // Step 2 — Per-field validators
+  function validatePw() {
+    if (pw.validity.valueMissing) {
+      markInvalid(pw, pwErr, 'Password is required.');
+      return false;
+    }
+    if (pw.validity.tooShort) {
+      markInvalid(pw, pwErr, `Min. 8 characters (${pw.value.length} typed).`);
+      return false;
+    }
+    markValid(pw, pwErr);
+    return true;
+  }
+
+  function validateConfirm() {
+    if (confirmEl.value === '') {
+      // Not filled yet — keep neutral, treat as invalid for submit gate
+      confirmEl.setCustomValidity('required');
+      confirmEl.setAttribute('aria-invalid', 'false');
+      confirmEl.classList.remove('valid');
+      confirmErr.textContent = '';
+      confirmErr.className = 'err';
+      return false;
+    }
+    if (confirmEl.value !== pw.value) {
+      confirmEl.setCustomValidity('Passwords do not match.');
+      markInvalid(confirmEl, confirmErr, 'Passwords do not match.');
+      return false;
+    }
+    confirmEl.setCustomValidity(''); // ← must clear so checkValidity() passes
+    markValid(confirmEl, confirmErr, '✓ Passwords match');
+    return true;
+  }
+
+  // Step 3 — Real-time listeners
+  pw.addEventListener('input', () => {
+    validatePw();
+    validateConfirm();           // re-validate confirm when password changes
+    submitBtn.disabled = !form.checkValidity();
+  });
+
+  confirmEl.addEventListener('input', () => {
+    validateConfirm();
+    submitBtn.disabled = !form.checkValidity();
+  });
+
+  // Step 4 — Submit gate
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (validatePw() && validateConfirm()) {
+      form.style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>
