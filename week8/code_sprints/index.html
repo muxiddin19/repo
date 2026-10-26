@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Sprint Hub — K0126002 Web Programming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1b2d;
+    --surface: #1a2e45;
+    --surface2: #1e3550;
+    --border: rgba(255,255,255,0.08);
+    --accent: #F7DF1E;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --orange: #f97316;
+    --red: #ef4444;
+    --teal: #14b8a6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px;
+    text-align: center;
+  }
+  .site-tag {
+    display: inline-block;
+    background: rgba(247,223,30,0.12);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(247,223,30,0.25);
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Grid */
+  main {
+    flex: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    width: 100%;
+  }
+
+  .grid-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .sprint-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .sprint-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .sprint-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--card-color);
+    opacity: 0.8;
+    border-radius: 14px 14px 0 0;
+  }
+  .sprint-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-color);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--card-color);
+    color: var(--badge-text, #fff);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 11px;
+    border-radius: 20px;
+    width: fit-content;
+  }
+  .card-title {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+  .card-info {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .difficulty {
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .start-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--card-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .start-link::after { content: '→'; transition: transform 0.2s; }
+  .sprint-card:hover .start-link::after { transform: translateX(4px); }
+
+  /* Notice */
+  .notice {
+    margin-top: 36px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-left: 3px solid rgba(247,223,30,0.4);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .notice strong { color: var(--accent); font-weight: 600; }
+
+  /* Footer */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #475569;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 24px 20px; }
+    header h1 { font-size: 22px; }
+    .sprint-grid { grid-template-columns: 1fr; }
+    main { padding: 32px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-tag">K0126002 · Web Programming</div>
+  <h1>Code Sprint <span>Hub</span></h1>
+  <p>Self-grading fill-in-the-blank drills. Pick a topic, set the timer, type the missing keywords.</p>
+</header>
+
+<main>
+  <div class="grid-label">6 Practice Sprints</div>
+
+  <div class="sprint-grid">
+
+    <!-- W6 Mon: HTML Forms (blue) -->
+    <a class="sprint-card" href="sprint_w6m_forms.html" style="--card-color: #3b82f6;">
+      <div class="badge">W6 Mon · HTML Forms</div>
+      <div class="card-title">Code Sprint — HTML Forms</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Medium">★★☆</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+    <!-- W6 Fri: JS Validation (purple) -->
+    <a class="sprint-card" href="sprint_w6f_jsval.html" style="--card-color: #8b5cf6;">
+      <div class="badge">W6 Fri · JS Validation</div>
+      <div class="card-title">Code Sprint — JS Form Validation</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Hard">★★★</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+    <!-- W7 Mon: Accessibility (green) -->
+    <a class="sprint-card" href="sprint_w7m_a11y.html" style="--card-color: #22c55e; --badge-text: #0f1b2d;">
+      <div class="badge" style="color:#0f1b2d;">W7 Mon · Accessibility</div>
+      <div class="card-title">Code Sprint — Web Accessibility</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Medium">★★☆</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+    <!-- W7 Fri: Performance (orange) -->
+    <a class="sprint-card" href="sprint_w7f_perf.html" style="--card-color: #f97316;">
+      <div class="badge">W7 Fri · Performance</div>
+      <div class="card-title">Code Sprint — Performance Optimization</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Easy">★☆☆</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+    <!-- W9 Mon: Git (red) -->
+    <a class="sprint-card" href="sprint_w9m_git.html" style="--card-color: #ef4444;">
+      <div class="badge">W9 Mon · Git</div>
+      <div class="card-title">Code Sprint — Git Version Control</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Easy">★☆☆</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+    <!-- W9 Fri: Deployment (teal) -->
+    <a class="sprint-card" href="sprint_w9f_deploy.html" style="--card-color: #14b8a6;">
+      <div class="badge">W9 Fri · Deployment</div>
+      <div class="card-title">Code Sprint — GitHub Pages</div>
+      <div class="card-meta">
+        <span class="card-info">5 questions · 3 min</span>
+        <span class="difficulty" title="Difficulty: Easy">★☆☆</span>
+      </div>
+      <div class="cta-row">
+        <span class="start-link">Start Sprint</span>
+      </div>
+    </a>
+
+  </div><!-- /.sprint-grid -->
+
+  <div class="notice">
+    <strong>Note:</strong> These are practice sprints for self-study. The graded version is taken via Google Forms in class. Your practice scores are not recorded.
+  </div>
+
+</main>
+
+<footer>
+  K0126002 Web Programming &nbsp;·&nbsp; Gachon University &nbsp;·&nbsp; Fall 2026
+</footer>
+
+</body>
+</html>

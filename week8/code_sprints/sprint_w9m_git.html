@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Sprint — Git Version Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1b2d;
+    --surface: #1a2e45;
+    --accent: #F7DF1E;
+    --success: #22c55e;
+    --error: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --badge: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+  header { background: var(--surface); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 18px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+  .badge { background: var(--badge); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+  header h1 { font-size: 18px; font-weight: 700; flex: 1; }
+  .header-right { display: flex; align-items: center; gap: 20px; margin-left: auto; }
+  .timer { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; color: var(--accent); background: rgba(247,223,30,0.1); padding: 6px 16px; border-radius: 8px; border: 1px solid rgba(247,223,30,0.3); min-width: 70px; text-align: center; }
+  .timer.urgent { color: var(--error); background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
+  .score-display { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .score-display span { color: var(--accent); font-size: 18px; }
+
+  main { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+
+  .q-card { background: var(--surface); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: border-color 0.2s; }
+  .q-card.answered-correct { border-color: var(--success); }
+  .q-card.answered-wrong { border-color: var(--error); }
+  .q-label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .q-prompt { font-size: 15px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+
+  pre.code-block { background: #0a1628; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.7; overflow-x: auto; margin-bottom: 16px; color: #cbd5e1; white-space: pre-wrap; }
+  pre.code-block .git { color: #7dd3fc; }
+  pre.code-block .flag { color: #fbbf24; }
+  pre.code-block .arg { color: #86efac; }
+  pre.code-block .cm { color: #475569; font-style: italic; }
+
+  input.blank { display: inline-block; width: 130px; background: #0f1b2d; border: 2px solid var(--accent); color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 2px 8px; border-radius: 5px; outline: none; vertical-align: baseline; transition: border-color 0.2s, background 0.2s, color 0.2s; line-height: 1.5; }
+  input.blank:focus { border-color: #fff; }
+  input.blank.correct { border-color: var(--success); background: rgba(34,197,94,0.1); color: var(--success); }
+  input.blank.wrong { border-color: var(--error); background: rgba(239,68,68,0.1); color: var(--error); }
+  input.blank:disabled { cursor: default; opacity: 1; }
+
+  .check-btn { background: var(--accent); color: #0f1b2d; border: none; padding: 8px 20px; border-radius: 7px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+  .check-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .check-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
+
+  .feedback { margin-top: 12px; font-size: 14px; font-weight: 600; min-height: 20px; }
+  .feedback.correct { color: var(--success); }
+  .feedback.wrong { color: var(--error); }
+  .feedback .answer-reveal { font-family: 'JetBrains Mono', monospace; background: rgba(239,68,68,0.1); padding: 2px 8px; border-radius: 4px; color: #fca5a5; }
+
+  .summary { background: var(--surface); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; text-align: center; margin-top: 20px; }
+  .summary h2 { font-size: 28px; margin-bottom: 16px; }
+  .final-score { font-size: 48px; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin: 16px 0; }
+  .summary p { color: var(--muted); font-size: 16px; margin-bottom: 28px; }
+  .summary-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-reset { background: var(--accent); color: #0f1b2d; border: none; padding: 12px 28px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+  .btn-reset:hover { opacity: 0.85; }
+  .btn-back { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.15); padding: 12px 28px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s; }
+  .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+  [hidden] { display: none !important; }
+  @media (max-width: 600px) { header { padding: 14px 16px; } main { padding: 20px 12px; } .q-card { padding: 18px 16px; } input.blank { width: 100px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">W9 Mon · Git</div>
+  <h1>Code Sprint — Git Version Control</h1>
+  <div class="header-right">
+    <div class="timer" id="timer">3:00</div>
+    <div class="score-display">Score: <span id="scoreDisplay">0</span> / 5</div>
+  </div>
+</header>
+
+<main>
+  <div class="questions" id="questions">
+
+    <!-- Q1 -->
+    <div class="q-card" id="qcard-1">
+      <div class="q-label">Q1</div>
+      <div class="q-prompt">Start a new Git repository in the current folder:</div>
+      <pre class="code-block"><code><span class="git">git</span> <input type="text" class="blank" id="ans-1" placeholder="type here" autocomplete="off" spellcheck="false">
+<span class="cm"># Creates a hidden .git folder</span></code></pre>
+      <button class="check-btn" id="btn-1" onclick="checkAnswer(1)">Check ✓</button>
+      <div class="feedback" id="fb-1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="qcard-2">
+      <div class="q-label">Q2</div>
+      <div class="q-prompt">Stage all changed files for the next commit:</div>
+      <pre class="code-block"><code><span class="git">git</span> <input type="text" class="blank" id="ans-2" placeholder="type here" autocomplete="off" spellcheck="false"> <span class="arg">.</span>
+<span class="cm"># The dot means "all files in this directory"</span></code></pre>
+      <button class="check-btn" id="btn-2" onclick="checkAnswer(2)">Check ✓</button>
+      <div class="feedback" id="fb-2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="qcard-3">
+      <div class="q-label">Q3</div>
+      <div class="q-prompt">Save the staged changes as a snapshot with a message:</div>
+      <pre class="code-block"><code><span class="git">git</span> <input type="text" class="blank" id="ans-3" placeholder="type here" autocomplete="off" spellcheck="false"> <span class="flag">-m</span> <span class="arg">"Add login page"</span></code></pre>
+      <button class="check-btn" id="btn-3" onclick="checkAnswer(3)">Check ✓</button>
+      <div class="feedback" id="fb-3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="qcard-4">
+      <div class="q-label">Q4</div>
+      <div class="q-prompt">Upload local commits to the remote repository on GitHub:</div>
+      <pre class="code-block"><code><span class="git">git</span> <input type="text" class="blank" id="ans-4" placeholder="type here" autocomplete="off" spellcheck="false"> <span class="arg">origin main</span></code></pre>
+      <button class="check-btn" id="btn-4" onclick="checkAnswer(4)">Check ✓</button>
+      <div class="feedback" id="fb-4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" id="qcard-5">
+      <div class="q-label">Q5</div>
+      <div class="q-prompt">Download the latest changes from the remote AND merge them into your local branch:</div>
+      <pre class="code-block"><code><span class="git">git</span> <input type="text" class="blank" id="ans-5" placeholder="type here" autocomplete="off" spellcheck="false">
+<span class="cm"># = git fetch + git merge</span></code></pre>
+      <button class="check-btn" id="btn-5" onclick="checkAnswer(5)">Check ✓</button>
+      <div class="feedback" id="fb-5"></div>
+    </div>
+
+  </div>
+
+  <div class="summary" id="summary" hidden>
+    <h2 id="summary-emoji">🏆</h2>
+    <div class="final-score" id="final-score">5 / 5</div>
+    <p id="summary-msg"></p>
+    <div class="summary-btns">
+      <button class="btn-reset" onclick="resetSprint()">Try Again</button>
+      <a href="index.html" class="btn-back">← Back to Hub</a>
+    </div>
+  </div>
+</main>
+
+<script>
+  const QUESTIONS = {
+    1: { accepted: ["init"] },
+    2: { accepted: ["add"] },
+    3: { accepted: ["commit"] },
+    4: { accepted: ["push"] },
+    5: { accepted: ["pull"] }
+  };
+
+  const TOTAL = 5;
+  let scoreCount = 0;
+  let answeredCount = 0;
+  let timerInterval = null;
+  let secondsLeft = 180;
+  let sprintDone = false;
+
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      secondsLeft--;
+      updateTimerDisplay();
+      if (secondsLeft <= 0) { clearInterval(timerInterval); autoSubmitRemaining(); finishSprint(); }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    const el = document.getElementById('timer');
+    el.textContent = m + ':' + String(s).padStart(2, '0');
+    if (secondsLeft < 30) el.classList.add('urgent');
+  }
+
+  function autoSubmitRemaining() {
+    for (let q = 1; q <= TOTAL; q++) {
+      const input = document.getElementById('ans-' + q);
+      if (!input.disabled) checkAnswer(q, true);
+    }
+  }
+
+  function checkAnswer(qNum, auto) {
+    if (sprintDone) return;
+    const input = document.getElementById('ans-' + qNum);
+    if (input.disabled) return;
+    const normalized = input.value.trim().toLowerCase();
+    const { accepted } = QUESTIONS[qNum];
+    const isCorrect = accepted.includes(normalized);
+    input.disabled = true;
+    document.getElementById('btn-' + qNum).disabled = true;
+    const fb = document.getElementById('fb-' + qNum);
+    const card = document.getElementById('qcard-' + qNum);
+    if (isCorrect) {
+      input.classList.add('correct');
+      fb.textContent = '✅ Correct!';
+      fb.className = 'feedback correct';
+      card.classList.add('answered-correct');
+      scoreCount++;
+      document.getElementById('scoreDisplay').textContent = scoreCount;
+    } else {
+      input.classList.add('wrong');
+      fb.innerHTML = '❌ Expected: <span class="answer-reveal">' + accepted[0] + '</span>';
+      fb.className = 'feedback wrong';
+      card.classList.add('answered-wrong');
+    }
+    answeredCount++;
+    if (answeredCount === TOTAL) finishSprint();
+  }
+
+  function finishSprint() {
+    if (sprintDone) return;
+    sprintDone = true;
+    clearInterval(timerInterval);
+    setTimeout(() => {
+      document.getElementById('questions').hidden = true;
+      document.getElementById('summary').hidden = false;
+      const s = scoreCount;
+      document.getElementById('final-score').textContent = s + ' / ' + TOTAL;
+      let emoji, msg;
+      if (s === 5) { emoji = '🏆'; msg = 'Perfect! You\'re ready for class.'; }
+      else if (s === 4) { emoji = '✅'; msg = 'Great job! Review the one you missed.'; }
+      else if (s === 3) { emoji = '👍'; msg = 'Good effort. Review the study guide.'; }
+      else { emoji = '📚'; msg = 'Time to review! Open the study guide for this topic.'; }
+      document.getElementById('summary-emoji').textContent = emoji;
+      document.getElementById('summary-msg').textContent = msg;
+    }, 600);
+  }
+
+  function resetSprint() {
+    scoreCount = 0; answeredCount = 0; secondsLeft = 180; sprintDone = false;
+    document.getElementById('scoreDisplay').textContent = 0;
+    const timerEl = document.getElementById('timer');
+    timerEl.textContent = '3:00'; timerEl.classList.remove('urgent');
+    for (let q = 1; q <= TOTAL; q++) {
+      const input = document.getElementById('ans-' + q);
+      input.value = ''; input.disabled = false; input.className = 'blank';
+      document.getElementById('btn-' + q).disabled = false;
+      document.getElementById('fb-' + q).textContent = '';
+      document.getElementById('fb-' + q).className = 'feedback';
+      document.getElementById('qcard-' + q).classList.remove('answered-correct', 'answered-wrong');
+    }
+    document.getElementById('summary').hidden = true;
+    document.getElementById('questions').hidden = false;
+    clearInterval(timerInterval);
+    startTimer();
+  }
+
+  for (let q = 1; q <= TOTAL; q++) {
+    document.getElementById('ans-' + q).addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkAnswer(q);
+    });
+  }
+
+  startTimer();
+</script>
+</body>
+</html>

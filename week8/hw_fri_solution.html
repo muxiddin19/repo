@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration — JS Validation Solution</title>
+  <style>
+    body { font-family: system-ui; padding: 24px; max-width: 460px; margin: 0 auto; background: #f8fafc; }
+    h2 { font-size: 1.3rem; margin-bottom: 1.25rem; color: #0f172a; }
+    fieldset { border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+    legend { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #64748b; padding: 0 6px; }
+
+    label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 14px; color: #0f172a; }
+    label:first-child { margin-top: 0; }
+
+    .field-wrap { position: relative; }
+    input, select, textarea {
+      width: 100%; padding: 10px 14px; font-size: 14px;
+      border: 2px solid #c8d4f0; border-radius: 8px;
+      outline: none; transition: border-color .2s, background .2s;
+      box-sizing: border-box; font-family: inherit;
+    }
+    textarea { resize: vertical; min-height: 70px; }
+    input:focus, select:focus, textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    }
+
+    /* aria-invalid drives visual state — not :valid/:invalid, since form has novalidate */
+    input[aria-invalid="false"], select[aria-invalid="false"], textarea[aria-invalid="false"] {
+      border-color: #16a34a; background: #f0fdf4;
+    }
+    input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] {
+      border-color: #dc2626; background: #fef2f2;
+    }
+
+    /* Error message spans */
+    .err {
+      display: block; font-size: 12px; color: #dc2626;
+      margin-top: 4px; min-height: 18px; line-height: 1.4;
+    }
+
+    /* Strength meter */
+    .strength-bar { height: 4px; border-radius: 2px; margin-top: 6px; background: #e2e8f0; overflow: hidden; }
+    .strength-fill { height: 100%; width: 0; transition: width .3s, background .3s; border-radius: 2px; }
+    .strength-label { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    /* Range */
+    .range-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+    input[type="range"] { flex: 1; border: none; background: none; box-shadow: none; padding: 0; outline: none; }
+    .range-val { font-weight: 700; color: #2563eb; min-width: 1.5em; }
+
+    /* Checkbox */
+    .check-row { display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; }
+    .check-row input[type="checkbox"] {
+      width: 18px; min-width: 18px; height: 18px; padding: 0; margin-top: 1px;
+      border: 2px solid #c8d4f0; border-radius: 4px; flex-shrink: 0;
+    }
+    .check-row label { margin: 0; font-size: 13px; font-weight: 600; }
+
+    /* Submit button */
+    button[type="submit"] {
+      margin-top: 18px; width: 100%; background: #2563eb; color: white;
+      border: none; padding: 12px 24px; border-radius: 8px;
+      cursor: pointer; font-weight: 700; font-size: 14px;
+      transition: opacity .2s, background .2s;
+    }
+    button[type="submit"]:disabled {
+      opacity: .45; cursor: not-allowed; background: #94a3b8;
+    }
+    button[type="submit"]:not(:disabled):hover { background: #1d4ed8; }
+
+    /* Success banner */
+    #success-banner {
+      display: none; background: #f0fdf4; border: 2px solid #16a34a;
+      border-radius: 10px; padding: 20px 24px; text-align: center; margin-top: 8px;
+    }
+    #success-banner h3 { color: #15803d; margin: 0 0 6px; font-size: 1.1rem; }
+    #success-banner p  { color: #166534; margin: 0; font-size: 0.9rem; }
+
+    /* Form-level live region (screen readers) */
+    #form-live { position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+
+<h2>Student Registration</h2>
+
+<!-- aria-live region: screen readers announce validation results -->
+<div id="form-live" aria-live="polite" aria-atomic="true"></div>
+
+<!--
+  novalidate: disables browser's built-in validation UI.
+  We handle everything in JS so we control the error messages and ARIA.
+-->
+<form id="regForm" action="/register" method="post" novalidate>
+
+  <fieldset>
+    <legend>Personal Information</legend>
+
+    <label for="fname">Full Name</label>
+    <div class="field-wrap">
+      <input type="text" id="fname" name="fname" required
+             placeholder="Your full name"
+             aria-describedby="err-fname"
+             aria-invalid="false">
+      <span class="err" id="err-fname" role="alert"></span>
+    </div>
+
+    <label for="sid">Student ID</label>
+    <div class="field-wrap">
+      <input type="text" id="sid" name="sid" required
+             pattern="\d{9}" placeholder="9-digit number"
+             aria-describedby="err-sid"
+             aria-invalid="false">
+      <span class="err" id="err-sid" role="alert"></span>
+    </div>
+
+    <label for="birth">Date of Birth</label>
+    <div class="field-wrap">
+      <input type="date" id="birth" name="birth" required
+             aria-describedby="err-birth"
+             aria-invalid="false">
+      <span class="err" id="err-birth" role="alert"></span>
+    </div>
+
+    <label for="major">Major</label>
+    <div class="field-wrap">
+      <select id="major" name="major" required
+              aria-describedby="err-major"
+              aria-invalid="false">
+        <option value="">-- Select your major --</option>
+        <option>Computer Science</option>
+        <option>Software Engineering</option>
+        <option>Information Technology</option>
+        <option>Electrical Engineering</option>
+      </select>
+      <span class="err" id="err-major" role="alert"></span>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Account Info</legend>
+
+    <label for="v-email">Email</label>
+    <div class="field-wrap">
+      <input type="email" id="v-email" name="email" required
+             placeholder="name@example.com"
+             aria-describedby="err-email"
+             aria-invalid="false">
+      <span class="err" id="err-email" role="alert"></span>
+    </div>
+
+    <label for="v-pw">Password (min 8 chars)</label>
+    <div class="field-wrap">
+      <input type="password" id="v-pw" name="password" required minlength="8"
+             placeholder="At least 8 characters"
+             aria-describedby="err-pw pw-strength-label"
+             aria-invalid="false">
+      <!-- Password strength meter (bonus visual) -->
+      <div class="strength-bar"><div class="strength-fill" id="pw-fill"></div></div>
+      <div class="strength-label" id="pw-strength-label"></div>
+      <span class="err" id="err-pw" role="alert"></span>
+    </div>
+
+    <label for="v-pw2">Confirm Password</label>
+    <div class="field-wrap">
+      <input type="password" id="v-pw2" name="password2" required
+             placeholder="Repeat password"
+             aria-describedby="err-pw2"
+             aria-invalid="false">
+      <span class="err" id="err-pw2" role="alert"></span>
+    </div>
+
+    <label for="tel">Telephone</label>
+    <div class="field-wrap">
+      <input type="text" id="tel" name="tel" required
+             pattern="\d{3}-\d{4}-\d{4}" placeholder="010-1234-5678"
+             aria-describedby="err-tel"
+             aria-invalid="false">
+      <span class="err" id="err-tel" role="alert"></span>
+    </div>
+
+    <!-- Range slider — no JS validation needed -->
+    <label for="exp">Years of Coding Experience (0–10)</label>
+    <div class="range-row">
+      <input type="range" id="exp" name="exp" min="0" max="10" value="0">
+      <span class="range-val" id="exp-val">0</span> yrs
+    </div>
+  </fieldset>
+
+  <div class="check-row">
+    <input type="checkbox" id="agree" name="agree" required
+           aria-describedby="err-agree"
+           aria-invalid="false">
+    <label for="agree">I agree to the terms and conditions</label>
+  </div>
+  <span class="err" id="err-agree" role="alert"></span>
+
+  <!-- BONUS: disabled until form.checkValidity() passes -->
+  <button type="submit" id="submit-btn" disabled>Create Account</button>
+
+</form>
+
+<div id="success-banner">
+  <h3>✅ Registration Successful!</h3>
+  <p>Welcome! Your account has been created. Check your email to verify.</p>
+</div>
+
+<script>
+  const form      = document.getElementById('regForm');
+  const submitBtn = document.getElementById('submit-btn');
+  const liveRegion = document.getElementById('form-live');
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+  function markValid(input, errSpan) {
+    input.setAttribute('aria-invalid', 'false');
+    errSpan.textContent = '';
+  }
+
+  function markInvalid(input, errSpan, msg) {
+    input.setAttribute('aria-invalid', 'true');
+    errSpan.textContent = msg;
+  }
+
+  // Returns true if field passes, false if it fails.
+  // Also updates aria-invalid and the error span.
+  function validateField(input) {
+    const id  = input.id;
+    const val = input.value.trim();
+
+    // Find the matching error span (ids follow err-{fieldid} pattern)
+    const errId   = 'err-' + id.replace('v-', '');
+    const errSpan = document.getElementById(errId);
+    if (!errSpan) return true; // range slider etc.
+
+    switch (id) {
+
+      case 'fname':
+        if (val.length < 2) {
+          markInvalid(input, errSpan, 'Full name is required');
+          return false;
+        }
+        break;
+
+      case 'sid':
+        // Real-time regex test — /^\d{9}$/ means exactly 9 digits
+        if (!/^\d{9}$/.test(val)) {
+          markInvalid(input, errSpan, 'Student ID must be exactly 9 digits');
+          return false;
+        }
+        break;
+
+      case 'birth':
+        if (!val) {
+          markInvalid(input, errSpan, 'Date of birth is required');
+          return false;
+        }
+        break;
+
+      case 'major':
+        if (!input.value) {
+          markInvalid(input, errSpan, 'Please select a major');
+          return false;
+        }
+        break;
+
+      case 'v-email':
+        // validity.typeMismatch = value present but not a valid email
+        if (!val) {
+          markInvalid(input, errSpan, 'Email is required');
+          return false;
+        }
+        if (input.validity.typeMismatch) {
+          markInvalid(input, errSpan, 'Enter a valid email address');
+          return false;
+        }
+        break;
+
+      case 'v-pw':
+        // validity.tooShort = value shorter than minlength
+        if (input.validity.tooShort || val.length < 8) {
+          markInvalid(input, errSpan, `Password must be at least 8 characters (${val.length} typed)`);
+          return false;
+        }
+        // Re-validate confirm whenever password changes
+        validateField(document.getElementById('v-pw2'));
+        break;
+
+      case 'v-pw2':
+        // setCustomValidity links this to the browser validity API
+        const pw = document.getElementById('v-pw').value;
+        if (input.value !== pw) {
+          input.setCustomValidity('Passwords do not match');
+          markInvalid(input, errSpan, 'Passwords do not match');
+          return false;
+        }
+        // Clear custom message so checkValidity() passes
+        input.setCustomValidity('');
+        break;
+
+      case 'tel':
+        // Regex test for format \d{3}-\d{4}-\d{4}
+        if (val && !/^\d{3}-\d{4}-\d{4}$/.test(val)) {
+          markInvalid(input, errSpan, 'Format: 010-1234-5678');
+          return false;
+        }
+        if (!val) {
+          markInvalid(input, errSpan, 'Phone number is required');
+          return false;
+        }
+        break;
+
+      case 'agree':
+        if (!input.checked) {
+          markInvalid(input, errSpan, 'You must agree to the terms');
+          return false;
+        }
+        break;
+    }
+
+    markValid(input, errSpan);
+    return true;
+  }
+
+  // ── Password strength meter ───────────────────────────────────────────
+  function updateStrength(val) {
+    const fill  = document.getElementById('pw-fill');
+    const label = document.getElementById('pw-strength-label');
+    let score = 0;
+    if (val.length >= 8)             score++;
+    if (val.length >= 12)            score++;
+    if (/[A-Z]/.test(val))           score++;
+    if (/[0-9]/.test(val))           score++;
+    if (/[^A-Za-z0-9]/.test(val))   score++;
+
+    const levels = [
+      { pct: '0%',   color: '#e2e8f0', text: '' },
+      { pct: '25%',  color: '#dc2626', text: 'Weak' },
+      { pct: '50%',  color: '#f59e0b', text: 'Fair' },
+      { pct: '75%',  color: '#2563eb', text: 'Good' },
+      { pct: '100%', color: '#16a34a', text: 'Strong' },
+    ];
+    const lv = levels[Math.min(score, 4)];
+    fill.style.width      = val ? lv.pct  : '0%';
+    fill.style.background = lv.color;
+    label.textContent     = val ? lv.text : '';
+    label.style.color     = lv.color;
+  }
+
+  // ── Real-time input event listeners ──────────────────────────────────
+  form.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', () => {
+      if (el.id === 'v-pw') updateStrength(el.value);
+      if (el.id !== 'exp') validateField(el); // skip range slider
+      // BONUS: enable submit only when the whole form is valid
+      submitBtn.disabled = !form.checkValidity();
+    });
+    // Also validate on blur so tabbing out of an empty required field shows error
+    el.addEventListener('blur', () => {
+      if (el.id !== 'exp') validateField(el);
+      submitBtn.disabled = !form.checkValidity();
+    });
+  });
+
+  // Range slider display only
+  document.getElementById('exp').addEventListener('input', function () {
+    document.getElementById('exp-val').textContent = this.value;
+  });
+
+  // ── Submit handler ────────────────────────────────────────────────────
+  form.addEventListener('submit', e => {
+    e.preventDefault(); // always block default, validate manually
+
+    // Run all validators; collect results
+    const fields = form.querySelectorAll('input:not([type=range]), select');
+    let allValid = true;
+    fields.forEach(f => { if (!validateField(f)) allValid = false; });
+
+    if (!allValid) {
+      // Focus first invalid field for keyboard users
+      const firstInvalid = form.querySelector('[aria-invalid="true"]');
+      if (firstInvalid) firstInvalid.focus();
+      // Announce to screen readers
+      liveRegion.textContent = 'Please correct the highlighted fields and try again.';
+      return;
+    }
+
+    // All valid — show success
+    form.hidden = true;
+    document.getElementById('success-banner').style.display = 'block';
+    liveRegion.textContent = 'Registration successful! Welcome aboard.';
+  });
+</script>
+</body>
+</html>

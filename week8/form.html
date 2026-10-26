@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -55,4 +56,63 @@
   
     </form>
     </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My form</title>
+
+    </head>
+    <body>
+        <!--Basic form skeleton-->
+        <form
+        action="/register"
+        method="GET"
+        id="reg-form"
+        autocomplete="on">
+    <label for="name">Full name</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="sid">Student ID</label>
+    <input type="sid" id="sid" name="sid" pattern="\d{9}">
+  <label for="age">Age </label>
+    <input type="number" id="age" name="age" min="18" max="99" >
+
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password">
+
+    <label for="date">Date</label>
+    <input type="date" id="date" name="date">
+
+    <label for="range">Range</label>
+    <input type="range" id="range" name="range">
+
+<label for="checkbox">Checkbox</label>
+<input type="checkbox" id="checkbox" name="checkbox">
+
+<label for="radio">Radio</label>
+<input type="radio" id="radio" name="radio">
+
+<label for="select">Select</label>
+<input type="select" id="select" name="select" >
+
+<label for="bio">Bio limit</label>
+<textarea name="bio" maxlength="200" placeholder="Type your bio data"></textarea>
+<label>
+    Email address
+    <input type="email" name="email">
+</label>
+<input type="email" name="email" placeholder="Emaii">
+
+    <button type="submit">Register</button>
+
+  
+    </form>
+    </body>
+>>>>>>> 1a8c3f9 (code sprint added)
 </html>

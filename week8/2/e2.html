@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html><head>
 <style>
@@ -56,4 +57,64 @@ emailInput.addEventListener('input', () => {
 });
   });
 </script>
+=======
+<!DOCTYPE html>
+<html><head>
+<style>
+  body { font-family: system-ui; padding: 28px; max-width: 400px; }
+  label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+  input {
+    width: 100%; padding: 10px 14px; border: 2px solid #c8d4f0;
+    border-radius: 8px; font-size: 14px; outline: none; transition: all .2s;
+  }
+  input.valid-ok  { border-color: #16a34a; background: #f0fdf4; }
+  input.valid-err { border-color: #dc2626; background: #fef2f2; }
+  .error-msg { font-size: 12px; font-weight: 600; color: #dc2626;
+    min-height: 18px; margin-top: 4px; }
+  .ok-msg { font-size: 12px; font-weight: 600; color: #16a34a; min-height: 18px; margin-top: 4px; }
+</style>
+</head><body>
+<h2>Email Validation</h2>
+<label for="rt-email">Email Address</label>
+<input type="email" id="rt-email" required placeholder="name@example.com">
+<div class="error-msg" id="email-err"></div>
+<div class="ok-msg"  id="email-ok"></div>
+
+<script>
+  const emailInput = document.querySelector('#rt-email');
+  const errEl = document.querySelector('#email-err');
+  const okEl  = document.querySelector('#email-ok');
+
+  emailInput.addEventListener('input', () => {
+    const v = emailInput.validity;
+    const isEmpty = emailInput.value === '';
+
+    // YOUR CODE HERE
+    // if empty: clear classes, clear messages
+    // else if v.valid: add valid-ok, clear err, show ok message
+    // else: add valid-err, show correct error message
+emailInput.addEventListener('input', () => {
+  const v = emailInput.validity;
+  const isEmpty = emailInput.value === '';
+
+  if (isEmpty) {
+    emailInput.classList.remove('valid-ok', 'valid-err');
+    errEl.textContent = '';
+    okEl.textContent  = '';
+  } else if (v.valid) {
+    emailInput.classList.add('valid-ok');
+    emailInput.classList.remove('valid-err');
+    errEl.textContent = '';
+    okEl.textContent  = '✓ Valid email!';
+  } else {
+    emailInput.classList.add('valid-err');
+    emailInput.classList.remove('valid-ok');
+    okEl.textContent = '';
+    if (v.valueMissing)  errEl.textContent = 'Email is required.';
+    if (v.typeMismatch)  errEl.textContent = 'Not a valid email format.';
+  }
+});
+  });
+</script>
+>>>>>>> 1a8c3f9 (code sprint added)
 </body></html>
